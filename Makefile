@@ -3,7 +3,7 @@ MODS = disp70 vzu term kachka kit diski mott gnus khlam \
 
 build: $(addsuffix .lst,$(MODS))
 	env BESM6_PATH=.:$(BESM6_PATH) dispak rvs.b6
-	./verify.pl
+	env BESM6_PATH=.:$(BESM6_PATH) ./verify.pl
 
 %.lst: %.b6
 	touch 2222
