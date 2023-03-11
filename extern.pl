@@ -10,15 +10,17 @@ die  "Usage: extern.pl symtab listing\n" unless $#ARGV == 1;
 open(TAB, $ARGV[0]) || die "Bad symtab $ARGV[0]\n";
 
 while (<TAB>) {
+	chop;
     # Only interested in entry points, but save locals for error reporting
     my ($a, $f, $n) = /^(\d+) +(\d+) +([^\b]+)/;
     next if $n eq '-'; # unnamed, not interesting
+#    $n =~ tr/ABEKMHOPCTYX/АВЕКМНОРСТУХ/; # normalizing to Cyrillics
+#	print STDERR "Got $n = $a, type $f\n";
+    $seen{$n}++ unless defined($all{$n}) && $all{$n} eq $a;
     $all{$n} = $a;
-    $seen{$n}++;
     next unless / entry /;
     chop;
     ($a, $f, $n, $m) = /^(\d+) +(\d+) +([^ ]+).* entry ([^ ]+)/;
-    $n =~ tr/ABEKMHOPCTYX/АВЕКМНОРСТУХ/; # normalizing to Cyrillics
     if (defined($mod{$n}) && $mod{$n} ne $m) {
         print STDERR "Symbol $n defined in both $mod{$n} and $m ???\n";
     } else {
@@ -52,16 +54,21 @@ for ($col = 0; $col < 8; ++$col) {
         next if $elt =~ /СА *$/; # already known external
         ($name, $addr) = ($1, $2) if $elt =~ /([^ ]+) +(\d\d\d\d\d)/;
         next if $addr ne '00000'; # defined locally
-        print STDERR "Considering $name\n";
-        $name =~ tr/ABEKMHOPCTYX/АВЕКМНОРСТУХ/;
+	next if $name eq '000000'; # empty slot
+#        print STDERR "Considering $name\n";
+#        $name =~ tr/ABEKMHOPCTYX/АВЕКМНОРСТУХ/;
         if (!defined($mod{$name})) {
-            if (defined($seen{$name})) {
-                print STDERR "$name is local, defined $seen{$name} times\n";
+            if (!defined($seen{$name}) ) {
+                print STDERR "$name unknown !!! \n";
+	    } elsif ($seen{$name} == 1) {
+                print "$name ЭКВ '$all{$name}'\n";
             } else {
-                print STDERR "$name unknown\n";
+                print "$name ЭКВ '$all{$name}' multi-defined, may be wrong\n";
             }
             next;
-        }
+        } elsif ($seen{$name} > 1) {
+		print STDERR "Module of multi-defined $name may be incorrect\n";
+	}
         $m = $mod{$name};
         $exts{$m} = 1;
         # Address labels use Latin A
