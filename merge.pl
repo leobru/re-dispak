@@ -58,7 +58,7 @@ if (open(TAB, 'fulltab')) {
 
 foreach $i (sort keys %flags) {
     $n = $i;
-    $n =~ s/А(\d\d\d\d\d)/A\1/; # making address labels use Latin A
+    $n =~ s/А(\d\d\d\d\d)/G\1/; # making address labels use Latin G
     print "$n $flags{$i} $name{$i}$comment{$i}\n";
 }
 

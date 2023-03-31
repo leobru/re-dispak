@@ -5,11 +5,9 @@ touch 2222
 BESM6_PATH=.:$BESM6_PATH
 export BESM6_PATH
 for mod in disp70 vzu term kachka kit diski mott gnus khlam \
-	avmd prik6 sostav boek1 visp dmlmb esml e71tk consul \
-	bonbot ; do
-    echo -n $mod '	: '
-    ./prn.sh $mod.be
-    grep ОШИБОК= $mod.lst
+	avmd sostav boek1 visp dmlmb esml e71tk consul \
+	bonbot e64 prikaz prik4 prik5 prik6 prik7 ; do
+    ./asm.pl $mod.be
 done
-dispak rvs.be
+./rvs.pl rvs.src
 ./verify.pl
