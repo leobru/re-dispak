@@ -39,7 +39,7 @@ $rvs = '';
 while (<RVS>) { $rvs .= $_ unless /^ *#/; }
 close(RVS);
 map {
-    $rvs =~ s/$_( *43)zzzz/$_\1$locs{$_}/i; 
+    $rvs =~ s/мдл   $_( *43)zzzz/мдл   $_\1$locs{$_}/i; 
 } (keys %locs);
 print B $rvs;
 print B qq/
