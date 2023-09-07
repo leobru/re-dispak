@@ -7,7 +7,7 @@ MODS = disp70 vzu term kachka kit diski mott gnus khlam pechat \
         smena1 zone0602s1 zone0602s2 stat1s ek5 ek6 ek7 sme \
         rpipl benson nrot ovd nrkod spoe67 prik8 prorok rezarkh \
         trubka zone0565s2 robot priskv nerot spe66 gruppa zone0744 \
-	upryach dnepr plan plan2 e60 e60d slojka kch pibesm \
+	upryach dnepr plan plan2 e60 e60d slojka kch pibesm avml \
         zone0561s0 ukachka v1k v3v4 v6v7 avrasp kz1 skor1 skor2 \
 	zone0676 zone0677 gens2 prikaz gens gens1 espi80 espl
 
