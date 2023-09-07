@@ -18,10 +18,16 @@ build: $(addsuffix .lst,$(MODS)) modloc.txt rvs.src
 %.lst: %.be modloc.txt
 	env BESM6_PATH=.:$(BESM6_PATH) ./asm.pl $<
 
+%.txt: %.lst
+	cp $< $@
+
 modloc.txt: modlist.src
 	./mkloc.pl < $< > $@
 
 clean:
 	rm -f 2222 *.lst *.tab G*-L* S*-L* *.be.b6
+
+zip:	$(addsuffix .txt,$(MODS))
+	zip -Z bzip2 -m listing.zip $(addsuffix .txt,$(MODS))
 
 full: clean build
