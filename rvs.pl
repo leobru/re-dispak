@@ -20,7 +20,7 @@ close (M);
 $b6 = "$rvs.b6";
 open(B, ">$b6") || die "Cannot open $b6 for writing\n";
 print B qq/шифр 419999^
-лен 67(2248)^
+лен 67(2248)42(2113)^
 лен 43(2222-зп)^
 росп 0^
 вход 1000^
@@ -48,4 +48,4 @@ _\$
 еконец
 /;
 close(B);
-system("dispak -s $b6 | grep -v ЗОНГП");
+system("dispak -s $b6 | tee rvs.log | grep -v ЗОНГП");
