@@ -9,7 +9,7 @@ MODS = disp70 vzu term kachka kit diski mott gnus khlam pechat \
         trubka zone0565s2 robot priskv nerot spe66 gruppa konvoy \
 	upryach dnepr plan plan2 e60 e60d slojka kch pibesm avml \
         zone0561s0 ukachka v1k v3v4 v6v7 avrasp kz1 skor1 skor2 \
-	khlam2 khlam3 gens2 prikaz gens gens1 espi80 espl
+	khlam2 khlam3 gens2 prikaz gens gens1 espi80 espl svyaz
 
 build: $(addsuffix .lst,$(MODS)) modloc.txt rvs.src
 	env BESM6_PATH=.:$(BESM6_PATH) ./rvs.pl rvs.src
