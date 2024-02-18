@@ -1,7 +1,7 @@
 MODS = disp70 vzu term kachka kit diski mott gnus khlam pechat \
         avmd prik6 sostav boek1 visp dmlmb esml e71tk consul kz \
         bonbot e64 prik4 prikaz prik5 prik7 resurs cirkul clock \
-	tupr bop2 stat2s termas eko plbesm ek2 ek3 ek4 \
+	tupr bop2 stat2s termas eko plbesm ek2 ek3 ek4 osa osaner \
         ekst ekvvod bop janus prik1 prik2 prik3 proces puskach \
         kanal ekgdr nombob pchkz esuvvk bop1 zone0576s2 doprez \
         smena1 nombo1 nombo2 stat1s ek5 ek6 ek7 sme pgs vyzovd \

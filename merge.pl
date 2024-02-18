@@ -10,7 +10,7 @@ for ($i = 0; $i <= $#ARGV; ++$i) {
     while (<TAB>) {
         chop;
         ($a, $f, $n, $c) =  /^(\d+) +(\d+) +([^ ]+)(.*)/;
-        next if $n =~ /[МMEЕ]\d\d?/; # do not merge register and bit definitions
+        next if $n =~ /[МMEЕ]\d\d?$/; # do not merge register and bit definitions
         next if oct($a) < 020; # too much noise
         next if 0103 <= oct($a) && oct($a) <= 0162; # E constants may appear under many names
         if (defined($flags{$a}) && $name{$a} ne $n) {
