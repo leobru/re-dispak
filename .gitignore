@@ -35,6 +35,7 @@
 *.lst
 *.txt
 *.b6
+*~
 
 # Symbol tables
 *.tab
