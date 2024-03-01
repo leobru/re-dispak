@@ -3,7 +3,7 @@ MODS = disp70 vzu term kachka kit diski mott gnus khlam pechat \
         bonbot e64 prik4 prikaz prik5 prik7 resurs cirkul clock \
 	tupr bop2 stat2s termas eko plbesm ek2 ek3 ek4 osa osaner \
 	gp1 gp4 vektor vydins siprog io gen arfa ra komar gidra \
-	nereza arkhin perekh \
+	nereza arkhin perekh obraz \
         ekst ekvvod bop janus prik1 prik2 prik3 proces puskach \
         kanal ekgdr nombob pchkz esuvvk bop1 zone0576s2 doprez \
         smena1 nombo1 nombo2 stat1s ek5 ek6 ek7 sme pgs vyzovd \
