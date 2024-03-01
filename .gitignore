@@ -39,9 +39,12 @@
 
 # Symbol tables
 *.tab
+*.sym
 
 # Binary dumps
 [GS]*-L*
+*.bin
+*.obj
 
 # Scratch disk
 2222

@@ -32,7 +32,7 @@ sub comp {
     my $nsec = $n == 4 ? '' : "(sector $n)";
     $flags = "-i $toskip -n 1536" unless $n == 4;
 #    print "Running cmp $flags $gold $silver\n";
-    my $first = `env LANG=en_US.UTF-8 cmp $flags $gold $silver`;
+    my $first = `env LANG=en_US.UTF-8 cmp -b $flags $gold $silver`;
     if ($?) {
         chop ($diff = `cmp $flags -l $gold $silver | wc -l`);
         print "\033[1;31m$Zone $s, $name{$s} $nsec differs in $diff bytes\033[22;39m\n";
