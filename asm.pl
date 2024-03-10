@@ -7,9 +7,10 @@ use open ':std', ':encoding(UTF-8)';
 $verbose = 0;
 if ($#ARGV >= 0 && $ARGV[0] eq '-v') { $verbose = 1; shift @ARGV; }
 
-die "Usage: asm.pl [-v] file\n" unless $#ARGV == 0;
+die "Usage: asm.pl [-v] file [naz]\n" unless $#ARGV == 0 || $#ARGV == 1;
 
 $src = $ARGV[0];
+$naz = $ARGV[1] if $#ARGV == 1;
 
 # Find module name
 $mod = '';
@@ -34,7 +35,8 @@ while (<M>) {
     if ("$mod " =~ /^$cur\b/i) { $found = 1; last; }
 }
 close (M);
-die "Could not find $mod in modloc.txt\n" if ! $found;
+warn "Could not find $mod in modloc.txt\n" if ! $found;
+$type = defined($naz) ? 'ГП ' : 'МОД';
 $b6 = "$src.b6";
 open(B, ">$b6") || die "Cannot open $b6 for writing\n";
 print B qq/шифр 419999^
@@ -70,7 +72,12 @@ print B qq/
 ЧТКОМП420070^
 1-1^
 БТМАЛФ^
-ЗОНМОД43$dest  00$len^
+/;
+print B qq/НАЗ   0$naz^
+/ if defined($naz);
+print B qq/ЗОН${type}43$dest  00$len^
+/ if $found;
+print B qq/
 КНЦ\$\$\$^
 _\$ЕКОНЕЦ
 /;
