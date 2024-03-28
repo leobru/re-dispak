@@ -35,7 +35,7 @@ sub comp {
     my $first = `env LANG=en_US.UTF-8 cmp -b $flags $gold $silver`;
     if ($?) {
         chop ($diff = `cmp $flags -l $gold $silver | wc -l`);
-        print "\033[1;31m$Zone $s, $name{$s} $nsec differs in $diff bytes\033[22;39m\n";
+        print "\033[1;31mZone $s, $name{$s} $nsec differs in $diff bytes\033[22;39m\n";
         ($zone, $byte) = $first =~ /G(\d+).*byte (\d+)/;
         $zone = oct($zone);
         $zone += int($byte / 6144);
@@ -50,10 +50,12 @@ for ($i = 0; $i <= $#start; ++$i) {
     my($s, $l) = ($start[$i], $len[$i]);
     $gold = "G$s-L$l";
     $silver = "S$s-L$l";
-    system("besmtool dump 2053 --start=$s --length=$l --to-file=$gold > /dev/null")
+# For zones higher than 01000 take gold from 2048
+    $disk = oct($s) < 512 ? '2053' : '2048';
+    system("besmtool dump $disk --start=0$s --length=$l --to-file=$gold > /dev/null")
 	unless (-e $gold && 6144*$l == -s $gold); 
     system("rm -f $silver") if (-e $silver);
-    system("besmtool dump 2222 --start=$s --length=$l --to-file=$silver > /dev/null");
+    system("besmtool dump 2222 --start=0$s --length=$l --to-file=$silver > /dev/null");
     if (-s $silver != $l * 6144) {
         print "\033[1;31mBad read of $silver\033[22;39m\n";
         next;
