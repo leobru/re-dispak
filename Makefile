@@ -5,7 +5,7 @@ MODS = disp70 vzu term kachka kit diski mott gnus khlam pechat \
 	gp1 gp4 vektor vydins siprog io gen arfa ra komar gidra \
 	nereza arkhin perekh obraz trakh \
 	serp serp2 serp3 serp4 serp5 bac \
-	sbor80 nakopl nakzad \
+	sbor80 nakopl nakzad vydach1 \
         ekst ekvvod bop janus prik1 prik2 prik3 proces puskach \
         kanal ekgdr nombob pchkz esuvvk bop1 zone0576s2 doprez \
         smena1 nombo1 nombo2 stat1s ek5 ek6 ek7 sme pgs vyzovd \
