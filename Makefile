@@ -1,3 +1,5 @@
+BESM6_PATH ?= /usr/local/share/besm6
+
 MODS = disp70 vzu term kachka kit diski mott gnus khlam pechat \
         avmd prik6 sostav boek1 visp dmlmb esml e71tk consul kz \
         bonbot e64 prik4 prikaz prik5 prik7 resurs cirkul clock \
