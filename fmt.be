@@ -11,9 +11,9 @@ KTO    CЧ    '13'
        HTЖ   KЛЮЧCC
        ПE    OPИEHT
  AIF (&BS EQ 0).KTO
- ПИO KTO1(M12)      M12=0  -HOPMAЛЬHЫЙ XOД PAЗMETKИ            
- ЦИKЛ KTO2(M13)    M12 HE 0 -ПPOИЗ.BЫKЛ.MГ.BEДETCЯ PEMOHT      
- ПБ BЫKЛM          M13 - ЧИCЛO ПOПЫTOK HAЙTИ OПOPHYЮ ЗOHY      
+ ПИO KTO1(M12)      M12=0  -HOPMAЛЬHЫЙ XOД PAЗMETKИ
+ ЦИKЛ KTO2(M13)    M12 HE 0 -ПPOИЗ.BЫKЛ.MГ.BEДETCЯ PEMOHT
+ ПБ BЫKЛM          M13 - ЧИCЛO ПOПЫTOK HAЙTИ OПOPHYЮ ЗOHY
 KTO2 CЧ '10'
  HTЖ CЛ0
  ПE OPИEHT
@@ -30,12 +30,12 @@ KTO1 HOП
        И     П3777
        YИ    M7
        ПБ    ЗПMГЗ
-CTИP   CЧ    KЛЮЧ     * БЛOK CTИPAHИЯ                          
+CTИP   CЧ    KЛЮЧ     * БЛOK CTИPAHИЯ
        Э70   ИCCT
        CЧИ   M16
   ПE HETCT  *HET CTИPAHИЯ
        ПБ    (M11)  BЫXOД
-ПPOBCC ЗП     OШCC      * БЛOK ПPOBEPKИ CЛYЖ. CЛOB             
+ПPOBCC ЗП     OШCC      * БЛOK ПPOBEPKИ CЛYЖ. CЛOB
        CЧ    '13'
        ИЛИ   '16'
        ЗП    PЯ1
@@ -66,32 +66,32 @@ HOBPAЗ CЧ 0
        ЗП    OШ
        CЧ    ИCШГЗH
        ПB    PAБMЛ(M2)
-       CЧИ   M16     AHAЛИЗ HA HAЧAЛO ЛEHTЫ                    
+       CЧИ   M16     AHAЛИЗ HA HAЧAЛO ЛEHTЫ
        HTЖ   E1
        ПO    HOBPЗ1
-       CЛИA  1(M5)  * +1 K ЧИCЛY CTИPAHИЙ  B ЗOHE              
+       CЛИA  1(M5)  * +1 K ЧИCЛY CTИPAHИЙ  B ЗOHE
  CЛИA 1(M4)
        CЧИ   M7
  HTЖ ДEФ(M6)
-       ПO    KCT    * ЗOHA ECTЬ B CПИCKE ДEФEKTHЫX             
+       ПO    KCT    * ЗOHA ECTЬ B CПИCKE ДEФEKTHЫX
        CЧИ   M7
  ЗП ДEФ+1(M6)
-       CЛИA  1(M6)  * +1 K ЧИCЛY ДEФEKTHЫX ЗOH                 
+       CЛИA  1(M6)  * +1 K ЧИCЛY ДEФEKTHЫX ЗOH
 KCT    CЧИ   M5
        HTЖ   E4
-  ПO MHOГO  *БOЛЬШE 7 CTИP. B ЗOHE                             
+  ПO MHOГO  *БOЛЬШE 7 CTИP. B ЗOHE
        CЛИA  -1(M7)
        ПB    CTИP(M11)
        ПБ    ЗПMГЗ
-HOBPЗ1 CЛИA  -1(M10)   CЧETЧИK ЦИKЛOB CTИPAHИЙ                 
+HOBPЗ1 CЛИA  -1(M10)   CЧETЧИK ЦИKЛOB CTИPAHИЙ
        CЧИ   M10
  И П7
-  ПO MHOГO  *БOЛЬШE 7 CTИPAHИЙ B ЗOHE                          
+  ПO MHOГO  *БOЛЬШE 7 CTИPAHИЙ B ЗOHE
        YИИ   M1(M10)
 CT     ПB    CTИP(M11)
        ЦИKЛ  CT(M1)
        ПБ    ЗПMГЗ
-PAБMЛ  ЗП    KOП        * БЛOK PAБOTЫ C MЛ                     
+PAБMЛ  ЗП    KOП        * БЛOK PAБOTЫ C MЛ
        CЧИ   M7
        ИЛИ   KOП
        ЗП    KOП  +N ЗOHЫ
@@ -109,18 +109,18 @@ PAБMЛ  ЗП    KOП        * БЛOK PAБOTЫ C MЛ
        И     E1E814
        ПO    AHЗП
 ABAP ПИHO ABOБP(M3)
-       YИA   -4(M3)    1-ЫЙ PAЗ ИДEM B ABOБP                   
+       YИA   -4(M3)    1-ЫЙ PAЗ ИДEM B ABOБP
        ПБ    ABOБP
 AHЗП CЧ KOП
        И     E40П42
  ПE AHЧT  БЫЛO ЧTEHИE
  CЧ CM
  И E10
-       ПE    ABAP     BЫXOД B ABOБP                            
+       ПE    ABAP     BЫXOД B ABOБP
  ПБ (M2)
 AHЧT   CЧ    CM
        И     E11
-       ПE    OPИEHT   CЧИTAЛИ MГЗ5                             
+       ПE    OPИEHT   CЧИTAЛИ MГЗ5
        CЧ    CM
        И     E9E13
        ПE    ABAP
@@ -134,12 +134,12 @@ AHMOД CЧИ M16   AHAЛИЗ M16
        ПO    0(M2)
        CЧИ   M16
        И     E1
-       ПE    0(M2)   HAЧAЛO ЛEHTЫ                              
+       ПE    0(M2)   HAЧAЛO ЛEHTЫ
        CЧИ   M16
        И     E2
        ПO    0(M2)
   ПБ KЛ  *KOHEЦ ЛEHTЫ
-CHЯTЬ1 Э64 AYЖEP  *ЦП ЗAHЯT PAЗMETKOЙ                          
+CHЯTЬ1 Э64 AYЖEP  *ЦП ЗAHЯT PAЗMETKOЙ
   ПБ KOHEЦ
 ПEЧ CЧ KЛЮЧ
  Э70 '1'
@@ -205,12 +205,12 @@ BЫKЛMГ HOП
  YИA 1(M12)
  YИA '77764'(M13)
  ПБ OPИEHT
-BЫKЛM YИA BЫKMГ1(M11)     HE HAШЛИ OПOPHOЙ ЗOHЫ                
+BЫKЛM YИA BЫKMГ1(M11)     HE HAШЛИ OПOPHOЙ ЗOHЫ
  AGO .BЫKM1
 .BЫKMГ ANOP
-BЫKЛMГ YИA BЫKMГ1(M11)  *BЫKMГ1-->M11                          
+BЫKЛMГ YИA BЫKMГ1(M11)  *BЫKMГ1-->M11
 .BЫKM1 ANOP
-HAПPMГ CЧ NMГ  *HAПP И NMГ ДЛЯ PACПEЧATKИ                      
+HAПPMГ CЧ NMГ  *HAПP И NMГ ДЛЯ PACПEЧATKИ
   И П7
   CДA 64-24
   ЗП PЯ1
@@ -218,10 +218,10 @@ HAПPMГ CЧ NMГ  *HAПP И NMГ ДЛЯ PACПEЧATKИ
   И  E4П6
   CДA 64-37
   ИЛИ PЯ1
- ПБ (M11)  *4048 P. CM-NHAПP,2432 P.-NMГ                     
-BЫKMГ1 ИЛИ TBЫKMГ+2  *HAПP. И NMГ B TEKCT PACП.                
+ ПБ (M11)  *4048 P. CM-NHAПP,2432 P.-NMГ
+BЫKMГ1 ИЛИ TBЫKMГ+2  *HAПP. И NMГ B TEKCT PACП.
   ЗП TBЫKMГ+2
-  Э64  BЫKMГ2   *ПEЧATЬ : BЫKЛЮЧEH MГ X/X                      
+  Э64  BЫKMГ2   *ПEЧATЬ : BЫKЛЮЧEH MГ X/X
   ПБ ИTOГ
 BЫKMГ2 KOHK A(TBЫKMГ)
   KOHK A(TBЫKMГ+2)
@@ -239,7 +239,7 @@ CHЯTЬ2 CЧ HOMБOБ
  ЗП ПЗC+6      48-30PP.ДATA
  CЧ PЯ1
  И П7
- 
+
  CДA 64-26
  ИЛИ ПЗC+6
  ЗП ПЗC+6      29-27PP.ЭBM
@@ -256,12 +256,12 @@ CHЯTЬ2 CЧ HOMБOБ
  CЧ ПOP
  BЧ E1
  ИЛИ ПЗC+6
- ЗП ПЗC+6       10-1 PP. ДEФ.ЗOH                               
+ ЗП ПЗC+6       10-1 PP. ДEФ.ЗOH
   YИA ПЗC(M16)
  CЧИ M16
- Э50 '7701' ФOPM-E ЗAДAЧИ ДЛЯ YHИЧT.CT-KИ O БOБ.               
+ Э50 '7701' ФOPM-E ЗAДAЧИ ДЛЯ YHИЧT.CT-KИ O БOБ.
   ПБ ПEЧ
-ПEP10 YИA -5(M15) БЛOK ПEPEBOДA 10-->8                         
+ПEP10 YИA -5(M15) БЛOK ПEPEBOДA 10-->8
  ЗП PЯ1
 K8 CДA 64+8
  ЗП PP
@@ -276,13 +276,13 @@ K8 CДA 64+8
   ПБ (M11)
 ИTOГ CЧ HOMБOБ
  PЖA 3
- ПB ПEP10(M11) *N БOБ ДЛЯ PACПEЧATKИ                           
+ ПB ПEP10(M11) *N БOБ ДЛЯ PACПEЧATKИ
   ИЛИ ПEЧATЬ
  ЗП ПEЧATЬ
   ПB HAПPMГ(M11)
   CДA 64+8
  ИЛИ ПEЧATЬ+12
- ЗП ПEЧATЬ+12        HAПP. И NMГ B TEKCT PACПEЧATKИ            
+ ЗП ПEЧATЬ+12        HAПP. И NMГ B TEKCT PACПEЧATKИ
  Э50 '114' ДAЙ ДATY
  ЗП PЯ1
  CДA 64-13
@@ -309,7 +309,7 @@ K8 CДA 64+8
  ЗП ПEЧATЬ+16
   CЧИ M7
   CДA 64+3
-  ПO ШAПKA  *PAБOЧИE ЗOHЫ HE PAЗMEЧAЛИCЬ                       
+  ПO ШAПKA  *PAБOЧИE ЗOHЫ HE PAЗMEЧAЛИCЬ
  YИИ M1(M7) * N ЗOHЫ-->M1
  AIF (&BS EQ 0).ИTOГ
  MOД TЗHMЛ
@@ -326,11 +326,11 @@ K8 CДA 64+8
 .ИTOГ ANOP
  CЛИA -10(M1)
  CЧИ M1
-  CДA 64-35  *KOЛ-BO ЗOH B 37-48 P.                            
+  CДA 64-35  *KOЛ-BO ЗOH B 37-48 P.
 ИTOГ2 HOП
  PЗБ K14
  ИЛИ ПEЧATЬ+3
- ЗП ПEЧATЬ+3  *ЧИCЛO ЗOH B TEKCT PACП.                         
+ ЗП ПEЧATЬ+3  *ЧИCЛO ЗOH B TEKCT PACП.
 ШAПKA CЧИ M4
  ЗП ПЗC+7     OШ.PAЗM
  ПE HEШAЛИ
@@ -348,7 +348,7 @@ HEШAЛИ ПB ПEP10(M11)
   CЧИ M7
   CДA 64+3
   ПO CHЯTЬ2
-  ПИHO ДEФEKT(M6)  *ECTЬ ДEФEKTHЫE ЗOHЫ                        
+  ПИHO ДEФEKT(M6)  *ECTЬ ДEФEKTHЫE ЗOHЫ
   Э64 HДEФ
   ПБ CHЯTЬ2
 ДEФEKT YИA 1(M1)
@@ -415,7 +415,7 @@ BЫXД CЧ ПOЛE
 E24П1 KOHД X'FFFFFF'
 ПPH KOHД П'  0000'
 ПOP KOHД B'1'
-БAЙT KOHД M40X'FF'    ЯЧ. БAЙT HE PAЗДEЛЯTЬ                    
+БAЙT KOHД M40X'FF'    ЯЧ. БAЙT HE PAЗДEЛЯTЬ
  KOHД M32X'FF'
  KOHД M24X'FF'
  KOHД M16X'FF'
@@ -459,7 +459,7 @@ YЖEP KOHД П'ЦП ЗAH'
  KOHД B'0'    N БOБИHЫ
  KOHД B'0'    ИHФ-Я O PAЗM.
  KOHД B'0'    ЧИCЛO OШ.PAЗM.
- KOHД П'0!0!0!'M40B'132'M24B'132'M8B'132'                      
+ KOHД П'0!0!0!'M40B'132'M24B'132'M8B'132'
  KOHД П'EKOHEЦ'
 HДEФ KOHK A(THДEФ)
  KOHK A(THДEФ+12)
@@ -477,30 +477,30 @@ THДEФ KOHД (2)П'      '
  KOHД П' Y Ж E'
  KOHД П' H O !'
 ПEЧATЬ KOHД П'Б 0000'
-  KOHД П'00Д   'M40B'175'M32B'173'                             
- KOHД П'00@00H'M40B'031'M32B'174'M16B'175'M8B'173'             
+  KOHД П'00Д   'M40B'175'M32B'173'
+ KOHД П'00@00H'M40B'031'M32B'174'M16B'175'M8B'173'
  KOHД П'0000 З'
- KOHД П'.  00З'M16B'175'M8B'173'                               
+ KOHД П'.  00З'M16B'175'M8B'173'
  KOHД П'BCEГO '
  KOHД П'OШИБOK'
  KOHД B'20'
- KOHД П'000   'M40B'175'M32B'175'M24B'175'                     
+ KOHД П'000   'M40B'175'M32B'175'M24B'175'
  И П7
- 
-PAЗMEC CTAPT '20'  *ПPOГPAMMA PAЗMETKИ MЛ EC-5017(PEЖ.Б-6)     
+
+PAЗMEC CTAPT '20'  *ПPOГPAMMA PAЗMETKИ MЛ EC-5017(PEЖ.Б-6)
  Б
 *
 ABBX PЖA 3  *ABOCTHЫЙ BXOД
   ПБ ИTOГ
 ИCCT KOHД M26B'3'M39B'7'M15B'3'
-ИCПPM KOHД M39B'6'M27B'1'M15B'3'                               
-ИCШЗB KOHД M39B'2'M27B'1'M15B'3'                               
-ИCШГЗB KOHД M39B'4'M27B'1'M15B'3'                              
-ИCШЗH KOHД M39B'3'M27B'1'M15B'3'                               
-ИCШГЗH KOHД M39B'5'M27B'1'M15B'3'                              
-ИCЧT KOHД M39B'1'M27B'1'M30B'3'M15B'3'                         
+ИCПPM KOHД M39B'6'M27B'1'M15B'3'
+ИCШЗB KOHД M39B'2'M27B'1'M15B'3'
+ИCШГЗB KOHД M39B'4'M27B'1'M15B'3'
+ИCШЗH KOHД M39B'3'M27B'1'M15B'3'
+ИCШГЗH KOHД M39B'5'M27B'1'M15B'3'
+ИCЧT KOHД M39B'1'M27B'1'M30B'3'M15B'3'
 ИCЗП KOHД M30B'2'M27B'1'M15B'3'
-ИCMГЗ  KOHД  M39B'7'M27B'1'M12B'30'                            
+ИCMГЗ  KOHД  M39B'7'M27B'1'M12B'30'
 OШ KOHД B'0'
 OШCC KOHД B'0'
 KOП KOHД B'0'
@@ -565,7 +565,7 @@ K2 Э70 2049
  KOHД M39B'1'B'410713'
  KOHД M39B'1'B'410614'
  KOHД M39B'1'B'410616'
-ИHФ2 KOHД M39B'1'M30B'1'B'410613'                              
+ИHФ2 KOHД M39B'1'M30B'1'B'410613'
  KOHД M39B'1'M30B'1'B'410714'
  KOHД M39B'1'M30B'1'B'410615'
  KOHД M39B'1'M30B'1'B'410617'
@@ -577,10 +577,10 @@ K2 Э70 2049
  MOДA 0
  ПБ BXOД
 BXOД MOДA '41777'
-       Э62   0 * OTKAЗ OT ПPOГPAMMHOЙ MЛ                       
+       Э62   0 * OTKAЗ OT ПPOГPAMMHOЙ MЛ
        PЖA   7
  CЧ E3E1
-       Э63   3     *ДAЙ 5 CEK HA AB. BЫДAЧY                    
+       Э63   3     *ДAЙ 5 CEK HA AB. BЫДAЧY
  AIF (&BS EQ 0).K1
  CЧИ M1
  CДA 64+3
@@ -610,8 +610,8 @@ K3 ЗП ПOЛE+K(M16)
        CЧ    KИHФБ
        CЛЦ   E31
        ЗП    ИHФCЛ
-       Э70   ИHФCЛ *OБHYЛEHИE TPAKTA MБ                        
-       CЧ    BCE25 *БЛOK POCПИCИ 2-OЙ CTP.                     
+       Э70   ИHФCЛ *OБHYЛEHИE TPAKTA MБ
+       CЧ    BCE25 *БЛOK POCПИCИ 2-OЙ CTP.
        YИA   -1022(M1)
 POCП1 HTЖ BCEEД
        ЗП    '5776'(M1)
@@ -619,20 +619,20 @@ POCП1 HTЖ BCEEД
   CЧ BCE6
        ЗП    '5777'
  YИA (M4)
-       YИA   -10(M1)  *ПEPEMOTKA                               
+       YИA   -10(M1)  *ПEPEMOTKA
 ПPM    CЧ    KЛЮЧ
        Э70   ИCПPM
        ЗП    PЯЗ      *CM B PЯЗ
  И E47
- ПE BЫKЛЗП      HET PAЗPEШEHИЯ ЗAПИCИ                          
+ ПE BЫKЛЗП      HET PAЗPEШEHИЯ ЗAПИCИ
        CЧИ   M16
        HTЖ   E1
  ПE HETПPM
-       YИA   1(M7)    * CTИPAHИE                               
+       YИA   1(M7)    * CTИPAHИE
  ПB CTИP(M11)
-ЗПMГЗ  CЧ    ИCMГЗ    * ЗAПИCЬ MГЗ                             
+ЗПMГЗ  CЧ    ИCMГЗ    * ЗAПИCЬ MГЗ
        ПB    PAБMЛ(M2)
-       CЛИA  1(M7) * +1 K ФИЗИЧ. N ЗOHЫ                        
+       CЛИA  1(M7) * +1 K ФИЗИЧ. N ЗOHЫ
  AIF (&BS EQ 0).ЗПMГЗ
  CЧИ M7
  И E12П1
@@ -654,31 +654,31 @@ POCП1 HTЖ BCEEД
        ПB    PAБMЛ(M2)
        CЧ    OШ
        ПE    HOBPAЗ
-       YИA   -1023(M1) * OБHYЛEHИE 3-ЬEГO  ЛИCTA               
+       YИA   -1023(M1) * OБHYЛEHИE 3-ЬEГO  ЛИCTA
        CЧ    0
 POCПH  ЗП    '7777'(M1)
        ЦИKЛ  POCПH(M1)
-       CЧ    ИCШГЗH    * БЛOK KOHTPOЛЯ                         
+       CЧ    ИCШГЗH    * БЛOK KOHTPOЛЯ
        ПB    PAБMЛ(M2)
        CЧ    ИCШГЗB
        ПB    PAБMЛ(M2)
-       CЧ    ИCЧT      * ЧTEHИE ЗOHЫ B 3-ИЙ ЛИCT               
+       CЧ    ИCЧT      * ЧTEHИE ЗOHЫ B 3-ИЙ ЛИCT
       ПB    PAБMЛ(M2)
        CЧ    OШ
        ПE    HOBPAЗ
-       CЧ    0          * * KOHTPOЛЬHOE CYMMИPOBAHИE           
+       CЧ    0          * * KOHTPOЛЬHOE CYMMИPOBAHИE
        YИA   -1023(M1)
 KC     CЛЦ   '7777'(M1)
        ЦИKЛ  KC(M1)
   HTЖ KCM
-       ПE    HOBPAЗ     * KOHTP. CYMMA HE COBПAЛA              
+       ПE    HOBPAЗ     * KOHTP. CYMMA HE COBПAЛA
  ПB ПPOBCC(M11)
        CЧ    OШCC
-       ПE    KTO        * БЫЛИ OШИБKИ B CЛYЖ. CЛOBAX           
+       ПE    KTO        * БЫЛИ OШИБKИ B CЛYЖ. CЛOBAX
  ПИO KC1(M5)
  CЧИ M5
  ЗП YДЛ(M6)
-       YИA   0(M5)  ЧИCЛO CTИPAHИЙ A ЗOHE                      
+       YИA   0(M5)  ЧИCЛO CTИPAHИЙ A ЗOHE
 KC1 YИA (M10)
        ПБ    ЗПMГЗ
 ИHФИ MOДA ИHФИ+1
@@ -687,7 +687,7 @@ KC1 YИA (M10)
  KOHД П'MЛ EC5'
  KOHД П'017 HA'
  KOHД П'PAЗM.@'
-ABOБP  CЛИA  1(M3)      * БЛOK ABAPИЙHOЙ OБPAБOTKИ             
+ABOБP  CЛИA  1(M3)      * БЛOK ABAPИЙHOЙ OБPAБOTKИ
        CЧ    KOП
        ЗП    KOПAB
  CЛИA 3(M3)
@@ -706,22 +706,22 @@ AB1   CЧ    ИCШГЗH
        ПБ    OP3
 ПOBT CЧ ИCШГЗB
        ПB    PAБMЛ(M2)
-       CЧ    KOПAB    ПOBTOPHЫЙ OБMEH                          
+       CЧ    KOПAB    ПOBTOPHЫЙ OБMEH
        ПB    PAБMЛ(M2)
        YИA   0(M3)
        ПБ    BЫXAB
-OPИEHT CЧ    ИCШГЗH     * БЛOK OPИEHTAЦИИ                      
+OPИEHT CЧ    ИCШГЗH     * БЛOK OPИEHTAЦИИ
        ПB    PAБMЛ(M2)
        YИA   OP1(M2)
 OP3    CЧИ   M16
        HTЖ   E1
        ПE    0(M2)    HET HЛ
-       YИA   1(M7)    NФИЗ.ЗOHЫ=1                              
+       YИA   1(M7)    NФИЗ.ЗOHЫ=1
        ПБ    HOBPЗ1
 OP1    CЧ    ИCШЗH
        ПB    PAБMЛ(M2)
        YИA  OP2(M2)
-       ПБ    OP3     HA  AHAЛИЗ  HЛ                            
+       ПБ    OP3     HA  AHAЛИЗ  HЛ
 M16)
 OP2    CЧ    ИCЧT
        ПB    PAБMЛ(M2)
@@ -736,9 +736,9 @@ KTO    CЧ    '13'
        HTЖ   KЛЮЧCC
        ПE    OPИEHT
  AIF (&BS EQ 0).KTO
- ПИO KTO1(M12)      M12=0  -HOPMAЛЬHЫЙ XOД PAЗMETKИ            
- ЦИKЛ KTO2(M13)    M12 HE 0 -ПPOИЗ.BЫKЛ.MГ.BEДETCЯ PEMOHT      
- ПБ BЫKЛM          M13 - ЧИCЛO ПOПЫTOK HAЙTИ OПOPHYЮ ЗOHY      
+ ПИO KTO1(M12)      M12=0  -HOPMAЛЬHЫЙ XOД PAЗMETKИ
+ ЦИKЛ KTO2(M13)    M12 HE 0 -ПPOИЗ.BЫKЛ.MГ.BEДETCЯ PEMOHT
+ ПБ BЫKЛM          M13 - ЧИCЛO ПOПЫTOK HAЙTИ OПOPHYЮ ЗOHY
 KTO2 CЧ '10'
  HTЖ CЛ0
  ПE OPИEHT
@@ -755,12 +755,12 @@ KTO1 HOП
        И     П3777
        YИ    M7
        ПБ    ЗПMГЗ
-CTИP   CЧ    KЛЮЧ     * БЛOK CTИPAHИЯ                          
+CTИP   CЧ    KЛЮЧ     * БЛOK CTИPAHИЯ
        Э70   ИCCT
        CЧИ   M16
   ПE HETCT  *HET CTИPAHИЯ
        ПБ    (M11)  BЫXOД
-ПPOBCC ЗП     OШCC      * БЛOK ПPOBEPKИ CЛYЖ. CЛOB             
+ПPOBCC ЗП     OШCC      * БЛOK ПPOBEPKИ CЛYЖ. CЛOB
        CЧ    '13'
        ИЛИ   '16'
        ЗП    PЯ1
@@ -791,32 +791,32 @@ HOBPAЗ CЧ 0
        ЗП    OШ
        CЧ    ИCШГЗH
        ПB    PAБMЛ(M2)
-       CЧИ   M16     AHAЛИЗ HA HAЧAЛO ЛEHTЫ                    
+       CЧИ   M16     AHAЛИЗ HA HAЧAЛO ЛEHTЫ
        HTЖ   E1
        ПO    HOBPЗ1
-       CЛИA  1(M5)  * +1 K ЧИCЛY CTИPAHИЙ  B ЗOHE              
+       CЛИA  1(M5)  * +1 K ЧИCЛY CTИPAHИЙ  B ЗOHE
  CЛИA 1(M4)
        CЧИ   M7
  HTЖ ДEФ(M6)
-       ПO    KCT    * ЗOHA ECTЬ B CПИCKE ДEФEKTHЫX             
+       ПO    KCT    * ЗOHA ECTЬ B CПИCKE ДEФEKTHЫX
        CЧИ   M7
  ЗП ДEФ+1(M6)
-       CЛИA  1(M6)  * +1 K ЧИCЛY ДEФEKTHЫX ЗOH                 
+       CЛИA  1(M6)  * +1 K ЧИCЛY ДEФEKTHЫX ЗOH
 KCT    CЧИ   M5
        HTЖ   E4
-  ПO MHOГO  *БOЛЬШE 7 CTИP. B ЗOHE                             
+  ПO MHOГO  *БOЛЬШE 7 CTИP. B ЗOHE
        CЛИA  -1(M7)
        ПB    CTИP(M11)
        ПБ    ЗПMГЗ
-HOBPЗ1 CЛИA  -1(M10)   CЧETЧИK ЦИKЛOB CTИPAHИЙ                 
+HOBPЗ1 CЛИA  -1(M10)   CЧETЧИK ЦИKЛOB CTИPAHИЙ
        CЧИ   M10
  И П7
-  ПO MHOГO  *БOЛЬШE 7 CTИPAHИЙ B ЗOHE                          
+  ПO MHOГO  *БOЛЬШE 7 CTИPAHИЙ B ЗOHE
        YИИ   M1(M10)
 CT     ПB    CTИP(M11)
        ЦИKЛ  CT(M1)
        ПБ    ЗПMГЗ
-PAБMЛ  ЗП    KOП        * БЛOK PAБOTЫ C MЛ                     
+PAБMЛ  ЗП    KOП        * БЛOK PAБOTЫ C MЛ
        CЧИ   M7
        ИЛИ   KOП
        ЗП    KOП  +N ЗOHЫ
@@ -834,18 +834,18 @@ PAБMЛ  ЗП    KOП        * БЛOK PAБOTЫ C MЛ
        И     E1E814
        ПO    AHЗП
 ABAP ПИHO ABOБP(M3)
-       YИA   -4(M3)    1-ЫЙ PAЗ ИДEM B ABOБP                   
+       YИA   -4(M3)    1-ЫЙ PAЗ ИДEM B ABOБP
        ПБ    ABOБP
 AHЗП CЧ KOП
        И     E40П42
  ПE AHЧT  БЫЛO ЧTEHИE
  CЧ CM
  И E10
-       ПE    ABAP     BЫXOД B ABOБP                            
+       ПE    ABAP     BЫXOД B ABOБP
  ПБ (M2)
 AHЧT   CЧ    CM
        И     E11
-       ПE    OPИEHT   CЧИTAЛИ MГЗ5                             
+       ПE    OPИEHT   CЧИTAЛИ MГЗ5
        CЧ    CM
        И     E9E13
        ПE    ABAP
@@ -859,12 +859,12 @@ AHMOД CЧИ M16   AHAЛИЗ M16
        ПO    0(M2)
        CЧИ   M16
        И     E1
-       ПE    0(M2)   HAЧAЛO ЛEHTЫ                              
+       ПE    0(M2)   HAЧAЛO ЛEHTЫ
        CЧИ   M16
        И     E2
        ПO    0(M2)
   ПБ KЛ  *KOHEЦ ЛEHTЫ
-CHЯTЬ1 Э64 AYЖEP  *ЦП ЗAHЯT PAЗMETKOЙ                          
+CHЯTЬ1 Э64 AYЖEP  *ЦП ЗAHЯT PAЗMETKOЙ
   ПБ KOHEЦ
 ПEЧ CЧ KЛЮЧ
  Э70 '1'
@@ -930,12 +930,12 @@ BЫKЛMГ HOП
  YИA 1(M12)
  YИA '77764'(M13)
  ПБ OPИEHT
-BЫKЛM YИA BЫKMГ1(M11)     HE HAШЛИ OПOPHOЙ ЗOHЫ                
+BЫKЛM YИA BЫKMГ1(M11)     HE HAШЛИ OПOPHOЙ ЗOHЫ
  AGO .BЫKM1
 .BЫKMГ ANOP
-BЫKЛMГ YИA BЫKMГ1(M11)  *BЫKMГ1-->M11                          
+BЫKЛMГ YИA BЫKMГ1(M11)  *BЫKMГ1-->M11
 .BЫKM1 ANOP
-HAПPMГ CЧ NMГ  *HAПP И NMГ ДЛЯ PACПEЧATKИ                      
+HAПPMГ CЧ NMГ  *HAПP И NMГ ДЛЯ PACПEЧATKИ
   И П7
   CДA 64-24
   ЗП PЯ1
@@ -943,10 +943,10 @@ HAПPMГ CЧ NMГ  *HAПP И NMГ ДЛЯ PACПEЧATKИ
   И  E4П6
   CДA 64-37
   ИЛИ PЯ1
- ПБ (M11)  *4048 P. CM-NHAПP,2432 P.-NMГ                     
-BЫKMГ1 ИЛИ TBЫKMГ+2  *HAПP. И NMГ B TEKCT PACП.                
+ ПБ (M11)  *4048 P. CM-NHAПP,2432 P.-NMГ
+BЫKMГ1 ИЛИ TBЫKMГ+2  *HAПP. И NMГ B TEKCT PACП.
   ЗП TBЫKMГ+2
-  Э64  BЫKMГ2   *ПEЧATЬ : BЫKЛЮЧEH MГ X/X                      
+  Э64  BЫKMГ2   *ПEЧATЬ : BЫKЛЮЧEH MГ X/X
   ПБ ИTOГ
 BЫKMГ2 KOHK A(TBЫKMГ)
   KOHK A(TBЫKMГ+2)
@@ -964,7 +964,7 @@ CHЯTЬ2 CЧ HOMБOБ
  ЗП ПЗC+6      48-30PP.ДATA
  CЧ PЯ1
  И П7
- 
+
  CДA 64-26
  ИЛИ ПЗC+6
  ЗП ПЗC+6      29-27PP.ЭBM
@@ -981,12 +981,12 @@ CHЯTЬ2 CЧ HOMБOБ
  CЧ ПOP
  BЧ E1
  ИЛИ ПЗC+6
- ЗП ПЗC+6       10-1 PP. ДEФ.ЗOH                               
+ ЗП ПЗC+6       10-1 PP. ДEФ.ЗOH
   YИA ПЗC(M16)
  CЧИ M16
- Э50 '7701' ФOPM-E ЗAДAЧИ ДЛЯ YHИЧT.CT-KИ O БOБ.               
+ Э50 '7701' ФOPM-E ЗAДAЧИ ДЛЯ YHИЧT.CT-KИ O БOБ.
   ПБ ПEЧ
-ПEP10 YИA -5(M15) БЛOK ПEPEBOДA 10-->8                         
+ПEP10 YИA -5(M15) БЛOK ПEPEBOДA 10-->8
  ЗП PЯ1
 K8 CДA 64+8
  ЗП PP
@@ -1001,13 +1001,13 @@ K8 CДA 64+8
   ПБ (M11)
 ИTOГ CЧ HOMБOБ
  PЖA 3
- ПB ПEP10(M11) *N БOБ ДЛЯ PACПEЧATKИ                           
+ ПB ПEP10(M11) *N БOБ ДЛЯ PACПEЧATKИ
   ИЛИ ПEЧATЬ
  ЗП ПEЧATЬ
   ПB HAПPMГ(M11)
   CДA 64+8
  ИЛИ ПEЧATЬ+12
- ЗП ПEЧATЬ+12        HAПP. И NMГ B TEKCT PACПEЧATKИ            
+ ЗП ПEЧATЬ+12        HAПP. И NMГ B TEKCT PACПEЧATKИ
  Э50 '114' ДAЙ ДATY
  ЗП PЯ1
  CДA 64-13
@@ -1034,7 +1034,7 @@ K8 CДA 64+8
  ЗП ПEЧATЬ+16
   CЧИ M7
   CДA 64+3
-  ПO ШAПKA  *PAБOЧИE ЗOHЫ HE PAЗMEЧAЛИCЬ                       
+  ПO ШAПKA  *PAБOЧИE ЗOHЫ HE PAЗMEЧAЛИCЬ
  YИИ M1(M7) * N ЗOHЫ-->M1
  AIF (&BS EQ 0).ИTOГ
  MOД TЗHMЛ
@@ -1051,11 +1051,11 @@ K8 CДA 64+8
 .ИTOГ ANOP
  CЛИA -10(M1)
  CЧИ M1
-  CДA 64-35  *KOЛ-BO ЗOH B 37-48 P.                            
+  CДA 64-35  *KOЛ-BO ЗOH B 37-48 P.
 ИTOГ2 HOП
  PЗБ K14
  ИЛИ ПEЧATЬ+3
- ЗП ПEЧATЬ+3  *ЧИCЛO ЗOH B TEKCT PACП.                         
+ ЗП ПEЧATЬ+3  *ЧИCЛO ЗOH B TEKCT PACП.
 ШAПKA CЧИ M4
  ЗП ПЗC+7     OШ.PAЗM
  ПE HEШAЛИ
@@ -1073,7 +1073,7 @@ HEШAЛИ ПB ПEP10(M11)
   CЧИ M7
   CДA 64+3
   ПO CHЯTЬ2
-  ПИHO ДEФEKT(M6)  *ECTЬ ДEФEKTHЫE ЗOHЫ                        
+  ПИHO ДEФEKT(M6)  *ECTЬ ДEФEKTHЫE ЗOHЫ
   Э64 HДEФ
   ПБ CHЯTЬ2
 ДEФEKT YИA 1(M1)
@@ -1140,7 +1140,7 @@ BЫXД CЧ ПOЛE
 E24П1 KOHД X'FFFFFF'
 ПPH KOHД П'  0000'
 ПOP KOHД B'1'
-БAЙT KOHД M40X'FF'    ЯЧ. БAЙT HE PAЗДEЛЯTЬ                    
+БAЙT KOHД M40X'FF'    ЯЧ. БAЙT HE PAЗДEЛЯTЬ
  KOHД M32X'FF'
  KOHД M24X'FF'
  KOHД M16X'FF'
@@ -1184,7 +1184,7 @@ YЖEP KOHД П'ЦП ЗAH'
  KOHД B'0'    N БOБИHЫ
  KOHД B'0'    ИHФ-Я O PAЗM.
  KOHД B'0'    ЧИCЛO OШ.PAЗM.
- KOHД П'0!0!0!'M40B'132'M24B'132'M8B'132'                      
+ KOHД П'0!0!0!'M40B'132'M24B'132'M8B'132'
  KOHД П'EKOHEЦ'
 HДEФ KOHK A(THДEФ)
  KOHK A(THДEФ+12)
@@ -1202,13 +1202,13 @@ THДEФ KOHД (2)П'      '
  KOHД П' Y Ж E'
  KOHД П' H O !'
 ПEЧATЬ KOHД П'Б 0000'
-  KOHД П'00Д   'M40B'175'M32B'173'                             
- KOHД П'00@00H'M40B'031'M32B'174'M16B'175'M8B'173'             
+  KOHД П'00Д   'M40B'175'M32B'173'
+ KOHД П'00@00H'M40B'031'M32B'174'M16B'175'M8B'173'
  KOHД П'0000 З'
- KOHД П'.  00З'M16B'175'M8B'173'                               
+ KOHД П'.  00З'M16B'175'M8B'173'
  KOHД П'BCEГO '
  KOHД П'OШИБOK'
  KOHД B'20'
- KOHД П'000   'M40B'175'M32B'175'M24B'175'                     
+ KOHД П'000   'M40B'175'M32B'175'M24B'175'
  И П7
- 
+

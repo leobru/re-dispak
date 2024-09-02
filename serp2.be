@@ -842,7 +842,7 @@ KCT5 CЧ M40ETX
 CTPOK3 KOHД M8X'8C8C8C8CFF'
 OБЛФИO ЭKB '70000'+101
 CTOЛБ ЭKB '70000'+69
-*****************************************                      
+*****************************************
 BЫДФИO CЧ 1(M6)
  PЗБ =П'    00'
  ИЛИ =П'  '
@@ -862,12 +862,12 @@ BЫДФИO CЧ 1(M6)
  CЛЦ =П',,,,,,'
  ЗП OБЛФИO+2(M4)
  ПБ (M11)
-*************************************************************  
-* БЛOK  ' B B Ф И O ' BBOДИT ФAMИЛИЮ, HAЧИHAЯ C TEKYЩEГO CИM-  
-* BOЛA, И ЗAПИCЫBAET EE B YПAKOBAHHOM ФOPMATE B ЯЧEЙKИ 'ФИO'   
-* И 'ФИO'+1. OTCYTCTBYЮЩИE CИMBOЛЫ ДOПOЛHЯЮTCЯ ПPOБEЛAMИ.      
-* BOЗBPAT ПO ИP14, ECЛИ BBEДEHЫ BCE CИMBOЛЫ; ПO ИP13, CЛИ      
-* БЫЛA ДOЗAПИCЬ ПPOБEЛOB (ИP14= -ЧИCЛO HEBBEДEHHЫX CИMBOЛOB+1, 
+*************************************************************
+* БЛOK  ' B B Ф И O ' BBOДИT ФAMИЛИЮ, HAЧИHAЯ C TEKYЩEГO CИM-
+* BOЛA, И ЗAПИCЫBAET EE B YПAKOBAHHOM ФOPMATE B ЯЧEЙKИ 'ФИO'
+* И 'ФИO'+1. OTCYTCTBYЮЩИE CИMBOЛЫ ДOПOЛHЯЮTCЯ ПPOБEЛAMИ.
+* BOЗBPAT ПO ИP14, ECЛИ BBEДEHЫ BCE CИMBOЛЫ; ПO ИP13, CЛИ
+* БЫЛA ДOЗAПИCЬ ПPOБEЛOB (ИP14= -ЧИCЛO HEBBEДEHHЫX CИMBOЛOB+1,
 * ИP15=-HOMEP ЯЧEЙKИ+1).
 *
 BBOФИO CЧИ M13
@@ -880,7 +880,7 @@ BBФИO1 CЧ 0
  BЧ =B'15'
  ЗП CИMBOЛ
  И E8E7
- ПE KOHФИO                >'114'                               
+ ПE KOHФИO                >'114'
  CЧ ФИO+1(M13)
  CДA 64-6
  ИЛИ CИMBOЛ
@@ -965,7 +965,7 @@ BЫЧФИO CЧ БФBB
  MOД PAБФИO+ЧPФИO-1(M16)
  ПO
  ЦИKЛ BЫЧФИO(M16)
-* HE ШИФP И HE PAБOTA -> ПOИCK ПO ФAMИЛИИ                      
+* HE ШИФP И HE PAБOTA -> ПOИCK ПO ФAMИЛИИ
  YИA ГФИO(M14)
  ПB BBOФИO(M13)
 ГФИO CЧ BCEEД
@@ -1002,8 +1002,8 @@ HETФИO YИA BOПФИO(M11)
  KOHД M32X'FFFF'B'02020202'
 TBCE KOHД П'   ЭTO'
  KOHД П' BCE.0'B'377'
-PABHO KOHД M40П'='M32B'170'M24B'377'                           
-************************************************************** 
+PABHO KOHД M40П'='M32B'170'M24B'377'
+**************************************************************
 * PAБOTA  ' B C E '
 *
 ПOOГЧ1 CЧ KOHEЦ1
@@ -1069,7 +1069,7 @@ CMEHИ5 MOД PAЯ1
  BЧ E2
  ЗП PAЯ1
  ПБ ЦПOФИO
-*****************************************************          
+*****************************************************
 * PAБOTA  ' Ф И O '
 *
 ПOФИO1 CЧ KOHEЦ1
@@ -1083,8 +1083,8 @@ OДИH YИA HAЧФИO(M6)
  ПБ BЫДФCT
 *
 KKФИO ЭKB '10001'
-**************************************                         
-* PAБOTЫ  " K T O "  И  " З A M "                              
+**************************************
+* PAБOTЫ  " K T O "  И  " З A M "
 *
 ПOИШИФ ЗП PAЯ11
  YИA HAЧФИO(M6)
@@ -1120,7 +1120,7 @@ BЫДФ YИA OБЛФИO(M1)
  ЗП PAЯ
  ПB ПOИШИФ(M15)
 ECTЬME ПИO HOBФИO(M6)
- ПB CЧИT(M15)          ПPOПYCKAEM ПPOБEЛ                       
+ ПB CЧИT(M15)          ПPOПYCKAEM ПPOБEЛ
  YИA ГЗФИO(M14)
  ПB BBOФИO(M13)
 ГЗФИO CЧ ФИO
@@ -1136,7 +1136,7 @@ HOBФИO CЧ 0
 HETME YИA TДЛФOP(M1)
  YИA BOПФИO(M13)
  ПБ BЫДШA
-********************************                               
+********************************
 OГ CЛИA 16(M2)
  CЧ ЧИCЛO
  CДA 64-40
@@ -1157,11 +1157,11 @@ OГ CЛИA 16(M2)
 ДPOГ CЛИA 2(M6)
  ПИHO ПOИOГ(M6)
  ПБ ЭTOBCE
-*******************************************                    
+*******************************************
 OШФИO YИA TOШИБ(M1)
  YИA BOПФИO(M13)
  ПБ BЫДШA
-************************************************************** 
+**************************************************************
 * PAБOTA  ' O Б B '
 *
 OБB YИA HAЧФИO(M6)
@@ -1198,7 +1198,7 @@ OTД41 И M40ETX
 Ш4155 ЭKB PAБФИO+9
 TKTЛOБ TEKCT П' KATAЛOГ OБH'
  KOHД П'YЛEH.0'B'377'
-************************************************************** 
+**************************************************************
 * PAБOTA  ' O Б O '
 *
 OБO YИA 0(M16)
@@ -1236,7 +1236,7 @@ OБO1 CЧ 1(M6)
 *
 TYБPOГ TEKCT П' YБPAH  00  '
  KOHД П'OTДEЛ0'B'377'
-********************************************************       
+********************************************************
 * PAБOTA  ' O Б Ч '
 *
 OБЧ YИA 0(M16)
@@ -1255,7 +1255,7 @@ OБЧ YИA 0(M16)
  YИA TECTЬ1(M1)
  YИA BOПФИO(M13)
  ПБ BЫДШA
-********************************************************       
+********************************************************
 * PAБOTA  ' З A П '
 *
 ЗAПФИO CЧ ПPИГЛ
@@ -1307,7 +1307,7 @@ PAБBCE CЧ Ш4155
  YИA 0(M12)
  YИA HAЧAЛO(M15)
  ПБ ФOPM
-* БЛOK ФOPMИPOBAHИЯ ЗAДAЧИ 'CEPП'                              
+* БЛOK ФOPMИPOBAHИЯ ЗAДAЧИ 'CEPП'
 ФCEPП YИA ПOЛEФ(M17)
  CЧ MД2053
  ИЛИ ИCЗAXB
@@ -1324,7 +1324,7 @@ PAБBCE CЧ Ш4155
  KOHД П'0BPE 2'M40B'115'
  KOHД П'200BXO'M24B'115'
  KOHД П' 70000'
- KOHД П'0БЛO0E'M40B'115'M8B'115'                               
+ KOHД П'0БЛO0E'M40B'115'M8B'115'
 DБAЗA KOHД B'70000'
  YПOTP DБAЗA-'67777'(M7)
  CЧ DMД
@@ -1349,8 +1349,8 @@ DЧT4 KOHД B'10030000550734'
  KOHД П'_!_!_!'
  KOHД B'64000'
 LФCEPП ЭKB *-ИФCEPП
-************************************************************** 
-************************************************************** 
+**************************************************************
+**************************************************************
 *   P A З Д E Л   ' П K '
 *   ---------------------
 *
@@ -1438,8 +1438,8 @@ OШПPMЛ YИA ПOЛEФ+LПPMЛ+1(M1)
 ***************************************************************
 *
 *
-*     Г E H E P A Ц И Я   C И C T E M Ы  " C E P П "           
-*     ----------------------------------------------           
+*     Г E H E P A Ц И Я   C И C T E M Ы  " C E P П "
+*     ----------------------------------------------
 *
 ГEHCП MOД AИПЗ
  Э65 ШИФPM
@@ -1538,45 +1538,45 @@ TПK KOHД П'ПK- 00'M8B'377'
 ЗП731 KOHД B'370000550731'
 TШAГ KOHД П'ШAГ-00'M8B'377'
 TЗAП KOHД П'ЗAП- 0'B'377'
-*    BHEШHИE   METKИ       **********                          
+*    BHEШHИE   METKИ       **********
 *
-CEPП BHEШ ШИФPФ1,ШИФPФ2,OШHAЧ,ПPOГOH                           
-CEPП BHEШ E19,TBEPC,ИCПЧ1,ЗAПДИA,BOППEЧ                        
-CEPП BHEШ П4П20,OБЛ,E16П1,ПOЛEФ,E24,BXOД                       
-CEPП BHEШ ПAPБOБ,HAЧ2,ФOPM,MД2053,ПЧ2053,E12                   
-CEPП BHEШ AИПЗ,ШИФГEH,ПPИГЛ,ЗAППAP,ПAPШИФ                      
-CEPП BHEШ HEПAP,ЗAXBAT,БФBB,HAЗПAP,ПAPГEH                      
-CEPП BHEШ M40ETX,ETX,ПAPOЛИ,TШИФP,ДEKOД                        
-CEPП BHEШ П5710,KOHHOM,BЫДCЛ,E5П1,E10П1                        
-CEPП BHEШ ПPИEM,BBЧИC,E48П33,ЧИCЛO                             
-CEPП BHEШ БOБЗ,E12П1,PAЯ,БД,ЧПAP                               
-CEPП BHEШ ПX108,BCEEД,E1,ШAГ,ЯЧПPИЗ                            
-CEPП BHEШ ЛПPOЗ,ИCЧT55,E40,E4,KПK,ABЫБOP,БBЫБOP                
-CEPП BHEШ HAЧAЛO,ДAЙЗП,TECTЬ1,BЫДШA                            
-CEPП BHEШ PAЯ42,ЯЧBЫДШ,ИCПЧ,PAЯ41                              
-CEPП BHEШ PAЯ31,CИMBOЛ,E8E7,CЧИT,E2                            
-CEPП BHEШ E48,E15П1,B12,E48П25,BЫДШAГ                          
-CEPП BHEШ PAЯ1,KOHEЦ1,PAЯ11,E4П1,TOШИБ,ПAPФИO,ПAPЧT            
-CEPП BHEШ ИCЗAXB,ПOBБOБ,П4П,TЧT,TДИAП,OШИБKA                   
-CEPП BHEШ E7П1,E6П1,E15П11,M24ETX,E5,П4710,B13                 
-CEPП BHEШ B60,B143,B7,B115,TЧЗ,БOБ,TДЛФOP                      
-CEPП BHEШ PAЯ12,PAЯ21,ЗAПCЛO,ПAPГC,ЗAПCИM                      
-CEPП BHEШ TYБPAH,TBЫД,ЗAKЗП,ИCПK,MДПK                          
-CEPП BHEШ ПAPЗП,ДOБИTЬ,HEBBE,PAЯ2,TИMЯ                         
-CEPП BHEШ TKOЛBO,THEBBE,П2П10,PEЖTT,ЭT                         
+CEPП BHEШ ШИФPФ1,ШИФPФ2,OШHAЧ,ПPOГOH
+CEPП BHEШ E19,TBEPC,ИCПЧ1,ЗAПДИA,BOППEЧ
+CEPП BHEШ П4П20,OБЛ,E16П1,ПOЛEФ,E24,BXOД
+CEPП BHEШ ПAPБOБ,HAЧ2,ФOPM,MД2053,ПЧ2053,E12
+CEPП BHEШ AИПЗ,ШИФГEH,ПPИГЛ,ЗAППAP,ПAPШИФ
+CEPП BHEШ HEПAP,ЗAXBAT,БФBB,HAЗПAP,ПAPГEH
+CEPП BHEШ M40ETX,ETX,ПAPOЛИ,TШИФP,ДEKOД
+CEPП BHEШ П5710,KOHHOM,BЫДCЛ,E5П1,E10П1
+CEPП BHEШ ПPИEM,BBЧИC,E48П33,ЧИCЛO
+CEPП BHEШ БOБЗ,E12П1,PAЯ,БД,ЧПAP
+CEPП BHEШ ПX108,BCEEД,E1,ШAГ,ЯЧПPИЗ
+CEPП BHEШ ЛПPOЗ,ИCЧT55,E40,E4,KПK,ABЫБOP,БBЫБOP
+CEPП BHEШ HAЧAЛO,ДAЙЗП,TECTЬ1,BЫДШA
+CEPП BHEШ PAЯ42,ЯЧBЫДШ,ИCПЧ,PAЯ41
+CEPП BHEШ PAЯ31,CИMBOЛ,E8E7,CЧИT,E2
+CEPП BHEШ E48,E15П1,B12,E48П25,BЫДШAГ
+CEPП BHEШ PAЯ1,KOHEЦ1,PAЯ11,E4П1,TOШИБ,ПAPФИO,ПAPЧT
+CEPП BHEШ ИCЗAXB,ПOBБOБ,П4П,TЧT,TДИAП,OШИБKA
+CEPП BHEШ E7П1,E6П1,E15П11,M24ETX,E5,П4710,B13
+CEPП BHEШ B60,B143,B7,B115,TЧЗ,БOБ,TДЛФOP
+CEPП BHEШ PAЯ12,PAЯ21,ЗAПCЛO,ПAPГC,ЗAПCИM
+CEPП BHEШ TYБPAH,TBЫД,ЗAKЗП,ИCПK,MДПK
+CEPП BHEШ ПAPЗП,ДOБИTЬ,HEBBE,PAЯ2,TИMЯ
+CEPП BHEШ TKOЛBO,THEBBE,П2П10,PEЖTT,ЭT
 CEPП BHEШ AДPTEK,ПЧECTЬ,НАЧ1,ТМАШ2
 ШИФPM BHEШH ДИCП70.ШИФPM
 *
- BXOД ФИOPAЗ,ПK,ГEHCП,ПPMЛ,ЗAГP,ГEHC,BЫЗД                      
+ BXOД ФИOPAЗ,ПK,ГEHCП,ПPMЛ,ЗAГP,ГEHC,BЫЗД
  BXOД PACПЗГ,PИTM
- BXOД CБPOC,BЫД,ИДTИ,ФOP,AДP,PAOП,CПY                          
+ BXOД CБPOC,BЫД,ИДTИ,ФOP,AДP,PAOП,CПY
 *
 *
 *   Г E H C
 *   -------
 *
-* 'Г Д E P A З' - ПOИCK PAЗДEЛA B TEKYЩEM BAPИAHTE.            
-* ИP 4 - HOMEP PAЗДEЛA; ПPИ BOЗBPATE ИP 11 - AДPEC PAЗДEЛA     
+* 'Г Д E P A З' - ПOИCK PAЗДEЛA B TEKYЩEM BAPИAHTE.
+* ИP 4 - HOMEP PAЗДEЛA; ПPИ BOЗBPATE ИP 11 - AДPEC PAЗДEЛA
 ГДEPAЗ YИA 1(M11)
  CЧИ M4
  ЗП PAЯ11
@@ -1600,7 +1600,7 @@ HETPAЗ YИA 0(M11)
 EPAЗД CЛИA ПOЛEГC(M11)
  ПБ (M15)
  CTPOK 2
-* 'B Ы Б P A З'  -  BЫБPOC PAЗДEЛA. ИP 11 - AДPEC PAЗДEЛA      
+* 'B Ы Б P A З'  -  BЫБPOC PAЗДEЛA. ИP 11 - AДPEC PAЗДEЛA
 BЫБPAЗ MOДA (M15)
  ПИO (M11)
  YИИ M16(M11)
@@ -1630,7 +1630,7 @@ BЫБPA CЧ ПOЛEГC(M16)
  YИA 0(M11)
  ПБ (M15)
  CTPOK 2
-* 'Д O Б P A З' - ДOБABЛEHИE PAЗДEЛA C TEPMИHAЛA.              
+* 'Д O Б P A З' - ДOБABЛEHИE PAЗДEЛA C TEPMИHAЛA.
 * BЫXOД ИP 11 - AДPEC PAЗДEЛA
 ДOБPAЗ CЧ ПOЛEГC
  И ETX
@@ -1668,7 +1668,7 @@ BЫБPA CЧ ПOЛEГC(M16)
  ЗП ПOЛEГC
  ПБ (M14)
  CTPOK 2
-* 'B Ы Д P A З' - BЫДAЧA PAЗДEЛA HA TEPMИHAЛ                   
+* 'B Ы Д P A З' - BЫДAЧA PAЗДEЛA HA TEPMИHAЛ
 BЫДPAЗ MOДA (M14)
  ПИO (M11)
  CЧ (M11)
@@ -1712,11 +1712,11 @@ BOГЛ KOHД B'0'
  CЧ MД2053
  ПB ЗAXBAT(M13)
  YИA ЛИCTЗГ+513(M11)
- Э70 ИCЧTЗГ         ЗOHY BAPИAHTOB HA ЛИCT 37                  
+ Э70 ИCЧTЗГ         ЗOHY BAPИAHTOB HA ЛИCT 37
  CЧ ЛИCTЗГ+512
  HTЖ E15П11
  ПE ИCПЗГC
- Э70 ИCЧTBИ         BЫДИHC HA ЛИCT 36                          
+ Э70 ИCЧTBИ         BЫДИHC HA ЛИCT 36
 BOПИMЯ CЧ TИMЯ
  ЗП БФBB
  YИA YБPИHФ(M15)
@@ -1735,7 +1735,7 @@ BOПИMЯ CЧ TИMЯ
  YИA ГOTBAP(M15)
  YИA HETBA(M13)
 ИЩYBAP CЧ (M11)
- ПO (M13)          ДЛЯ    ЗAП "ИMЯ"                            
+ ПO (M13)          ДЛЯ    ЗAП "ИMЯ"
  HTЖ БФBB
  ИЛИ ETX
  HTЖ ETX
@@ -1745,22 +1745,22 @@ BOПИMЯ CЧ TИMЯ
 CЛBAP CЧ (M11)
  И ETX
  ЗП PAЯ
- ПO ИCПЗГC         ИCПOPЧEHA ЗOHA BAPИAHTOB                    
+ ПO ИCПЗГC         ИCПOPЧEHA ЗOHA BAPИAHTOB
  MOД PAЯ
  CЛИA (M11)
  CЧ BOГЛ
  ПE OГBAP
  ПБ ИЩYBAP
-ГOTBAP CЧ (M11)         ИP11 = A HAЧ  BAPИAHTA                 
+ГOTBAP CЧ (M11)         ИP11 = A HAЧ  BAPИAHTA
  И ETX
  ПO ИCПЗГC
- YИ M14            ИP14:= L BAPИAHTA                           
+ YИ M14            ИP14:= L BAPИAHTA
  HTЖ BCEEД
  YИ M15
- CЛИA 2(M15)        ИP 15 := -L+1                              
+ CЛИA 2(M15)        ИP 15 := -L+1
  YИИ M13(M11)
  CЛИ M13(M14)
- CЛИA -1(M13)       ИP 13 := A HAЧ + L - 1                     
+ CЛИA -1(M13)       ИP 13 := A HAЧ + L - 1
  CЧИ M11
  ЗП AДPBAP
 ПEPBAP MOДA (M15)
@@ -1768,7 +1768,7 @@ CЛBAP CЧ (M11)
  MOДA (M15)
  ЗП ПOЛEГC-1(M14)
  ЦИKЛ ПEPBAP(M15)
- HOП ,              ПEPEПИCAЛИ BAPИAHT B PAБ.ПOЛE              
+ HOП ,              ПEPEПИCAЛИ BAPИAHT B PAБ.ПOЛE
  ПБ BOПPAЗ
 HETBA CЧ БФBB
  ИЛИ ETX
@@ -1783,7 +1783,7 @@ BOПPAЗ CЧ TPAЗД
  ЗП БФBB
  CЧ ПPИГЛ
  ЗП БФBB+1
- YИA TPABAP(M15)   ПYCTAЯ ПOCЫЛKA - TPAHCЛЯЦИЯ BAPИAHTA        
+ YИA TPABAP(M15)   ПYCTAЯ ПOCЫЛKA - TPAHCЛЯЦИЯ BAPИAHTA
  ПB ПPИEM(M14)
 ПOBPAЗ CЧ БФBB
  CДA 64-8
@@ -1810,7 +1810,7 @@ HEПPИ ПB CЧИT(M15)
 ПOИPAЗ CЧ ЛИCTB+'70000'(M4)
  ПO OШPAЗД
  HTЖ PAЯ
- ПO ГДEPAЗ        HA П/П ПOИCKA PAЗДEЛA B BAPИAHTE             
+ ПO ГДEPAЗ        HA П/П ПOИCKA PAЗДEЛA B BAPИAHTE
  CЛИA 1(M4)
  ПБ ПOИPAЗ
 ПPOBEP CЧ БФBB
@@ -1833,7 +1833,7 @@ HEПPИ ПB CЧИT(M15)
 *
 TOГЛ KOHД П'OГЛ000'M16B'377'
 THOB KOHД П'HOBBAP'
-*----------------------- И H Ф -                               
+*----------------------- И H Ф -
 BOПИHФ CЧ TИHФOP
  ЗП БФBB
  YИA BOПPAЗ(M15)
@@ -2020,7 +2020,7 @@ AДPBAP ЭKB '70000'+57
 TPAЗД KOHД П'PAЗДEЛ'
 TИHФOP KOHД П'ИHФ- 0'B'377'
 KKBЫДИ ЭKB '10004'
-******************************************                     
+******************************************
 YБPИHФ CЧ TMAШИH
  ЗП БФBB
  YИA HAЧAЛO(M15)
@@ -2081,13 +2081,13 @@ KГEHC CЧ B132
  YИИ '17'(M5)
  YИA HAЧAЛO(M15)
  ПБ ФOPM
-******************************************                     
+******************************************
 ШKHOB KOHД B'7417547303031620'
  KOHД M40B'3'
  KOHД B'0'
 B132 KOHД B'132'
  CTPOK 2
-*   Г E H C   - ФOPMИPYEMAЯ ПPOГPAMMA                          
+*   Г E H C   - ФOPMИPYEMAЯ ПPOГPAMMA
  YПOTP GБAЗA-'62'(M7)
 ИГEHC KOHД П'0OЗY 9'M40B'115'
  KOHД П'0BXO 6'M40B'115'
