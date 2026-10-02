@@ -5,8 +5,10 @@ tty.py PORT SCRIPT: SCRIPT - строки вида
     expect РЕГВЫР     ждать в выводе терминала
     send ТЕКСТ        послать ТЕКСТ и CR
     wait СЕК          просто читать СЕК секунд
+$ИМЯ в сценарии заменяется переменной окружения.
 Весь вывод терминала - на stdout. Код возврата 1, если expect не дождался.
 """
+import os
 import re
 import socket
 import sys
@@ -81,7 +83,7 @@ def main():
     port = int(sys.argv[1])
     t = Term(port, float(sys.argv[3]) if len(sys.argv) > 3 else 20)
     for line in open(sys.argv[2], encoding="utf-8"):
-        line = line.rstrip("\n")
+        line = os.path.expandvars(line.rstrip("\n"))
         if not line or line.startswith("#"):
             continue
         cmd, _, arg = line.partition(" ")

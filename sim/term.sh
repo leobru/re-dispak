@@ -1,14 +1,30 @@
 #!/bin/sh
-# Сеанс с терминала (линия 2, telnet) на собранном 2053.bin:
-# sim/term.sh [сценарий]   (сценарий - для sim/tty.py, по умолчанию sim/term.scr)
-# Протокол терминала - sim/run/tty2.txt.
+# Сеансы с терминалов по telnet на собранном 2053.bin:
+#   sim/term.sh            - линия 2 (T002)
+#   sim/term.sh consuls    - КОНСУЛЫ T031 и T032 (tty25, tty26) как видеотоны
+#                            VIDI; образ правит sim/consuls.py
+# Сценарий - sim/term.scr (для sim/tty.py); протоколы - sim/run/session*.txt.
 set -e
 here=$(cd "$(dirname "$0")" && pwd)
-scr=$(realpath "${1:-$here/term.scr}")
-ini=$here/term.ini
-port=${PORT:-4199}
+scr=$here/term.scr
+# Порты - свободные от ядра: SIMH не слушает порт, оставшийся в TIME-WAIT.
+freeport() {
+    python3 -c 'import socket; s = socket.socket(); s.bind(("", 0)); print(s.getsockname()[1])'
+}
+port=$(freeport) port25=$(freeport) port26=$(freeport)
+if [ "$1" = consuls ]; then
+    ini=$here/consul.ini
+    sessions="031:$port25 032:$port26"
+else
+    ini=$here/term.ini
+    sessions="002:$port"
+fi
 . "$here/setup.sh"
-PORT=$port "$besm6" boot.ini < /dev/null > sim.out 2>&1 &
+if [ "$1" = consuls ]; then
+    "$here/consuls.py" 2053.bin 2053.bin
+fi
+PORT=$port PORT25=$port25 PORT26=$port26 \
+    "$besm6" boot.ini < /dev/null > sim.out 2>&1 &
 pid=$!
 deadline=$(( $(date +%s) + ${TIMEOUT:-60} ))
 stop() {
@@ -23,15 +39,18 @@ until grep -q '^### BOOTED' sim.out 2>/dev/null; do
     fi
     sleep 1
 done
-left=$(( deadline - $(date +%s) ))
-if timeout $left "$here/tty.py" $port "$scr" > session.txt; then
-    stop
-    echo "### SESSION OK"
-    kadopam_count
-else
-    rc=$?
-    stop
-    cat session.txt
-    echo "### SESSION FAILED ($rc)"
-    exit 1
-fi
+for s in $sessions; do
+    line=${s%:*}
+    left=$(( deadline - $(date +%s) ))
+    if LINE=$line timeout $left "$here/tty.py" ${s#*:} "$scr" > session$line.txt; then
+        echo "### SESSION T$line OK"
+    else
+        rc=$?
+        stop
+        cat session$line.txt
+        echo "### SESSION T$line FAILED ($rc)"
+        exit 1
+    fi
+done
+stop
+kadopam_count

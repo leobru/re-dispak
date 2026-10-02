@@ -32,6 +32,7 @@ boot: build
 
 term: build
 	sim/term.sh
+	sim/term.sh consuls
 
 %.lst: %.be modloc.txt
 	env BESM6_PATH=.:$(BESM6_PATH) ./asm.pl $<

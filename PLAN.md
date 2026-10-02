@@ -29,6 +29,10 @@ length (`пам n`, or a jump over the hole), so no exported label moves.
    КОНФУС.`свядкс` polling. From phase 1 on it must be 0.
    `sim/term.sh` (or `make term`): a session on telegraph line 2 over telnet
    (script `sim/term.scr`: prompt, directive `ВРЕ`), same КАДОПАМ count.
+   `sim/term.sh consuls` (also in `make term`): the same session on both
+   Consul lines T031 and T032 (tty25, tty26), on a copy of the image where
+   `sim/consuls.py` enables them as VIDI Videotons; this exercises the ПРП
+   vectors 12/11 (receive) and 10/9 (output).
 5. One commit per step.
 
 `tools/xref.py NAME…` lists the uses of names in the label/address fields
@@ -154,3 +158,24 @@ changes size (`мода 0` is the no-op, as in `benson.be:354`):
 
 Result: zones 0420, 0426, 0551, 0552, 0573 change; exported labels unchanged;
 the job and the terminal session work; КАДОПАМ accesses 0.
+
+**ПРП 12 and the Consuls.** КОНФУС.`нстдкс` (`konfus.be:848-869`) loads
+СВЯЗЬ7 even when no ДКС is present and copies the five `уходы` entries of
+СВЯЗЬ7 into the ПРП vectors listed in `адреса`: ПРП 8, 7, 6, 5 and 12. ПРП 12
+is the receive interrupt of Consul 0 (T031; default `уиа (М16) / пб прсn`,
+`disp70.be:1413-1414`); СВЯЗЬ7.`ПРП12` reads КАДОПАМ cell 0 and drops the
+character. In the baseline T031 therefore gets no input at all (T032 works);
+memory at 04050 shows `мод базсв7`. ПРП 11, 10, 9 (T032 receive, T031/T032
+output) are never patched; СВЯЗЬ7.`фикпрп` only uses entries 0–3 (ПРП 8–5).
+After phase 1 СВЯЗЬ7 is not loaded and all vectors keep their defaults.
+In addition the fifth `уходы` entry is now the default ПРП 12 code itself
+(`уиа (М16) / пб прсn`, the same word as in ДИСП70), so even when СВЯЗЬ7 is
+loaded ПРП 12 stays with the Consul (checked by booting the baseline image
+with only zone 0677 replaced: both Consuls work, ПРП 8–5 point to СВЯЗЬ7,
+ПРП 12 unchanged). СВЯЗЬ7.`ПРП12` is now unreachable.
+
+ТЕРМАС (НЕРПА network driver over Consul 0, never started in this build: no
+module calls its entry `ВХПУСК`) installs its handlers at `обвнп3+12` (ПРП 12)
+and `обвнп3+14` (ПРП 10) in the штат variant, but at `обвнп3-6` and
+`обвнп3-4` in the К-71 variant (`termas.be:340-357`), i.e. over the ГРП 17 and
+ГРП 13 vectors. To be restored to штат in phase 2.
