@@ -31,6 +31,7 @@ while kill -0 $pid 2>/dev/null; do
         kill $pid
         wait $pid 2>/dev/null || true
         echo "### PRINTED"
+        echo "### KADOPAM accesses: $(grep -cE '^DBG.*(032|0132):' log.txt)"
         exit 0
     fi
     if [ "$(date +%s)" -ge "$deadline" ]; then
