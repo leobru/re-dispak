@@ -11,7 +11,11 @@ SIMH выполняет только слова с командной свёрт
 и командную, и числовую.  Служебные слова зоны берутся из образа, кроме
 контрольной суммы (СС[3], СС[7]), которая пересчитывается.
 
+Зоны (или секторы зон) удалённых модулей, указанные в --zero ЗОНА[:СЕКТОРЫ],
+заполняются нулями с числовой свёрткой, чтобы их нельзя было выполнить.
+
     python3 mkdisk.py [--base образ] [--src 2222] [--out 2053.bin]
+                      [--zero 0677] [--zero 0567:0]
 """
 import argparse
 import re
@@ -24,6 +28,7 @@ ZONE = ZONE_WORDS * WORD
 M48 = (1 << 48) - 1
 PHYS_OFFSET = 4
 PARITY_INSN = 1
+PARITY_NUM = 2
 DEFAULT_BASE = "sbor2053.orig"
 
 
@@ -54,6 +59,7 @@ def main():
     ap.add_argument("--src", default="2222")
     ap.add_argument("--rvs", default="rvs.src")
     ap.add_argument("--out", default="2053.bin")
+    ap.add_argument("--zero", action="append", default=[], metavar="ZONE[:SECTORS]")
     args = ap.parse_args()
 
     img = bytearray(open(args.base, "rb").read())
@@ -66,6 +72,11 @@ def main():
     def put(zone, i, raw):
         off = (zone + PHYS_OFFSET) * ZONE + i * WORD
         img[off:off + WORD] = struct.pack("<Q", raw)
+
+    def checksum(zone):
+        cs = cyclic_sum48(get(img, zone, i) for i in range(8, ZONE_WORDS))
+        for i in (3, 7):
+            put(zone, i, (get(img, zone, i) & ~M48) | cs)
 
     changed = []
     for name, zone in rvs_zones(args.rvs):
@@ -81,10 +92,17 @@ def main():
                 put(zone, i, (PARITY_INSN << 48) | new)
                 nwords += 1
         if nwords:
-            cs = cyclic_sum48(get(img, zone, i) for i in range(8, ZONE_WORDS))
-            for i in (3, 7):
-                put(zone, i, (get(img, zone, i) & ~M48) | cs)
+            checksum(zone)
             changed.append("%s %04o: %d" % (name, zone, nwords))
+
+    for spec in args.zero:
+        zone, _, sectors = spec.partition(":")
+        zone = int(zone, 8)
+        for s in map(int, sectors or "0123"):
+            for i in range(8 + 256 * s, 8 + 256 * (s + 1)):
+                put(zone, i, PARITY_NUM << 48)
+        checksum(zone)
+        changed.append("обнулено %s" % spec)
 
     open(args.out, "wb").write(img)
     print("mkdisk: %s -> %s, изменённых зон %d" % (args.base, args.out, len(changed)))

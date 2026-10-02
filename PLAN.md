@@ -178,4 +178,34 @@ with only zone 0677 replaced: both Consuls work, ПРП 8–5 point to СВЯЗ�
 module calls its entry `ВХПУСК`) installs its handlers at `обвнп3+12` (ПРП 12)
 and `обвнп3+14` (ПРП 10) in the штат variant, but at `обвнп3-6` and
 `обвнп3-4` in the К-71 variant (`termas.be:340-357`), i.e. over the ГРП 17 and
-ГРП 13 vectors. To be restored to штат in phase 2.
+ГРП 13 vectors. This is not ДКС code; restoring the штат variant is left for
+the later pass over the other К-71 features (decision B).
+
+**Phase 2 done, together with phase 3.** The modules could not be dropped
+separately: СВЯЗЬ7, ЭКО and ЭК7 import the ДКС cells of ВЗУ, МОТТ and КОНФУС,
+and those modules import labels of СВЯЗЬ7 and ЭКО. Every removed piece of code
+is replaced by a reserve of the same size (`мода 0` inside straight-line code,
+`пам n` after an unconditional jump), marked «РЕЗЕРВ: АДРЕСА НЕ СДВИГАТЬ», so no
+remaining label moves (`tools/labels.py --check labels.base` shows only gone
+labels). Non-ДКС К-71 features stay (decision B): the `шкэт` terminal handling
+(МОТТ `прсим7`, `прнол7`, `км2бк7`; ТЕРМ calls them), АС/ТАБЛО blocks in
+НОМБОБ, МОТТ blocks N1/N2 without the `шзпри7` reads, КОНФУС Э52 '7777',
+КОНВОЙ and DW-21 parts, `маспр7` and `шкраб7` (used by ЭК2, ПРИК7, КЗ1, ХЛАМ).
+- ДМЛМБ, ПРИКАЗ, ПРИСКВ, БОНБОТ, КЗ, ЭКВВОД, ГЕНС, ГЕНС1, НОМБОБ: hooks and
+  ДКС imports removed.
+- ТЕРМ: output start goes straight to БОЭК1.`боэте4`; `КМ` does
+  `уиа E45(М10)` itself; `С373` and the `штерм7` uses removed.
+- ДИСП70: `КИК` restores М17 itself (`сч И17 / уи М17`); the Э50 entry `Э`
+  goes straight to `э1а`, so Э50 '133' is an ordinary unused extracode (a test
+  task issuing it ends normally, exactly as with Э50 '145').
+- ВЗУ: `кик7а`, `выдас7`, `кмас7`, `Э1` and the cells `шзпри7`, `шзагс7`,
+  `шкут`, `шкаэко` removed.
+- МОТТ: the `шкут` test in `прнол7`, the `шзпри7` reads, `штерм7`, `бсв7ма`,
+  `бсв7мб` removed.
+- КОНФУС: `кзк71`, `МАСДКС`, the СВЯЗЬ7 loader, `начало`, `экозап`, `завобм`,
+  `нстдкс`/`свядкс` and all ДКС cells removed.
+- СВЯЗЬ7, ЭКО, ЭК7: removed from `Makefile`, `modlist.src`, `rvs.src`, and their
+  sources deleted. In `rvs.src` consul and сме now head their zone groups at
+  their old addresses (011000 in 0567, 011400 in 0607); their sectors are
+  unchanged. `mkdisk.py --zero` fills zone 0677, sector 0 of 0567 and sectors
+  0–2 of 0607 with numeric-tag zeros.
