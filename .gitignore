@@ -48,3 +48,9 @@
 
 # Scratch disk
 2222
+
+# Disk images and runs
+2053.bin
+sbor2053.orig
+sim/run/
+*.log
