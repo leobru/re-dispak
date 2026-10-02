@@ -30,6 +30,9 @@ sbor2053.orig:
 boot: build
 	sim/run.sh
 
+term: build
+	sim/term.sh
+
 %.lst: %.be modloc.txt
 	env BESM6_PATH=.:$(BESM6_PATH) ./asm.pl $<
 

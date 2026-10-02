@@ -4,23 +4,10 @@
 # протокол пульта - sim/run/log.txt.
 set -e
 here=$(cd "$(dirname "$0")" && pwd)
-top=$(dirname "$here")
-job=${1:-$here/prime.job}
+job=$(realpath "${1:-$here/prime.job}")
 ini=${2:-$here/boot.ini}
-disks=${DISKS:-$HOME/git/besm6.github.io/download/disks}
-besm6=${BESM6:-$HOME/git/besm6/simh/BIN/besm6}
-
-run=$here/run
-rm -rf "$run"
-mkdir -p "$run"
-cp "$top/2053.bin" "$run/2053.bin"
-for d in krab2063 sbor2048 svs2048 alt2048; do
-    cp "$disks/$d.bin" "$run/"
-done
-cp "$here/boot_dispak.b6" "$run/"
-cp "$job" "$run/input.txt"
-cp "$ini" "$run/boot.ini"
-cd "$run"
+. "$here/setup.sh"
+cp "$job" input.txt
 "$besm6" boot.ini < /dev/null &
 pid=$!
 # Распечатка задачи кончается строкой из пятёрок.
@@ -31,7 +18,7 @@ while kill -0 $pid 2>/dev/null; do
         kill $pid
         wait $pid 2>/dev/null || true
         echo "### PRINTED"
-        echo "### KADOPAM accesses: $(grep -cE '^DBG.*(032|0132):' log.txt)"
+        kadopam_count
         exit 0
     fi
     if [ "$(date +%s)" -ge "$deadline" ]; then

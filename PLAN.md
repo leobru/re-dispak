@@ -27,6 +27,8 @@ length (`пам n`, or a jump over the hole), so no exported label moves.
    ends; the summary line `KADOPAM accesses: N` counts 032/0132 executions
    (logged by `set dks debug=KADOPAM`). Baseline: 2–3 reads of cell 0, from
    КОНФУС.`свядкс` polling. From phase 1 on it must be 0.
+   `sim/term.sh` (or `make term`): a session on telegraph line 2 over telnet
+   (script `sim/term.scr`: prompt, directive `ВРЕ`), same КАДОПАМ count.
 5. One commit per step.
 
 `tools/xref.py NAME…` lists the uses of names in the label/address fields
@@ -113,9 +115,9 @@ Make every ДКС path unreachable without removing code yet:
 4. ГЕНС: do not copy СВЯЗЬ7 to the drum.
 5. КЗ: do not call `кзк71`.
 
-Then add a second test: a terminal session on a telegraph line (log in with
-`СЕРП 4199`, run a directive, log out). The ТЕРМ/МОТТ output paths with
-`шкут = 0` are exercised there, not by the batch job.
+Then add a second test: a terminal session on a user telegraph line
+(`sim/term.sh`), so that the ТЕРМ/МОТТ paths with `шкут = 0` are exercised
+on a line other than the operator console.
 
 ### Phase 2: remove the dead code, module by module
 
@@ -131,14 +133,24 @@ Remove СВЯЗЬ7, ЭКО and ЭК7 from `Makefile` and `rvs.src`. Zero their z
 image (0677; sector 0 of 0567; ЭК7's part of 0607) with a `mkdisk.py` option, so
 that any remaining load attempt fails loudly instead of loading the old code.
 
-## Decisions needed
+## Decisions
 
-- **A. МОТТ blocks N1/N2.** Keep the К-71 versions (they work in SIMH today: the
-  console T001 is a telegraph line), or restore the штат МОТТ-100 code
-  (reconstructed, never assembled into the reference binary, and not exercised
-  by SIMH's default terminal setup)? Proposed: keep for now, remove only the
-  ДКС reads (`шзпри7`).
-- **B. Other К-71 features** (list above): keep? Proposed: yes; the target is
-  "without КАДОПАМ/ДКС", not "without К-71".
-- **C. Zones of removed modules:** zero them (proposed) or leave the original
-  bytes.
+- **A. МОТТ blocks N1/N2:** keep the К-71 versions; remove only the ДКС reads
+  (`шзпри7`).
+- **B. Other К-71 features:** keep for now; possibly removed in a later pass.
+- **C. Zones of removed modules:** zero them.
+
+## Progress
+
+**Phase 1 done.** Each edit replaces instructions one for one, so no module
+changes size (`мода 0` is the no-op, as in `benson.be:354`):
+- НОМБОБ `диасм7`: `по нстдкс` → `пб НЕЗАВИ`.
+- ЭКВВОД, table entry 133: `СЧ 0` / `ПБ Э105Г`, like the other unused
+  extracodes (145, 175, 200, 201, 220).
+- ГЕНС1: `зп шкут(М10)` → `мода 0`.
+- ГЕНС: the СВЯЗЬ7 copy (`уиа куссв7…`, `пв ОБМПМБ`) → two `мода 0`.
+- КЗ: `пв кзк71(М1)` → `мода 0`. (КЗ is end of task, not cold start; `кзк71`
+  clears the task's ДКС state and sends Э50 '133' for ЭКО tasks.)
+
+Result: zones 0420, 0426, 0551, 0552, 0573 change; exported labels unchanged;
+the job and the terminal session work; КАДОПАМ accesses 0.
