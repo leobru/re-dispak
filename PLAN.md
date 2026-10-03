@@ -94,8 +94,8 @@ These are switched by `∧К71` too, but do not use КАДОПАМ:
 - КОНВОЙ checkpoint tracing and remote-disk tests through the disk channel
   (`konvoy.be`, `konfus.be:238-444`, hooks in ДИСКИ, ХЛАМ, АВМД, МОТТ
   `2145-2412`).
-- DW-21 printer on the АЦПУ channel (`konfus.be:527-630`, `734-754`, ПЕЧАТЬ,
-  ПРИК4); already assembled out by `∧DW21 УСТВ 0` in the parts that matter.
+- DW-21 printer on the АЦПУ channel (КОНФУС, ПЕЧАТЬ, ПРИК4). To be removed,
+  see phase 4 and decision D.
 - Plotter stubs `загл7а`/`загл7б` (ВЗУ, ДИСП70, ГП2, ПУСКАЧ, ТРУБКА).
 - `маспр7` in ЭК2, КЗ1, ПРИК7 ("не шифр подсист. МРВ", `konfus.be:951`).
 - МОТТ block N1 (`mott.be:133-260`, `аск71`: КРК terminal detection) and block
@@ -137,12 +137,35 @@ Remove СВЯЗЬ7, ЭКО and ЭК7 from `Makefile` and `rvs.src`. Zero their z
 image (0677; sector 0 of 0567; ЭК7's part of 0607) with a `mkdisk.py` option, so
 that any remaining load attempt fails loudly instead of loading the old code.
 
+### Phase 4: remove DW-21 support
+
+DW-21 is a К-71 addition, but the printer is only a subset of the standard
+АЦПУ-128, so the support is not worth keeping. Only a few parts are assembled
+out by `∧DW21 УСТВ 0` (`konfus.be:9-10`, `pechat.be:5-6`); most of the code is
+unconditional and runs on every print job:
+- ПЕЧАТЬ: `НАЧАЛО` calls КОНФУС.`начdw` (`pechat.be:45-47`); the per-character
+  block `пркдdw`/`пркdw1`/`пркdw2` (`269-339`) and the `шdw21б`/`е17dw` test in
+  the output path (`351-354`, `376`, `404-406`); the DW-21 buffer write
+  (`657-711`, with the jump to КОНФУС.`авdw21`); the `шdw21`/`шdw21а` uses
+  (`123`, `753`, `846`); the accounting trailer `учетdw`/`учтdw1`/`тучdw1`
+  (`1164-1296`, `1401`, `1427`); cells `режdw1`, `режdw2`, `cимвdw`.
+- КОНФУС: block "ПЕЧАТЬ" (`konfus.be:491-571`: `начdw`, `авdw21`, `пркод7`,
+  the `шdw21*` cells, `е17dw`, the recoding table `ТАБЛИЦ`) and its ВНЕШ/ВХОД.
+- ПРИК4/КОНФУС: `вых1к7` and `шпр4к7` (`prik4.be:300`, `konfus.be:699-715`,
+  `pechat.be:110-111`). Check first whether they belong to DW-21 or are a
+  separate К-71 change of ПРИК4.
+
+Use the штат variant (plain АЦПУ-128 path) where the source has one; otherwise
+remove with same-size reserves, as in phase 2. Test: the batch job's printout
+must stay unchanged (apart from date and time).
+
 ## Decisions
 
 - **A. МОТТ blocks N1/N2:** keep the К-71 versions; remove only the ДКС reads
   (`шзпри7`).
 - **B. Other К-71 features:** keep for now; possibly removed in a later pass.
 - **C. Zones of removed modules:** zero them.
+- **D. DW-21:** remove (phase 4); it is an exception to decision B.
 
 ## Progress
 
