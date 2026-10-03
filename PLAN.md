@@ -93,8 +93,7 @@ The default ПРП vectors in ДИСП70 (`ОБВНП3`) are already the non-Д�
 ### Other К-71 features (kept unless decided otherwise)
 
 These are switched by `∧К71` too, but do not use КАДОПАМ:
-- Э52 '7777' "trusted link" for АНИС-6. To be removed, see phase 5 and
-  decision D.
+- Э52 '7777' "trusted link" for АНИС-6. Removed in phase 5 (decision D).
 - КОНВОЙ checkpoint tracing and remote-disk tests through the disk channel.
   Removed after phase 2 (it could only be switched on through ЭК7), see
   Progress.
@@ -106,7 +105,7 @@ These are switched by `∧К71` too, but do not use КАДОПАМ:
 - `шкраб7` (used by ХЛАМ) and the unreferenced `G71136` block in КОНФУС.
 - ТЕРМАС handlers at `обвнп3-6`/`обвнп3-4` instead of the штат ПРП 12/10
   vectors (see Progress).
-- `маспр7` in ЭК2, КЗ1, ПРИК7 ("не шифр подсист. МРВ", `konfus.be:951`).
+- `маспр7` in ЭК2, КЗ1, ПРИК7 ("не шифр подсист. МРВ", `konfus.be:74`).
 - МОТТ block N1 (`mott.be:133-260`, `аск71`: КРК terminal detection) and block
   N2 (`mott.be:1373-1441`, `вдк71`: modified telegraph-line I/O). They replace
   the МОТТ-100 multiplexer path (`ВХОДАС`, ПРП 8). Block N1 mentions the КРК
@@ -168,7 +167,7 @@ Use the штат variant (plain АЦПУ-128 path) where the source has one; oth
 remove with same-size reserves, as in phase 2. Test: the batch job's printout
 must stay unchanged (apart from date and time).
 
-### Phase 5: remove Э52 '7777' — next
+### Phase 5: remove Э52 '7777' — done
 
 The "trusted link" extracode for the АНИС-6 resident (НИТИ). ДИСП70 sends every
 Э52 to КОНФУС.`Э52777` (`disp70.be:255-263`), which returns to `ПЕЭ52` unless the
@@ -181,7 +180,7 @@ address is '7777'. The штат variant `пб пеэ52` is still in the source, 
 Test: Э52 with an ordinary address still works, and Э52 '7777' from a user task
 gets the same handling as in the штат system.
 
-### Phase 6: enable МОТТ-100 and fix the ШКАС setup in ГЕНС1 — to do
+### Phase 6: enable МОТТ-100 and fix the ШКАС setup in ГЕНС1 — next
 
 **Reference: ЯНУС.** The kernel debugger (`janus.be`) drives the АС hardware
 directly and is the definitive description of the interface; МОТТ-100 does
@@ -358,7 +357,7 @@ became those constants; ПЕЧАТЬ now imports `П30` from ДИСП70. All rem
 and cells are same-size reserves; the `∧DW21` switch is gone from both modules.
 - ПЕЧАТЬ: `НАЧАЛО` no longer calls `начdw`; the per-character block `пркдdw`
   and its call; the special-buffer branch `по бвывdw` and the chain
-  `бвывдw`…`прибав`, `спецоб` (from `пчтном`), `учетdw`…`бфдисw` with the
+  `бвывdw`…`прибав`, `спецоб` (from `пчтном`), `учетdw`…`бфдисw` with the
   accounting trailer «НА ЛИСТАХ … DW-21»; `чтспец` goes straight to `чтобщ`;
   `выдсб` jumps to `ВЫДОПТ` instead of КОНФУС.`авdw21`; `гасгрп` goes to
   `зпупря` (`счзон` was non-zero only in the DW chain); cells `режdw1`,
@@ -379,12 +378,26 @@ and cells are same-size reserves; the `∧DW21` switch is gone from both modules
 Result: zones 0401 (ПЕЧАТЬ), 0534 (ПРИК4) and 0676 (КОНФУС) change; no label
 moved; `tools/check.sh` passes; the job's printout equals the one from the
 previous build except for the time in the banner.
-In КОНФУС the remaining code is the Э52 '7777' block (phase 5), `маспр7`,
-`шкраб7` and `G71136`; the rest of the zone is reserves.
+
+**Phase 5 done: Э52 '7777' removed.**
+- ДИСП70: `э52к71` uses the штат branch `зп СМ` / `пб пеэ52` (same size);
+  `КОНФУС ВНЕШ Э52777` dropped.
+- КОНФУС: the block `Э52777`…`ш52гус` (070000–070153) → `пам 108` reserve;
+  `Э52777` dropped from ВХОД. The only code left (`G71136`) needs just
+  `ВРЕМЯ`, so the ВНЕШ lines shrink to `ДИСП70 ВНЕШ ВРЕМЯ`.
+
+Test jobs: Э52 with address 0 on acc = 0 returns cos 0 (+0.999999999998),
+as before. Э52 '7777' from a user task now ends it with «ЗАПРЕЩ.ЭКСТРАКОД»
+(`ПЕЭ52` → `КОСИН` → `ЗОВЫ`, the штат handling); the old build returned all
+ones in the accumulator (the `э52вых` refusal of the trusted-link code).
+
+Result: zones 0621 (ДИСП70) and 0676 (КОНФУС) change; no label moved;
+`tools/check.sh` passes; the job's printout is unchanged apart from times.
+КОНФУС now holds only `маспр7`, `шкраб7` and `G71136`; the rest of the zone is
+reserves.
 
 ## Remaining work
 
-1. Phase 5: Э52 '7777'.
-2. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
-3. Decision B pass over the other К-71 features, starting with the штат
+1. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
+2. Decision B pass over the other К-71 features, starting with the штат
    ТЕРМАС vectors.
