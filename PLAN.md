@@ -424,6 +424,26 @@ Result: the zones of МОТТ (0627), КЗ1 (0670), ХЛАМ, ПРИК7 and ЭК
 0676 is zeroed; no label moved (`МАСПР7` is new in МОТТ); `tools/check.sh`
 passes; the job's printout is unchanged apart from times.
 
+**Remote-disk error tracing removed from МОТТ.** ЭК7 («ПРОГРАММА ДЛЯ
+ТРАССИРОВКИ ОШИБОК УДАЛ. НМД(НМЛ). ДКС К-71», block АВМЛ) chose a controller
+into `гтмдл7` and read back `шмлк71`/`шврк71`, which МОТТ filled. Since ЭК7 was
+removed nothing read them, but `опргд1` still logged controller 2 (the
+initial `гтмдл7`) on every ДИСКИ readiness pass.
+- `опргд1`: the compare-and-store is gone; it is now `пб нпр3` + reserve, so
+  ДИСКИ's loop (`нпр3 цикл нпр2(М13)` / `пб (М10)`) is unchanged.
+- `врк71` block («БЛОК "АВМЛ"», with `вр7ря1/2`, `КВР`…`КВР2`; unreferenced
+  even in the baseline) and the cells `гтмдл7`, `шмлк71`, `шврк71` → reserves.
+- The unreachable, unreferenced word `мднап2` (after `пб ОСВМД`) → reserve.
+- Unused imports `зневып`, `Е24П1` dropped.
+
+The other disk sections in МОТТ (`ДДИП`, `ДКП`, `ДКО`, `ЗАН`, `опргд2`, `освл`,
+`номлин` for ДИСКИ; `опрдк7` for АВМД; `чрк71`, `дик71`, `мдмл7` for ХЛАМ;
+`можно7`, `избоэ7` for БОЭК1) are К-71 versions of штат code with live callers
+(decision B).
+
+Result: only zone 0627 (МОТТ) changes; no label moved; `tools/check.sh`
+passes; the job's printout is unchanged apart from times.
+
 ## Remaining work
 
 1. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
