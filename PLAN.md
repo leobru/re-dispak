@@ -102,10 +102,12 @@ These are switched by `∧К71` too, but do not use КАДОПАМ:
 - Plotter stubs `загл7а`/`загл7б` (ВЗУ, ДИСП70, ГП2, ПУСКАЧ, ТРУБКА).
 - `шкэт` terminal handling (МОТТ `прсим7`, `прнол7`, `км2бк7`, called by ТЕРМ)
   and the АС/ТАБЛО blocks in НОМБОБ.
-- `шкраб7` (used by ХЛАМ) and the unreferenced `G71136` block in КОНФУС.
+- ХЛАМ Э62 '6200'–'6203' → `Э62ГРУ` (used to take КОНФУС.`шкраб7`'s address as
+  the constant, now `слиа -'6200'`).
 - ТЕРМАС handlers at `обвнп3-6`/`обвнп3-4` instead of the штат ПРП 12/10
   vectors (see Progress).
-- `маспр7` in ЭК2, КЗ1, ПРИК7 ("не шифр подсист. МРВ", `konfus.be:74`).
+- `маспр7` in ЭК2, КЗ1, ПРИК7 ("не шифр подсист. МРВ"; now in МОТТ, was in
+  КОНФУС).
 - МОТТ block N1 (`mott.be:133-260`, `аск71`: КРК terminal detection) and block
   N2 (`mott.be:1373-1441`, `вдк71`: modified telegraph-line I/O). They replace
   the МОТТ-100 multiplexer path (`ВХОДАС`, ПРП 8). Block N1 mentions the КРК
@@ -396,8 +398,34 @@ Result: zones 0621 (ДИСП70) and 0676 (КОНФУС) change; no label moved;
 КОНФУС now holds only `маспр7`, `шкраб7` and `G71136`; the rest of the zone is
 reserves.
 
+**КОНФУС removed.** Its last users did not need the module:
+- ХЛАМ (Э62): `слиа шкраб7(М16)` / `счи М16` / `слиа '6200'(М16)` used only the
+  address 071600 = −'6200' (mod 2¹⁵), testing for Э62 addresses
+  '6200'–'6203'. Now `слиа -'6200'(М16)`, the same instruction word
+  (`16 25 71600`); `КОНФУС ВНЕШ шкраб7` dropped.
+- `маспр7` (ПРИК7, КЗ1, ЭК2): moved into the МОТТ reserve left by КОНВОЙ
+  (077461, `пам 52` → constant + `пам 51`), exported by МОТТ; the importers
+  now say `МОТТ ВНЕШ маспр7`.
+- `G71136`: unreferenced, gone with the module.
+- КОНФУС removed from `Makefile`, `modlist.src`, `rvs.src`; source deleted;
+  zone 0676 zeroed by `mkdisk.py --zero 0676`.
+
+How КОНФУС got into memory: ГЕНС1 tests ТРАКТЫ E28 («СЭВМ ДА»); if set, it
+closes page 034 (`ШКЗЛ` E20) and stores `КЛСВ` (zone 0576 + `НОММЛ1` = logical
+0676, page 034) into ДИСП70.`КУСЛСВ`; ПРИК4 at the first directive 16 reads
+that zone into 070000 and clears `КУСЛСВ` (`prik4.be:288-294`). So КОНФУС sat
+in the page of the СЭВМ (inter-machine link) module. E28 is set in all 16
+configuration variants, so the zeroed zone 0676 is still read into the closed
+page 034; nothing refers to it any more.
+
+Result: the zones of МОТТ (0627), КЗ1 (0670), ХЛАМ, ПРИК7 and ЭК2 change,
+0676 is zeroed; no label moved (`МАСПР7` is new in МОТТ); `tools/check.sh`
+passes; the job's printout is unchanged apart from times.
+
 ## Remaining work
 
-1. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
-2. Decision B pass over the other К-71 features, starting with the штат
+1. «СЭВМ ДА» (ТРАКТЫ E28) in the test image: with no СЭВМ module it only
+   closes page 034 and loads the zeroed zone 0676; decide whether to clear it.
+2. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
+3. Decision B pass over the other К-71 features, starting with the штат
    ТЕРМАС vectors.

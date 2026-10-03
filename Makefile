@@ -15,14 +15,14 @@ MODS = disp70 vzu term kachka kit diski mott gnus khlam pechat \
         trubka gp3 robot priskv nerot spe66 gruppa \
 	upryach dnepr plan plan2 e60 e60d slojka kch pibesm avml \
         gp2 ukachka v1k v3v4 v6v7 avrasp kz1 skor1 skor2 \
-	konfus gens2 prikaz gens gens1 espi80 espl svyaz
+	gens2 prikaz gens gens1 espi80 espl svyaz
 
 DISKS_REPO ?= $(HOME)/git/besm6.github.io
 
 build: $(addsuffix .lst,$(MODS)) modloc.txt rvs.src sbor2053.orig
 	env BESM6_PATH=.:$(BESM6_PATH) ./rvs.pl rvs.src
 	env BESM6_PATH=.:$(BESM6_PATH) ./verify.pl
-	./mkdisk.py --zero 0677 --zero 0567:0 --zero 0607:012 --zero 0744
+	./mkdisk.py --zero 0677 --zero 0567:0 --zero 0607:012 --zero 0744 --zero 0676
 
 sbor2053.orig:
 	git -C $(DISKS_REPO) show HEAD:download/disks/sbor2053.bin > $@
