@@ -22,7 +22,8 @@ while kill -0 $pid 2>/dev/null; do
         exit 0
     fi
     if [ "$(date +%s)" -ge "$deadline" ]; then
-        kill $pid
+        # SIGTERM only interrupts the current SIMH command, the script goes on.
+        kill -9 $pid
         wait $pid 2>/dev/null || true
         echo "### TIMEOUT"
         exit 124

@@ -100,8 +100,11 @@ These are switched by `∧К71` too, but do not use КАДОПАМ:
 - DW-21 printer on the АЦПУ channel (КОНФУС, ПЕЧАТЬ, ПРИК4). Removed in
   phase 4 (decision D).
 - Plotter stubs `загл7а`/`загл7б` (ВЗУ, ДИСП70, ГП2, ПУСКАЧ, ТРУБКА).
-- `шкэт` terminal handling (МОТТ `прсим7`, `прнол7`, `км2бк7`, called by ТЕРМ)
-  and the АС/ТАБЛО blocks in НОМБОБ.
+- `шкэт` terminal handling (МОТТ `прсим7`, `прнол7`, `км2бк7`, called by ТЕРМ).
+
+The АС and ТАБЛО blocks in НОМБОБ, ТЕРМ `rt` and the АС blocks of МОТТ are
+not К-71 features: they are штат code that `∧К71` assembles out. ТАБЛО is
+back (see Progress); the АС parts belong to phase 6.
 - ХЛАМ Э62 '6200'–'6203' → `Э62ГРУ` (used to take КОНФУС.`шкраб7`'s address as
   the constant, now `слиа -'6200'`).
 - ТЕРМАС handlers at `обвнп3-6`/`обвнп3-4` instead of the штат ПРП 12/10
@@ -237,6 +240,18 @@ Steps:
    vectors and open them in `МПРП`, as the removed АС lines presumably did;
    decide on `ТЕРАС`.
 3. Configuration: describe at least one АС line in the test image.
+4. The other штат АС code that `∧К71` assembles out:
+   - НОМБОБ: the АС part of block ДА1 (`СЧ ЗАНЯТА` … `АС761` … `ПВ УСТПРП`,
+     after the ЗВ1 loop; it now ends in `пб АС76`, the ТАБЛО code), block ДА2
+     (штат `АС762`; К-71 has a stub `АС762 ноп`, the target of СМЕНА1's
+     `пе/пб АС762-Н(М7)` «ДР. БОБ.»), block ДА3 (`ТЕРМ ВНЕШ rt`) and the
+     commented-out `ПЕ АС762` in the ЗВ1 loop.
+   - ТЕРМ: `rt` (`term.be:613-615`) and its `ВХОД` (`term.be:652-661`).
+   - МОТТ: the штат АС blocks (`mott.be:133-260`, 596-608, 806-882, 895-905,
+     924-951, 964-1135, 1142-1210, 1659-1667, 1734-1745, 1780-1788), part of
+     step 1.
+   Like ТАБЛО, any growth must not move labels: НОМБОБ ends just below
+   Н+'1400' (011400), where СТАТ1С/СТАТ2С are loaded.
 Test: a terminal session on a mux line (SIMH `set ttyN` on the mux), with
 `ШКАС`/`АСОТ` coming from the OS, which needs SIMH without the `увв '153'`
 patch.
@@ -295,8 +310,8 @@ is replaced by a reserve of the same size (`мода 0` inside straight-line cod
 `пам n` after an unconditional jump), marked «РЕЗЕРВ: АДРЕСА НЕ СДВИГАТЬ», so no
 remaining label moves (`tools/labels.py --check labels.base` shows only gone
 labels). Non-ДКС К-71 features stay (decision B): the `шкэт` terminal handling
-(МОТТ `прсим7`, `прнол7`, `км2бк7`; ТЕРМ calls them), АС/ТАБЛО blocks in
-НОМБОБ, МОТТ blocks N1/N2 without the `шзпри7` reads, КОНФУС Э52 '7777',
+(МОТТ `прсим7`, `прнол7`, `км2бк7`; ТЕРМ calls them), the АС/ТАБЛО blocks in
+НОМБОБ (actually штат code, see «ТАБЛО enabled»), МОТТ blocks N1/N2 without the `шзпри7` reads, КОНФУС Э52 '7777',
 КОНВОЙ (removed later, decision E) and DW-21 parts, `маспр7` and `шкраб7`
 (used by ЭК2, ПРИК7, КЗ1, ХЛАМ).
 - ДМЛМБ, ПРИКАЗ, ПРИСКВ, БОНБОТ, КЗ, ЭКВВОД, ГЕНС, ГЕНС1, НОМБОБ: hooks and
@@ -443,6 +458,28 @@ The other disk sections in МОТТ (`ДДИП`, `ДКП`, `ДКО`, `ЗАН`, `
 
 Result: only zone 0627 (МОТТ) changes; no label moved; `tools/check.sh`
 passes; the job's printout is unchanged apart from times.
+
+**ТАБЛО enabled in НОМБОБ.** After the ЗВ1 loop the штат НОМБОБ runs the АС
+code and then the panel code `АС76`: show `ТАБЛО` on the panel (`увв '147'`;
+SIMH treats it as an idle hint, then as `'177'`) and keep its bits 48-16
+(remembered in `пртаб`) for one pass before clearing them. `∧К71` assembled
+out both, together with `пртаб`.
+- `пртаб` and `АС76`…`ВЫ1` (now ending in `ПБ ВЫ`) sit in the reserve after
+  `пб НЕЗАВИ` (`пам 11` → 1 + 6 words + `пам 4`).
+- After `ЦИКЛ (М15)` the К-71 text has `пб АС76` where it had the filler
+  `уиа 1027` (М0 target, a no-op), which the штат text keeps before its АС
+  code. The АС code itself stays under `∧К71` for phase 6.
+
+First try: leaving the code in place moved НОМБОБ's tail by 6 words. Labels
+relink, but the literal pool then ran past 011377 into Н+'1400', where
+СТАТ2С (`СТАРТ '11400'`) is loaded. The overlay overwrote the constants, and
+СТАТ2С was then called over and over (zone 0030 read endlessly), so the boot
+hung.
+
+Result: only zone 0426 (НОМБОБ) changes; no label moved (`ПРТАБ`, `АС76`,
+`ВЫ1` are new); `tools/check.sh` passes; the job's printout is unchanged
+apart from times. `sim/run.sh` now uses SIGKILL on timeout, since SIGTERM only
+interrupts the current SIMH command and the script goes on.
 
 ## Remaining work
 
