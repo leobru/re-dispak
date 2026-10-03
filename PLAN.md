@@ -98,8 +98,8 @@ These are switched by `∧К71` too, but do not use КАДОПАМ:
 - КОНВОЙ checkpoint tracing and remote-disk tests through the disk channel.
   Removed after phase 2 (it could only be switched on through ЭК7), see
   Progress.
-- DW-21 printer on the АЦПУ channel (КОНФУС, ПЕЧАТЬ, ПРИК4). To be removed,
-  see phase 4 and decision D.
+- DW-21 printer on the АЦПУ channel (КОНФУС, ПЕЧАТЬ, ПРИК4). Removed in
+  phase 4 (decision D).
 - Plotter stubs `загл7а`/`загл7б` (ВЗУ, ДИСП70, ГП2, ПУСКАЧ, ТРУБКА).
 - `шкэт` terminal handling (МОТТ `прсим7`, `прнол7`, `км2бк7`, called by ТЕРМ)
   and the АС/ТАБЛО blocks in НОМБОБ.
@@ -146,7 +146,7 @@ Remove СВЯЗЬ7, ЭКО and ЭК7 from `Makefile` and `rvs.src`. Zero their z
 image (0677; sector 0 of 0567; ЭК7's part of 0607) with a `mkdisk.py` option, so
 that any remaining load attempt fails loudly instead of loading the old code.
 
-### Phase 4: remove DW-21 support — next
+### Phase 4: remove DW-21 support — done
 
 DW-21 is a К-71 addition, but the printer is only a subset of the standard
 АЦПУ-128, so the support is not worth keeping. Only a few parts are assembled
@@ -168,7 +168,7 @@ Use the штат variant (plain АЦПУ-128 path) where the source has one; oth
 remove with same-size reserves, as in phase 2. Test: the batch job's printout
 must stay unchanged (apart from date and time).
 
-### Phase 5: remove Э52 '7777' — to do
+### Phase 5: remove Э52 '7777' — next
 
 The "trusted link" extracode for the АНИС-6 resident (НИТИ). ДИСП70 sends every
 Э52 to КОНФУС.`Э52777` (`disp70.be:255-263`), which returns to `ПЕЭ52` unless the
@@ -330,7 +330,7 @@ built sources. Removed in addition (same-size reserves, no label moved):
   the other МОТТ-100 output starts, not "через ДКС".
 
 Not ДКС, kept: МОТТ `шкот7` (written by ТРУБКА), the `G71136` block in КОНФУС
-(unreferenced, see phase 4), МОТТ block N1 (decision A).
+(unreferenced, not DW-21 either, kept in phase 4), МОТТ block N1 (decision A).
 
 **КОНВОЙ removed (decision E).** Tracing was switched on only by ЭК7 (the
 `дайлт` branch of Э50 '133' fills `бат`/`ук` and loads the КОНВОЙ zone);
@@ -351,14 +351,40 @@ with `бат = 0` the МОТТ gate jumped straight to the continuation with acc
 Result: zones 0551 (ГЕНС), 0605 (АВМД), 0625 (group КАЧКА…РЕЗАРХ, with
 ДИСКИ), 0627 (МОТТ) and 0676 (КОНФУС) change, 0744 is zeroed; no label moved;
 `tools/check.sh` passes.
-In КОНФУС the remaining code is the Э52 '7777' block (phase 5), the DW-21
-block "ПЕЧАТЬ" and `вых1к7`/`шпр4к7` (phase 4), `маспр7`, `шкраб7` and
-`G71136`; the rest of the zone is reserves.
+
+**Phase 4 done: DW-21 removed.** Without DW-21 the КОНФУС cells held fixed
+values (`шdw21` = П30, `шdw21а` = П140, no DW bits in `шdw21б`), so their uses
+became those constants; ПЕЧАТЬ now imports `П30` from ДИСП70. All removed code
+and cells are same-size reserves; the `∧DW21` switch is gone from both modules.
+- ПЕЧАТЬ: `НАЧАЛО` no longer calls `начdw`; the per-character block `пркдdw`
+  and its call; the special-buffer branch `по бвывdw` and the chain
+  `бвывдw`…`прибав`, `спецоб` (from `пчтном`), `учетdw`…`бфдисw` with the
+  accounting trailer «НА ЛИСТАХ … DW-21»; `чтспец` goes straight to `чтобщ`;
+  `выдсб` jumps to `ВЫДОПТ` instead of КОНФУС.`авdw21`; `гасгрп` goes to
+  `зпупря` (`счзон` was non-zero only in the DW chain); cells `режdw1`,
+  `режdw2`, `абуфdw`, `первая`, `прбсек`, `рбтdw1/2` and others. `cимвdw` and
+  `NНПРDW` are general working cells despite the names and stay.
+  The `бвывdw` branch was taken for print buffers with bit 31 of the first
+  word clear; РОБОТ always sets that bit on its own print tracks (and halts if
+  it is missing), so only foreign DW-21 buffers took it. A `стоп` placed there
+  before the removal was never reached by the test job.
+- ПРИК4/КОНФУС: `вых1к7` set `шпр4к7`, which ПЕЧАТЬ copied into `шкприк` so
+  that `НОЛЬ` skipped printer interrupts after ПРИК4; the штат text of that
+  ПРИК4 block is empty, so it belongs to DW-21. The call is `мода 0`; ПЕЧАТЬ
+  now stores 0 into `шкприк`.
+- КОНФУС: block "ПЕЧАТЬ" (`начdw`, `авdw21`, `пркод7`, `шdw21*`, `е17dw`,
+  `ТАБЛИЦ`) and `вых1к7`/`шпр4к7` → reserves; ВХОД and ВНЕШ lines trimmed.
+  `G71136` (unreferenced, not DW-21) stays.
+
+Result: zones 0401 (ПЕЧАТЬ), 0534 (ПРИК4) and 0676 (КОНФУС) change; no label
+moved; `tools/check.sh` passes; the job's printout equals the one from the
+previous build except for the time in the banner.
+In КОНФУС the remaining code is the Э52 '7777' block (phase 5), `маспр7`,
+`шкраб7` and `G71136`; the rest of the zone is reserves.
 
 ## Remaining work
 
-1. Phase 4: DW-21 (decide `вых1к7`/`шпр4к7` and the `G71136` block first).
-2. Phase 5: Э52 '7777'.
-3. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
-4. Decision B pass over the other К-71 features, starting with the штат
+1. Phase 5: Э52 '7777'.
+2. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
+3. Decision B pass over the other К-71 features, starting with the штат
    ТЕРМАС vectors.
