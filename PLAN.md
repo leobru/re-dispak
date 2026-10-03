@@ -92,9 +92,9 @@ The default ПРП vectors in ДИСП70 (`ОБВНП3`) are already the non-Д�
 These are switched by `∧К71` too, but do not use КАДОПАМ:
 - Э52 '7777' "trusted link" for АНИС-6. To be removed, see phase 5 and
   decision D.
-- КОНВОЙ checkpoint tracing and remote-disk tests through the disk channel
-  (`konvoy.be`, `konfus.be:238-444`, hooks in ДИСКИ, ХЛАМ, АВМД, МОТТ
-  `2145-2412`).
+- КОНВОЙ checkpoint tracing and remote-disk tests through the disk channel.
+  Removed after phase 2 (it could only be switched on through ЭК7), see
+  Progress.
 - DW-21 printer on the АЦПУ channel (КОНФУС, ПЕЧАТЬ, ПРИК4). To be removed,
   see phase 4 and decision D.
 - Plotter stubs `загл7а`/`загл7б` (ВЗУ, ДИСП70, ГП2, ПУСКАЧ, ТРУБКА).
@@ -181,6 +181,7 @@ gets the same handling as in the штат system.
 - **C. Zones of removed modules:** zero them.
 - **D. DW-21 and Э52 '7777':** remove (phases 4 and 5); exceptions to
   decision B.
+- **E. КОНВОЙ:** removed now, since nothing can switch it on any more.
 
 ## Progress
 
@@ -263,7 +264,18 @@ built sources. Removed in addition (same-size reserves, no label moved):
 Not ДКС, kept: МОТТ `шкот7` (written by ТРУБКА), the `G71136` block in КОНФУС
 (unreferenced, see phase 4), МОТТ block N1 (decision A).
 
-**КОНВОЙ is now unreachable.** Tracing was switched on only by ЭК7 (the
+**КОНВОЙ removed (decision E).** Tracing was switched on only by ЭК7 (the
 `дайлт` branch of Э50 '133' fills `бат`/`ук` and loads the КОНВОЙ zone);
-nothing else writes `бат`. So the КОНФУС trace handlers, the МОТТ
-`дтпре`…`дтав` gates and the КОНВОЙ module are idle.
+nothing else writes `бат`. Each hook did `сч A(продолжение)` / `пб дт…`, and
+with `бат = 0` the МОТТ gate jumped straight to the continuation with acc = 0.
+- ДИСКИ (`нпр1`, `прмд`, `тмдоб7`, `enq3`, `qc`, the `ДА12А` block) and АВМД
+  (`опрд1`, `аварк7`): each hook is now `сч 0` plus three `мода 0`, which falls
+  into the continuation with acc = 0. ХЛАМ still jumps to ДИСКИ.`тмдоб7`.
+- МОТТ: section «КОНВОЙ» (gates `дтпре`, `дтпро`, `дтобщ`, `дтав` and cells
+  `вых1`…`рк71`) → reserve.
+- КОНФУС: trace handlers `тпрер`, `тпроц`, `тобщ`, `тав` (`КОНФУС+'600'`) →
+  reserve; unused imports dropped.
+- ГЕНС: `уиа тип1(М3)` → `уиа '77526'(М3)` (same value; the address of the
+  former МОТТ cell).
+- КОНВОЙ removed from `Makefile`, `modlist.src`, `rvs.src`; source deleted;
+  zone 0744 zeroed by `mkdisk.py --zero 0744`.
