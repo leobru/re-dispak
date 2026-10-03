@@ -481,6 +481,29 @@ Result: only zone 0426 (НОМБОБ) changes; no label moved (`ПРТАБ`, `А
 apart from times. `sim/run.sh` now uses SIGKILL on timeout, since SIGTERM only
 interrupts the current SIMH command and the script goes on.
 
+**ДИСКИ reserves merged.** Nothing outside ДИСКИ addresses its cells by number
+(searched for octal and decimal forms of 073326-075367; the near misses are
+text codes, page addresses or programs with their own address space; КЗ1's
+`ЭКВИВ`s `'25047'`…`'33457'` are the ГОСТ texts «КЗ», «ОЗ», «ЧЛ», «ЧБ», «ЧП»,
+«ЧД», «УЗ» for the end-of-task line). So the six 2-word КОНВОЙ reserves
+(`нпр1`, after `прмд`, `тмдоб7`, `enq3`, `qc`, after `отклин`) are gone, with
+their now empty `∧К71` blocks. `qc` now labels the next instruction
+(`СЧ ШЗМД`), and `тмдоб7`, which only fell through, is replaced by its target
+`освкм1` (ДИСКИ `пв`, ХЛАМ `пб`, ВХОД/ВНЕШ).
+
+ДИСКИ's size must stay the same: КИТ, ГРУППА, ДИСКИ and РЕЗАРХ have no load
+address of their own in `rvs.src` and are packed one after another behind
+КАЧКА (072000, zones 0625-0626). A shorter ДИСКИ moved РЕЗАРХ's code 2 words
+below its `СТАРТ '75370'`, and the job ended with «ДАЙ ТРАКТЫ». The 12 words
+are therefore one reserve at the end of ДИСКИ's code (`пам 12`, before the
+constant pool).
+
+Result: 215 ДИСКИ labels move by up to 12 words (the ДИСКИ entries in
+`labels.base` are rebased); its importers are relinked; РЕЗАРХ and ДИСКИ's
+constants stay put; `tools/check.sh` passes; the job's printout is unchanged
+apart from times. `tools/check.sh` now also fails if the job's printout lacks
+«КОНЕЦ ЗАДАЧИ» (it only waited for the printout before).
+
 ## Remaining work
 
 1. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
