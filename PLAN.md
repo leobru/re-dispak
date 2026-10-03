@@ -90,7 +90,8 @@ The default ПРП vectors in ДИСП70 (`ОБВНП3`) are already the non-Д�
 ### Other К-71 features (kept unless decided otherwise)
 
 These are switched by `∧К71` too, but do not use КАДОПАМ:
-- Э52 '7777' "trusted link" for АНИС-6 (`konfus.be:20-237`, `disp70.be:257-263`).
+- Э52 '7777' "trusted link" for АНИС-6. To be removed, see phase 5 and
+  decision D.
 - КОНВОЙ checkpoint tracing and remote-disk tests through the disk channel
   (`konvoy.be`, `konfus.be:238-444`, hooks in ДИСКИ, ХЛАМ, АВМД, МОТТ
   `2145-2412`).
@@ -159,13 +160,27 @@ Use the штат variant (plain АЦПУ-128 path) where the source has one; oth
 remove with same-size reserves, as in phase 2. Test: the batch job's printout
 must stay unchanged (apart from date and time).
 
+### Phase 5: remove Э52 '7777'
+
+The "trusted link" extracode for the АНИС-6 resident (НИТИ). ДИСП70 sends every
+Э52 to КОНФУС.`Э52777` (`disp70.be:255-263`), which returns to `ПЕЭ52` unless the
+address is '7777'. The штат variant `пб пеэ52` is still in the source, so:
+- ДИСП70: use the штат branch of the `э52к71` block and drop
+  `КОНФУС ВНЕШ Э52777` (`disp70.be:2764`).
+- КОНФУС: the `Э52777` block (`konfus.be:18-236`, `Э52777` … `ш52гус`) becomes
+  a reserve; drop `Э52777` from ВХОД and, if nothing else needs it, `ПЕЭ52`
+  from the ДИСП70 ВНЕШ line.
+Test: Э52 with an ordinary address still works, and Э52 '7777' from a user task
+gets the same handling as in the штат system.
+
 ## Decisions
 
 - **A. МОТТ blocks N1/N2:** keep the К-71 versions; remove only the ДКС reads
   (`шзпри7`).
 - **B. Other К-71 features:** keep for now; possibly removed in a later pass.
 - **C. Zones of removed modules:** zero them.
-- **D. DW-21:** remove (phase 4); it is an exception to decision B.
+- **D. DW-21 and Э52 '7777':** remove (phases 4 and 5); exceptions to
+  decision B.
 
 ## Progress
 
