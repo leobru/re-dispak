@@ -14,8 +14,11 @@ SIMH выполняет только слова с командной свёрт
 Зоны (или секторы зон) удалённых модулей, указанные в --zero ЗОНА[:СЕКТОРЫ],
 заполняются нулями с числовой свёрткой, чтобы их нельзя было выполнить.
 
+--trakty-off N гасит разряд EN слова ТРАКТЫ (слово 015) во всех 16 вариантах
+конфигурации (зона 0750, по 040 слов на вариант).
+
     python3 mkdisk.py [--base образ] [--src 2222] [--out 2053.bin]
-                      [--zero 0677] [--zero 0567:0]
+                      [--zero 0677] [--zero 0567:0] [--trakty-off 28]
 """
 import argparse
 import re
@@ -30,6 +33,10 @@ PHYS_OFFSET = 4
 PARITY_INSN = 1
 PARITY_NUM = 2
 DEFAULT_BASE = "sbor2053.orig"
+CONFIG_ZONE = 0o750
+CONFIG_VARIANTS = 16
+CONFIG_SIZE = 0o40
+TRAKTY = 0o15
 
 
 def cyclic_sum48(words):
@@ -60,6 +67,7 @@ def main():
     ap.add_argument("--rvs", default="rvs.src")
     ap.add_argument("--out", default="2053.bin")
     ap.add_argument("--zero", action="append", default=[], metavar="ZONE[:SECTORS]")
+    ap.add_argument("--trakty-off", action="append", default=[], type=int, metavar="N")
     args = ap.parse_args()
 
     img = bytearray(open(args.base, "rb").read())
@@ -103,6 +111,13 @@ def main():
                 put(zone, i, PARITY_NUM << 48)
         checksum(zone)
         changed.append("обнулено %s" % spec)
+
+    for bit in args.trakty_off:
+        for v in range(CONFIG_VARIANTS):
+            i = 8 + v * CONFIG_SIZE + TRAKTY
+            put(CONFIG_ZONE, i, get(img, CONFIG_ZONE, i) & ~(1 << (bit - 1)))
+        checksum(CONFIG_ZONE)
+        changed.append("ТРАКТЫ: погашен Е%d" % bit)
 
     open(args.out, "wb").write(img)
     print("mkdisk: %s -> %s, изменённых зон %d" % (args.base, args.out, len(changed)))

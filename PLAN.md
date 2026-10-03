@@ -415,8 +415,10 @@ closes page 034 (`ШКЗЛ` E20) and stores `КЛСВ` (zone 0576 + `НОММЛ1
 0676, page 034) into ДИСП70.`КУСЛСВ`; ПРИК4 at the first directive 16 reads
 that zone into 070000 and clears `КУСЛСВ` (`prik4.be:288-294`). So КОНФУС sat
 in the page of the СЭВМ (inter-machine link) module. E28 is set in all 16
-configuration variants, so the zeroed zone 0676 is still read into the closed
-page 034; nothing refers to it any more.
+configuration variants. With no СЭВМ module it only closed page 034 and read
+the zeroed zone 0676 into it, so `mkdisk.py --trakty-off 28` now clears E28 in
+all 16 variants of the test image: `КУСЛСВ` stays 0, ПРИК4 reads nothing, and
+`ШКЗЛ` keeps its assembled value (page 034 open).
 
 Result: the zones of МОТТ (0627), КЗ1 (0670), ХЛАМ, ПРИК7 and ЭК2 change,
 0676 is zeroed; no label moved (`МАСПР7` is new in МОТТ); `tools/check.sh`
@@ -424,8 +426,6 @@ passes; the job's printout is unchanged apart from times.
 
 ## Remaining work
 
-1. «СЭВМ ДА» (ТРАКТЫ E28) in the test image: with no СЭВМ module it only
-   closes page 034 and loads the zeroed zone 0676; decide whether to clear it.
-2. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
-3. Decision B pass over the other К-71 features, starting with the штат
+1. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
+2. Decision B pass over the other К-71 features, starting with the штат
    ТЕРМАС vectors.
