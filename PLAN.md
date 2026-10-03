@@ -21,8 +21,9 @@ length (`пам n`, or a jump over the hole), so no exported label moves.
 1. `make build`: every module assembles with `ОШИБОК=0000`.
 2. `verify.pl` (part of `make build`): only the zones of the edited modules
    differ from the original.
-3. `tools/entries.sh | diff entries.base -`: no exported label moved; only the
-   removed ДКС entries disappear.
+3. `tools/labels.py --check labels.base`: no label of the baseline moved
+   (0 MOVED); labels of removed code are reported as gone. (The first steps
+   used `tools/entries.sh | diff entries.base -`, exported labels only.)
 4. `sim/run.sh` (or `make boot`): the OS boots, the job runs, the printout
    ends; the summary line `KADOPAM accesses: N` counts 032/0132 executions
    (logged by `set dks debug=KADOPAM`). Baseline: 2–3 reads of cell 0, from
@@ -34,6 +35,8 @@ length (`пам n`, or a jump over the hole), so no exported label moves.
    `sim/consuls.py` enables them as VIDI Videotons; this exercises the ПРП
    vectors 12/11 (receive) and 10/9 (output).
 5. One commit per step.
+
+`tools/check.sh` runs checks 1–4 in one go and ends with `### ALL CHECKS OK`.
 
 `tools/xref.py NAME…` lists the uses of names in the label/address fields
 (case and Latin/Cyrillic look-alikes folded); `tools/k71blocks.py` lists all
@@ -98,6 +101,11 @@ These are switched by `∧К71` too, but do not use КАДОПАМ:
 - DW-21 printer on the АЦПУ channel (КОНФУС, ПЕЧАТЬ, ПРИК4). To be removed,
   see phase 4 and decision D.
 - Plotter stubs `загл7а`/`загл7б` (ВЗУ, ДИСП70, ГП2, ПУСКАЧ, ТРУБКА).
+- `шкэт` terminal handling (МОТТ `прсим7`, `прнол7`, `км2бк7`, called by ТЕРМ)
+  and the АС/ТАБЛО blocks in НОМБОБ.
+- `шкраб7` (used by ХЛАМ) and the unreferenced `G71136` block in КОНФУС.
+- ТЕРМАС handlers at `обвнп3-6`/`обвнп3-4` instead of the штат ПРП 12/10
+  vectors (see Progress).
 - `маспр7` in ЭК2, КЗ1, ПРИК7 ("не шифр подсист. МРВ", `konfus.be:951`).
 - МОТТ block N1 (`mott.be:133-260`, `аск71`: КРК terminal detection) and block
   N2 (`mott.be:1373-1441`, `вдк71`: modified telegraph-line I/O). They replace
@@ -107,7 +115,7 @@ These are switched by `∧К71` too, but do not use КАДОПАМ:
 
 ## Phases
 
-### Phase 1: disconnect (small, address-preserving edits)
+### Phase 1: disconnect (small, address-preserving edits) — done
 
 Make every ДКС path unreachable without removing code yet:
 1. НОМБОБ `диасм7`: do not go to `нстдкс`. СВЯЗЬ7 is then never loaded, ПРП
@@ -124,7 +132,7 @@ Then add a second test: a terminal session on a user telegraph line
 (`sim/term.sh`), so that the ТЕРМ/МОТТ paths with `шкут = 0` are exercised
 on a line other than the operator console.
 
-### Phase 2: remove the dead code, module by module
+### Phase 2: remove the dead code, module by module — done
 
 Leaves first, so that each step still assembles: ДМЛМБ, ПРИКАЗ, ПРИСКВ,
 БОНБОТ, КЗ, ЭКВВОД, ГЕНС, ГЕНС1, НОМБОБ, ТЕРМ, ВЗУ, ДИСП70, МОТТ (block N3
@@ -132,13 +140,13 @@ and the `шзпри7` uses), КОНФУС (the ДКС blocks and cells). Use the
 variant where there is one, otherwise delete; pad in the fixed-address
 modules. ВНЕШ/ВХОД lines go together with the code.
 
-### Phase 3: drop the modules
+### Phase 3: drop the modules — done (together with phase 2)
 
 Remove СВЯЗЬ7, ЭКО and ЭК7 from `Makefile` and `rvs.src`. Zero their zones in the
 image (0677; sector 0 of 0567; ЭК7's part of 0607) with a `mkdisk.py` option, so
 that any remaining load attempt fails loudly instead of loading the old code.
 
-### Phase 4: remove DW-21 support
+### Phase 4: remove DW-21 support — next
 
 DW-21 is a К-71 addition, but the printer is only a subset of the standard
 АЦПУ-128, so the support is not worth keeping. Only a few parts are assembled
@@ -160,7 +168,7 @@ Use the штат variant (plain АЦПУ-128 path) where the source has one; oth
 remove with same-size reserves, as in phase 2. Test: the batch job's printout
 must stay unchanged (apart from date and time).
 
-### Phase 5: remove Э52 '7777'
+### Phase 5: remove Э52 '7777' — to do
 
 The "trusted link" extracode for the АНИС-6 resident (НИТИ). ДИСП70 sends every
 Э52 to КОНФУС.`Э52777` (`disp70.be:255-263`), which returns to `ПЕЭ52` unless the
@@ -229,7 +237,8 @@ remaining label moves (`tools/labels.py --check labels.base` shows only gone
 labels). Non-ДКС К-71 features stay (decision B): the `шкэт` terminal handling
 (МОТТ `прсим7`, `прнол7`, `км2бк7`; ТЕРМ calls them), АС/ТАБЛО blocks in
 НОМБОБ, МОТТ blocks N1/N2 without the `шзпри7` reads, КОНФУС Э52 '7777',
-КОНВОЙ and DW-21 parts, `маспр7` and `шкраб7` (used by ЭК2, ПРИК7, КЗ1, ХЛАМ).
+КОНВОЙ (removed later, decision E) and DW-21 parts, `маспр7` and `шкраб7`
+(used by ЭК2, ПРИК7, КЗ1, ХЛАМ).
 - ДМЛМБ, ПРИКАЗ, ПРИСКВ, БОНБОТ, КЗ, ЭКВВОД, ГЕНС, ГЕНС1, НОМБОБ: hooks and
   ДКС imports removed.
 - ТЕРМ: output start goes straight to БОЭК1.`боэте4`; `КМ` does
@@ -279,3 +288,17 @@ with `бат = 0` the МОТТ gate jumped straight to the continuation with acc
   former МОТТ cell).
 - КОНВОЙ removed from `Makefile`, `modlist.src`, `rvs.src`; source deleted;
   zone 0744 zeroed by `mkdisk.py --zero 0744`.
+
+Result: zones 0551 (ГЕНС), 0605 (АВМД), 0625 (group КАЧКА…РЕЗАРХ, with
+ДИСКИ), 0627 (МОТТ) and 0676 (КОНФУС) change, 0744 is zeroed; no label moved;
+`tools/check.sh` passes.
+In КОНФУС the remaining code is the Э52 '7777' block (phase 5), the DW-21
+block "ПЕЧАТЬ" and `вых1к7`/`шпр4к7` (phase 4), `маспр7`, `шкраб7` and
+`G71136`; the rest of the zone is reserves.
+
+## Remaining work
+
+1. Phase 4: DW-21 (decide `вых1к7`/`шпр4к7` and the `G71136` block first).
+2. Phase 5: Э52 '7777'.
+3. Decision B pass over the other К-71 features, starting with the штат
+   ТЕРМАС vectors.
