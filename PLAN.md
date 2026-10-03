@@ -183,41 +183,62 @@ gets the same handling as in the штат system.
 
 ### Phase 6: enable МОТТ-100 and fix the ШКАС setup in ГЕНС1 — to do
 
-Terminals on the АС multiplexer (МОТТ-100; in SIMH the mux device: output
-`увв '143'`, input `увв '4143'`, ПРП 7 input / ПРП 6 done, reset `увв '153'`)
-only work today because SIMH patches the OS: on `увв '153'` (issued by ГЕНС1,
-«ГАШЕНИЕ РПМ (ДЛЯ АС)») `besm6_cpu.c` stores `ШКАС` := E48 (line 1 is on АС)
-and `АСОТ` := `0101010101010101` (line 1 in all 8 operator positions) straight
-into МОТТ (077023, 076774). The OS code that should set them is gone:
-- ГЕНС1: its header says the listing lost lines 398-425 and 1345-1348 («АС»)
-  and 1239-1245 («ТЕРМАС»). Nothing in the build writes `ШКАС`/`АСОТ` at
-  startup; only МОТТ (`ПИЛОТ`, disconnect) and БОНБОТ change `ШКАС` later.
-- ГЕНС1 `ТЕРАС` (table `ТАС`, logical → physical МОТТ-100 line): the test is
-  stubbed out as `счи 0` / `пб НЕТТЕР` with the comments «надо И Е48+47(М16)»
-  and «надо ПО vt» (the `vt` branch below is unreachable), so all `ТАС`
-  entries for lines 1-63 are 0.
-- МОТТ `усвд`: after the `ДА4А` block the common code does
-  `или '7777'` / `зп '7777'`, i.e. writes absolute cell 07777, where the
-  МОТТ-100 text («"1" -> ШАС01») has `шас01`.
-- МОТТ blocks N1 (`ВХОДАС`, `аск71`) and N2 (`вдк71`) and the small
-  `ДА4А`/`ДА4Б` blocks are К-71 versions; the штат (МОТТ-100) variants are
-  still in the source (N1: 32 lines штат vs 74 К-71).
+**Reference: ЯНУС.** The kernel debugger (`janus.be`) drives the АС hardware
+directly and is the definitive description of the interface; МОТТ-100 does
+the same in its штат text (`ВХОДАС`):
+- `увв '143'`: send a 16-bit syllable; `увв '4143'`: read the received
+  syllable, then `увв '153'` releases the receive register (after every
+  read, in ЯНУС `ЖДСЛСЛ`, `G50415`, `ЖДИВЫД` and in `ВХОДАС`).
+- `увв '4034'` reads ПРП: E7 = syllable received, E6 = ready to send;
+  `увв '30'` clears the bit; ЯНУС opens the mask with `МПРП := П140`. So the
+  АС uses ПРП 7 (input) and ПРП 6 (output), as SIMH does (`PRP_MUX_INPUT`,
+  `PRP_MUX_DONE`); the «8Р. ПРП» in the МОТТ comment is not the bit number.
+- Syllable: physical line in bits 14-9 (`сда 64-8`; ЯНУС takes it from
+  panel cell 4, low 6 bits, < 060), character in bits 8-1. Out: data =
+  line<<8 | character; service = line<<8 | E15 | (`ГОД` ∧ 7, the machine
+  number) | code, with code E8 = line reset (the reply must have
+  syllable ∧ П30 = E4) and E4 = start of output. In: E15 = service syllable,
+  E16 = parity error (`ВХОДАС` → `КЧС1`).
+
+**State of this build.** The АС path is not used at all: a test run logs only
+the one `MUX: clear` from ГЕНС1 `увв '153'`.
+- МОТТ: `ВХОДАС` (block N1) is the штат text of an `∧К71` block, so it is
+  not assembled; the К-71 text `аск71` is entered from the monitor loop
+  (`НАЧАЛО`: `по аск71` instead of `по ВЫХМОН`). Block N2 (`вдк71`) and the
+  `ДА4А`/`ДА4Б` blocks are К-71 versions as well.
+- ДИСП70: the ПРП 7 and 6 vectors (`прп7`, `прп6`) go to `БМВ`, and nothing
+  installs `ВХОДАС` there. ГЕНС1's header says the listing lost lines
+  398-425 and 1345-1348 («АС») and 1239-1245 («ТЕРМАС»); presumably the
+  vector setup was there (not checked).
+- `ШКАС` (logical lines on АС) and `АСОТ` (8 × 6 bits, physical lines of the
+  operator terminals on АС) are never set at startup. SIMH instead stores
+  `ШКАС` := E48 and `АСОТ` := `0101010101010101` into МОТТ (077023, 076774)
+  on every `увв '153'` (`besm6_cpu.c`). Since МОТТ-100 and ЯНУС issue
+  `увв '153'` after each received syllable, this patch would overwrite the
+  run-time `ШКАС` (set by `ПИЛОТ`/автоподключение, cleared on disconnect) on
+  every character: it has to go once the OS sets these cells itself, which
+  means a SIMH change (not done here unless asked).
+- ГЕНС1 `ТЕРАС` builds `ТАС`, indexed by physical line and giving the
+  logical number (`ВХОДАС`: `мод ТАС(М17)`; 0 = автоподключение `АС1`). Its
+  test is stubbed out (`счи 0` / `пб НЕТТЕР`, comments «надо И Е48+47(М16)»,
+  «надо ПО vt»), so every line auto-connects; that may be acceptable, to be
+  decided.
+- МОТТ `усвд`: after the `ДА4А` block the common code does `или '7777'` /
+  `зп '7777'` (absolute cell 07777) where the МОТТ-100 text has `шас01`.
 - All 12 configuration variants have the АС words empty (`ЯШАС`/`ШАС128`,
-  `NТАС`, `ШКТТ`, `ШКТТ2` = 0), so the configuration has to describe the АС
-  lines as well (as `makeBESM2053.py` does for ТЕРМ).
+  `NТАС`, `ШКТТ`, `ШКТТ2` = 0).
 
 Steps:
-1. Recover the АС setup of ГЕНС1 (`ШКАС`, `АСОТ`, `ТАС`) from the МОТТ-100
-   documentation and the surrounding code (`РУКАВА` §2.2 on ТЕРМ/АС, ВЫДИНС
-   `ЯШАС`, `NТАС`, ГЕНС `ШАС128`/`NТАС`), and fix `ТЕРАС` as its comments say.
-2. МОТТ: `'7777'` → `шас01`; switch N1/N2 and `ДА4А`/`ДА4Б` to the штат
-   variants where they are complete (this revisits decision A); check the
-   ПРП bit that `ВХОДАС` expects («8Р. ПРП») against SIMH (ПРП 7).
+1. МОТТ: use the штат (МОТТ-100) variants of block N1 (`ВХОДАС`), the
+   `НАЧАЛО` branch, block N2 and `ДА4А`/`ДА4Б`, checking each against ЯНУС;
+   `'7777'` → `шас01`. This revisits decision A.
+2. ГЕНС1: set `ШКАС`/`АСОТ` (operator terminals on АС), install the ПРП 7/6
+   vectors and open them in `МПРП`, as the removed АС lines presumably did;
+   decide on `ТЕРАС`.
 3. Configuration: describe at least one АС line in the test image.
-Test: an АС terminal session on a mux line, with the values of `ШКАС`/`АСОТ`
-after ГЕНС1 coming from the OS. The SIMH patch in `увв '153'` overwrites
-them, so to prove it a SIMH build without the patch is needed (SIMH is not
-changed here unless asked).
+Test: a terminal session on a mux line (SIMH `set ttyN` on the mux), with
+`ШКАС`/`АСОТ` coming from the OS, which needs SIMH without the `увв '153'`
+patch.
 
 ## Decisions
 
