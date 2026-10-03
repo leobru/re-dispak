@@ -484,8 +484,9 @@ interrupts the current SIMH command and the script goes on.
 **ДИСКИ reserves merged.** Nothing outside ДИСКИ addresses its cells by number
 (searched for octal and decimal forms of 073326-075367; the near misses are
 text codes, page addresses or programs with their own address space; КЗ1's
-`ЭКВИВ`s `'25047'`…`'33457'` are the ГОСТ texts «КЗ», «ОЗ», «ЧЛ», «ЧБ», «ЧП»,
-«ЧД», «УЗ» for the end-of-task line). So the six 2-word КОНВОЙ reserves
+`ЭКВИВ`s `'25047'`…`'33457'` were the ГОСТ texts «КЗ», «ОЗ», «ЧЛ», «ЧБ», «ЧП»,
+«ЧД», «УЗ» for the end-of-task line, now written `УИА П'КЗ'(М15)` etc., same
+code). So the six 2-word КОНВОЙ reserves
 (`нпр1`, after `прмд`, `тмдоб7`, `enq3`, `qc`, after `отклин`) are gone, with
 their now empty `∧К71` blocks. `qc` now labels the next instruction
 (`СЧ ШЗМД`), and `тмдоб7`, which only fell through, is replaced by its target
