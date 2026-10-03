@@ -247,3 +247,23 @@ labels). Non-ДКС К-71 features stay (decision B): the `шкэт` terminal ha
   their old addresses (011000 in 0567, 011400 in 0607); their sectors are
   unchanged. `mkdisk.py --zero` fills zone 0677, sector 0 of 0567 and sectors
   0–2 of 0607 with numeric-tag zeros.
+
+**Follow-up sweep for missed ДКС code.** No `кк 26` (032/0132) is left in the
+built sources. Removed in addition (same-size reserves, no label moved):
+- КОНФУС: the unused jump block at `КОНФУС+'1000'` (`дпрез7`, `ВХОДПР`,
+  `кнцэ7*`, `оши7`, `вхдпр7`) with `шккз7`, which only the ДКС cold-start
+  block `кзк71` set; `тстнмл` («ДЛЯ ДРУГОЙ ВЕРСИИ ДКС»), `масмл1–8`, `cчпб15`,
+  `т60и`. Nothing ever called them.
+- Exports left without importers: ХЛАМ `вхлам7`, МОТТ `ук`, `гтмдл7`, `шмлк71`.
+- Misleading comments: ДИСП70 `ТУС` slot Е24 is ОСА (its base 040000 is used
+  by ЕСПИ80, ЕСПЛ, В3В4; К-71 only borrowed the slot for СВЯЗЬ7 at run time);
+  ГЕНС `ОБМК` clears page 023, not СВЯЗЬ7; БОНБОТ `КОМЛИН` opens ПРП 6 like
+  the other МОТТ-100 output starts, not "через ДКС".
+
+Not ДКС, kept: МОТТ `шкот7` (written by ТРУБКА), the `G71136` block in КОНФУС
+(unreferenced, see phase 4), МОТТ block N1 (decision A).
+
+**КОНВОЙ is now unreachable.** Tracing was switched on only by ЭК7 (the
+`дайлт` branch of Э50 '133' fills `бат`/`ук` and loads the КОНВОЙ zone);
+nothing else writes `бат`. So the КОНФУС trace handlers, the МОТТ
+`дтпре`…`дтав` gates and the КОНВОЙ module are idle.
