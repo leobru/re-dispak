@@ -107,8 +107,6 @@ not К-71 features: they are штат code that `∧К71` assembles out. ТАБ�
 back (see Progress); the АС parts belong to phase 6.
 - ХЛАМ Э62 '6200'–'6203' → `Э62ГРУ` (used to take КОНФУС.`шкраб7`'s address as
   the constant, now `слиа -'6200'`).
-- ТЕРМАС handlers at `обвнп3-6`/`обвнп3-4` instead of the штат ПРП 12/10
-  vectors (see Progress).
 - `маспр7` in ЭК2, КЗ1, ПРИК7 ("не шифр подсист. МРВ"; now in МОТТ, was in
   КОНФУС).
 - МОТТ block N1 (`mott.be:133-260`, `аск71`: КРК terminal detection) and block
@@ -295,13 +293,6 @@ In addition the fifth `уходы` entry is now the default ПРП 12 code itsel
 loaded ПРП 12 stays with the Consul (checked by booting the baseline image
 with only zone 0677 replaced: both Consuls work, ПРП 8–5 point to СВЯЗЬ7,
 ПРП 12 unchanged). СВЯЗЬ7.`ПРП12` is now unreachable.
-
-ТЕРМАС (НЕРПА network driver over Consul 0, never started in this build: no
-module calls its entry `ВХПУСК`) installs its handlers at `обвнп3+12` (ПРП 12)
-and `обвнп3+14` (ПРП 10) in the штат variant, but at `обвнп3-6` and
-`обвнп3-4` in the К-71 variant (`termas.be:340-357`), i.e. over the ГРП 17 and
-ГРП 13 vectors. This is not ДКС code; restoring the штат variant is left for
-the later pass over the other К-71 features (decision B).
 
 **Phase 2 done, together with phase 3.** The modules could not be dropped
 separately: СВЯЗЬ7, ЭКО and ЭК7 import the ДКС cells of ВЗУ, МОТТ and КОНФУС,
@@ -511,8 +502,15 @@ calls it. Dropped from `Makefile`, `modlist.src`, `rvs.src`; source deleted;
 zone 0737 zeroed. Related: ДИСКИ's absolute `уиа '76010'(М7)` is now
 `уиа ИПЗ+10(М7)` (МОТТ).
 
+**ТЕРМАС / ТМГУ is not К-71.** The configuration option `ТМГУ ДА` (ВЫДИНС;
+ГЕНС1 loads zone 0414 when `ПРЕДЕЛ` has Е39) is штат. ТЕРМАС installs ПРП
+12/10 at `обвнп3+12`/`+14` and the timer at `обвнп1+38`; the old `∧К71`
+offsets (`обвнп3-6`/`-4`, `обвнп1+20`) were a К-71 overlay quirk and must not
+be used. `termas.be` now has `∧К71 УСТВ 0` so the штат vectors assemble.
+ТЕРМАС stays in the build; it starts only when ТМГУ is enabled.
+
 ## Remaining work
 
 1. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
-2. Decision B pass over the other К-71 features, starting with the штат
-   ТЕРМАС vectors.
+2. Decision B pass over the other К-71 features (plotter stubs, `шкэт`,
+   ХЛАМ Э62, `маспр7` uses, …) — not ТЕРМАС.
