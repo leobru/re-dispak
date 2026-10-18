@@ -505,6 +505,12 @@ constants stay put; `tools/check.sh` passes; the job's printout is unchanged
 apart from times. `tools/check.sh` now also fails if the job's printout lacks
 «КОНЕЦ ЗАДАЧИ» (it only waited for the printout before).
 
+**УЧЕТ removed.** The module (zone 0737) was only loaded through ПЕЧАТЬ's
+DW-21 path (phase 4). With DW-21 gone and `∧УЧЕТ` unset in КЗ/ПРИК4, nothing
+calls it. Dropped from `Makefile`, `modlist.src`, `rvs.src`; source deleted;
+zone 0737 zeroed. Related: ДИСКИ's absolute `уиа '76010'(М7)` is now
+`уиа ИПЗ+10(М7)` (МОТТ).
+
 ## Remaining work
 
 1. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
