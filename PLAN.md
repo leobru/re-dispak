@@ -105,8 +105,6 @@ These are switched by `∧К71` too, but do not use КАДОПАМ:
 The АС and ТАБЛО blocks in НОМБОБ, ТЕРМ `rt` and the АС blocks of МОТТ are
 not К-71 features: they are штат code that `∧К71` assembles out. ТАБЛО is
 back (see Progress); the АС parts belong to phase 6.
-- ХЛАМ Э62 '6200'–'6203' → `Э62ГРУ` (used to take КОНФУС.`шкраб7`'s address as
-  the constant, now `слиа -'6200'`).
 - `маспр7` in ЭК2, КЗ1, ПРИК7 ("не шифр подсист. МРВ"; now in МОТТ, was in
   КОНФУС).
 - МОТТ block N1 (`mott.be:133-260`, `аск71`: КРК terminal detection) and block
@@ -509,8 +507,14 @@ offsets (`обвнп3-6`/`-4`, `обвнп1+20`) were a К-71 overlay quirk and 
 be used. `termas.be` now has `∧К71 УСТВ 0` so the штат vectors assemble.
 ТЕРМАС stays in the build; it starts only when ТМГУ is enabled.
 
+**ХЛАМ Э62 → Э62ГРУ aligned with СВС.** The test for Э62 addresses
+`'6200'`–`'6203'` and the call to `ГРУППА.Э62ГРУ` (group main / parameters /
+connect) is штат in СВС (`khlam.bemsh`); the BESM-6 source had wrongly put it
+under `∧К71`. The АПУ wrapper and the alternate `сч Е31` stub are gone; the
+path is unconditional, same as СВС.
+
 ## Remaining work
 
 1. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
 2. Decision B pass over the other К-71 features (plotter stubs, `шкэт`,
-   ХЛАМ Э62, `маспр7` uses, …) — not ТЕРМАС.
+   `маспр7` uses, …) — not ТЕРМАС / ТМГУ, not ХЛАМ Э62→Э62ГРУ.
