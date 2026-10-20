@@ -75,7 +75,7 @@ Hooks in other modules:
 | ВЗУ | `vzu.be:1875-1888` | `Э1`: hands Э50 '133' of tasks in `шкаэко` to ЭКО |
 | ВЗУ | `vzu.be:2183-2208` | ВНЕШ/ВХОД |
 | ТЕРМ | `term.be:115`, `317-322`, `418`, `465-471`, `200-202`, `427`, `452-455`, `659-669` | start/char/end of output to ДКС lines (`выдас7`, `прнол7`, `кмас7`, `км2бк7`); `штерм7` |
-| МОТТ | `mott.be:2001-2142` (block N3, ex-ХЛАМ1) | `прсим7`, `прнол7`, `вдкс`, `км2бк7`: character I/O for "АС К-71" lines (`шкут`, `шкэт`) → СВЯЗЬ7 |
+| МОТТ | `mott.be:2001-2142` (block N3, ex-ХЛАМ1) | `прсим7`, `прнол7`, `вдкс`, `км2бк7`: character I/O for "АС К-71" lines (`шкэт`; `шкут` removed with ДКС) → СВЯЗЬ7 |
 | МОТТ | `mott.be:278-282`, `1875`, `2418-2419`, `2537-2569`; `шзпри7` at `185-186`, `654`, `1338-1339`, `1425-1426` | call of `прсим7`; cells `базсв7`, `бсв7ма`, `бсв7мб`; ВНЕШ/ВХОД |
 | ДМЛМБ | `dmlmb.be:404-419`, `1886-1903`, `2354-2361` | drum-exchange hooks → СВЯЗЬ7.`вдмлмб`/`св7мб` |
 | ЭКВВОД | `ekvvod.be:180-181` | Э50 '133' → ЭК7.`Э133` |
@@ -84,7 +84,7 @@ Hooks in other modules:
 | ПРИСКВ | `priskv.be:20-25`, `577-583` | the same; штат keeps a local `шсост7` |
 | БОНБОТ | `bonbot.be:147-153`, `2043` | no carriage return for `шкут` lines |
 | ГЕНС | `gens.be:491-492`, `552` | copies СВЯЗЬ7 (zone 0677) to the drum at startup (`куссв7`) |
-| ГЕНС1 | `gens1.be:347`, `1618` | `шкут := СЛОN`: every free logical line may become a ДКС line |
+| ГЕНС1 | (was `gens1.be:347`) | `шкут := СЛОN` — removed; without ДКС `шкут` would stay 0 and is not needed |
 
 Left as is (harmless text): АВРАСП `avrasp.be:1490` alarm text 29 «НЕ ГОТ. КАДОПАМ».
 The default ПРП vectors in ДИСП70 (`ОБВНП3`) are already the non-ДКС ones; only
@@ -96,7 +96,7 @@ These are switched by `∧К71` too, but do not use КАДОПАМ:
 - Э52 '7777' "trusted link" for АНИС-6. Removed in phase 5 (decision D).
 - КОНВОЙ checkpoint tracing and remote-disk tests through the disk channel.
   Removed after phase 2 (it could only be switched on through ЭК7), see
-  Progress.
+  Progress. The ENQ/DEQ `зандк7` «удал. МД» test is gone too (Progress).
 - DW-21 printer on the АЦПУ channel (КОНФУС, ПЕЧАТЬ, ПРИК4). Removed in
   phase 4 (decision D).
 - Plotter stubs `загл7а`/`загл7б` (ВЗУ, ДИСП70, ГП2, ПУСКАЧ, ТРУБКА).
@@ -105,13 +105,19 @@ These are switched by `∧К71` too, but do not use КАДОПАМ:
 The АС and ТАБЛО blocks in НОМБОБ, ТЕРМ `rt` and the АС blocks of МОТТ are
 not К-71 features: they are штат code that `∧К71` assembles out. ТАБЛО is
 back (see Progress); the АС parts belong to phase 6.
-- `маспр7` in ЭК2, КЗ1, ПРИК7 ("не шифр подсист. МРВ"; now in МОТТ, was in
-  КОНФУС).
 - МОТТ block N1 (`mott.be:133-260`, `аск71`: КРК terminal detection) and block
   N2 (`mott.be:1373-1441`, `вдк71`: modified telegraph-line I/O). They replace
   the МОТТ-100 multiplexer path (`ВХОДАС`, ПРП 8). Block N1 mentions the КРК
   equipment "с прямым доступом в память Э-60" and reads `шзпри7`, so it is
   partly ДКС; see decision A.
+
+### `∧ЛИНМД` (not К-71)
+
+Disk **lines** (УКВП → `НОМРМД`) and hardware capture/release (ПРП 1/2,
+`мзахв`, `увв '20'`) are штат. The BESM-6 alternate control paths that used
+to sit under `∧К71` in ДИСКИ — readiness poll via `нпр2`/`опргд1`, release via
+`освкм1`/`освл`/`опргд2`, and the matching `ВНЕШ` — are now under
+`∧ЛИНМД УСТВ 1` (`diski.be`). Helpers stay in МОТТ; they are not ДКС.
 
 ## Phases
 
@@ -219,10 +225,9 @@ the one `MUX: clear` from ГЕНС1 `увв '153'`.
   every character: it has to go once the OS sets these cells itself, which
   means a SIMH change (not done here unless asked).
 - ГЕНС1 `ТЕРАС` builds `ТАС`, indexed by physical line and giving the
-  logical number (`ВХОДАС`: `мод ТАС(М17)`; 0 = автоподключение `АС1`). Its
-  test is stubbed out (`счи 0` / `пб НЕТТЕР`, comments «надо И Е48+47(М16)»,
-  «надо ПО vt»), so every line auto-connects; that may be acceptable, to be
-  decided.
+  logical number (`ВХОДАС`: `мод ТАС(М17)`; 0 = автоподключение `АС1`).
+  Restored: bit test `И Е48+47(М16)` on `ШКТТ2`, else `vt` on `ШКVТ2`;
+  `СЛЕДЯП` uses `УИА -1(М17)` as in СВС. Empty scales still leave `ТАС` = 0.
 - МОТТ `усвд`: after the `ДА4А` block the common code does `или '7777'` /
   `зп '7777'` (absolute cell 07777) where the МОТТ-100 text has `шас01`.
 - All 12 configuration variants have the АС words empty (`ЯШАС`/`ШАС128`,
@@ -233,8 +238,8 @@ Steps:
    `НАЧАЛО` branch, block N2 and `ДА4А`/`ДА4Б`, checking each against ЯНУС;
    `'7777'` → `шас01`. This revisits decision A.
 2. ГЕНС1: set `ШКАС`/`АСОТ` (operator terminals on АС), install the ПРП 7/6
-   vectors and open them in `МПРП`, as the removed АС lines presumably did;
-   decide on `ТЕРАС`.
+   vectors and open them in `МПРП`, as the removed АС lines presumably did.
+   (`ТЕРАС` restored — see Progress.)
 3. Configuration: describe at least one АС line in the test image.
 4. The other штат АС code that `∧К71` assembles out:
    - НОМБОБ: the АС part of block ДА1 (`СЧ ЗАНЯТА` … `АС761` … `ПВ УСТПРП`,
@@ -301,8 +306,8 @@ remaining label moves (`tools/labels.py --check labels.base` shows only gone
 labels). Non-ДКС К-71 features stay (decision B): the `шкэт` terminal handling
 (МОТТ `прсим7`, `прнол7`, `км2бк7`; ТЕРМ calls them), the АС/ТАБЛО blocks in
 НОМБОБ (actually штат code, see «ТАБЛО enabled»), МОТТ blocks N1/N2 without the `шзпри7` reads, КОНФУС Э52 '7777',
-КОНВОЙ (removed later, decision E) and DW-21 parts, `маспр7` and `шкраб7`
-(used by ЭК2, ПРИК7, КЗ1, ХЛАМ).
+КОНВОЙ (removed later, decision E) and DW-21 parts, `шкраб7` (used by ХЛАМ;
+`маспр7` removed later — see Progress).
 - ДМЛМБ, ПРИКАЗ, ПРИСКВ, БОНБОТ, КЗ, ЭКВВОД, ГЕНС, ГЕНС1, НОМБОБ: hooks and
   ДКС imports removed.
 - ТЕРМ: output start goes straight to БОЭК1.`боэте4`; `КМ` does
@@ -399,7 +404,7 @@ ones in the accumulator (the `э52вых` refusal of the trusted-link code).
 
 Result: zones 0621 (ДИСП70) and 0676 (КОНФУС) change; no label moved;
 `tools/check.sh` passes; the job's printout is unchanged apart from times.
-КОНФУС now holds only `маспр7`, `шкраб7` and `G71136`; the rest of the zone is
+КОНФУС then held only `маспр7`, `шкраб7` and `G71136`; the rest of the zone was
 reserves.
 
 **КОНФУС removed.** Its last users did not need the module:
@@ -407,9 +412,8 @@ reserves.
   address 071600 = −'6200' (mod 2¹⁵), testing for Э62 addresses
   '6200'–'6203'. Now `слиа -'6200'(М16)`, the same instruction word
   (`16 25 71600`); `КОНФУС ВНЕШ шкраб7` dropped.
-- `маспр7` (ПРИК7, КЗ1, ЭК2): moved into the МОТТ reserve left by КОНВОЙ
-  (077461, `пам 52` → constant + `пам 51`), exported by МОТТ; the importers
-  now say `МОТТ ВНЕШ маспр7`.
+- `маспр7` (ПРИК7, КЗ1, ЭК2): first moved into the МОТТ reserve left by КОНВОЙ,
+  then removed entirely (see Progress).
 - `G71136`: unreferenced, gone with the module.
 - КОНФУС removed from `Makefile`, `modlist.src`, `rvs.src`; source deleted;
   zone 0676 zeroed by `mkdisk.py --zero 0676`.
@@ -440,10 +444,10 @@ initial `гтмдл7`) on every ДИСКИ readiness pass.
 - The unreachable, unreferenced word `мднап2` (after `пб ОСВМД`) → reserve.
 - Unused imports `зневып`, `Е24П1` dropped.
 
-The other disk sections in МОТТ (`ДДИП`, `ДКП`, `ДКО`, `ЗАН`, `опргд2`, `освл`,
-`номлин` for ДИСКИ; `опрдк7` for АВМД; `чрк71`, `дик71`, `мдмл7` for ХЛАМ;
-`можно7`, `избоэ7` for БОЭК1) are К-71 versions of штат code with live callers
-(decision B).
+МОТТ helpers for ДИСКИ lines (`ДДИП`, `ДКП`, `ДКО`, `ЗАН`, `опргд2`, `освл`,
+`номлин`) are the `∧ЛИНМД` side of штат disk I/O (see «`∧ЛИНМД`» above), not
+decision B. Still under review with live callers: `опрдк7` (АВМД); `чрк71`,
+`дик71`, `мдмл7` (ХЛАМ); `можно7`, `избоэ7` (БОЭК1).
 
 Result: only zone 0627 (МОТТ) changes; no label moved; `tools/check.sh`
 passes; the job's printout is unchanged apart from times.
@@ -513,8 +517,38 @@ connect) is штат in СВС (`khlam.bemsh`); the BESM-6 source had wrongly pu
 under `∧К71`. The АПУ wrapper and the alternate `сч Е31` stub are gone; the
 path is unconditional, same as СВС.
 
+**`маспр7` removed.** The К-71 marker (`4181 1141 9991`) hid catalog entries
+and altered ИСКЛЮЧ; СВС has no analog. Constant and `ВХОД` dropped from МОТТ
+(reserve `пам 52` kept so МОТТ layout is unchanged). ЭК2 / ПРИК7 / КЗ1 restored
+to штат compares (`НТЖ РР` / `РЯ1П7`, no special skip before ТВ40); mid-routine
+labels in those overlays were allowed to shrink (no `пам` pad). Entry points
+before the cuts (`Э155`, `КЗ1`, `ВТР`, …) stay put; later exports (`Р`, `БЮД`, …)
+move and are resolved by the linker. `labels.base` updated; `tools/check.sh`
+still passes (boot, job, T002, consuls).
+
+**`зандк7` (ENQ/DEQ «удал. МД» via ДКС) removed.** The К-71 block saved `ГУС`
+into `зандк7` on ENQ and checked it on DEQ (mismatch → `СТ175`). No СВС analog;
+СВС ENQ/DEQ use `ЗАХМД`/`ОССМД` in АДАП instead. Штат path: busy → `eq1`,
+free → `ХЛАМ.eq` → `enq2`; DEQ goes straight to `qc`. Cells → `пам 2`; code
+holes padded so ДИСКИ size (and РЕЗАРХ) stay put; `ФЗ1Е` now `уиа ФЗ15`.
+
+**`∧ЛИНМД` split out of `∧К71` in ДИСКИ.** All ten remaining ДИСКИ `АПУ`
+(ДА1–ДА4, ДА6/6А/6Б, ДА7, ДА9, ДА13) use `(&ЛИНМД)`; `ГБЛВ ∧ЛИНМД` /
+`∧ЛИНМД УСТВ 1`; `∧К71` dropped from this module. Same object code while both
+flags are 1; later `∧К71 УСТВ 0` will not strip the line/capture paths.
+
+**`шкут` gone (ДКС).** It marked S-lines for ДКС (`:= СЛОN` in ГЕНС1). With
+ДКС removed it would always be 0; cell, tests and imports are already deleted
+(phase 2). No СВС analog either (СВС uses `ШКАС` ← `ШОТА` for АС).
+
+**ГЕНС1 `ТЕРАС` restored.** The stub (`счи 0` / `пб НЕТТЕР`) always wrote 0
+into `ТАС` (auto-connect every line). Real logic matches the in-source notes
+and the СВС shape: `ШКТТ2` bit → machine number; else `ШКVТ2` bit → number
+with Е16; else 0. Second word via `УИА -1(М17)` as in СВС (`ШКТТ`/`ШКVТ`).
+
 ## Remaining work
 
 1. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
-2. Decision B pass over the other К-71 features (plotter stubs, `шкэт`,
-   `маспр7` uses, …) — not ТЕРМАС / ТМГУ, not ХЛАМ Э62→Э62ГРУ.
+2. Decision B pass over the other К-71 features (plotter stubs, `шкэт`, …)
+   — not ТЕРМАС / ТМГУ, not ХЛАМ Э62→Э62ГРУ, not `маспр7` / `зандк7`, not
+   `∧ЛИНМД` (ДИСКИ lines / capture).
