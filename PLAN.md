@@ -187,7 +187,7 @@ address is '7777'. The штат variant `пб пеэ52` is still in the source, 
 Test: Э52 with an ordinary address still works, and Э52 '7777' from a user task
 gets the same handling as in the штат system.
 
-### Phase 6: enable МОТТ-100 and fix the ШКАС setup in ГЕНС1 — next
+### Phase 6: enable МОТТ-100 and fix the ШКАС setup in ГЕНС1 — in progress
 
 **Reference: ЯНУС.** The kernel debugger (`janus.be`) drives the АС hardware
 directly and is the definitive description of the interface; МОТТ-100 does
@@ -546,9 +546,28 @@ into `ТАС` (auto-connect every line). Real logic matches the in-source notes
 and the СВС shape: `ШКТТ2` bit → machine number; else `ШКVТ2` bit → number
 with Е16; else 0. Second word via `УИА -1(М17)` as in СВС (`ШКТТ`/`ШКVТ`).
 
+**Phase 6 core (СВС МПД / ПАСМПД shape) — done for empty configs.**
+- ГЕНС1: ЦОТ builds `ШКАС`/`АСОТ` from `NТАС` (like СВС `ШОТА`); folds
+  `ШКОПТ|ШКАС|ШКУСТР` into `ШКНОВ`/`ШЗПРИМ`/`СЛОN`; sets `адраб`; `увв '153'`;
+  installs `прп7`→`ВХОДАС` and opens `МПРП` E7|E6 only if TT/VT scales ≠ 0.
+- МОТТ: `шас01` instead of `'7777'`; `ВХОДАС` parked at end of module (ТАБЛО
+  style) with stubs for deferred AS labels; full `аск71` kept — `НАЧАЛО`→
+  `по ВЫХМОН` hangs boot. `ШКАС`/`АСОТ` stay at 077023/076774.
+- SIMH: `увв '153'` no longer pokes `ШКАС`/`АСОТ` or forces `МПРП` E6
+  (`besm6_cpu.c` in the simulator tree).
+- `tools/check.sh` OK (job, T002, consuls). Mux line / non-empty `NТАС` not
+  tested yet.
+
 ## Remaining work
 
-1. Phase 6: МОТТ-100 and the ШКАС setup in ГЕНС1.
+1. Phase 6 remainder:
+   - Wire real АС targets (`КЧС1`, `СООБАС`, `АС1`, …) instead of `пб ВЫХОД`
+     stubs — surgical `ДА5`/`ДА6*`/… with pad/park; do **not** flip
+     `НАЧАЛО`→`ВЫХМОН` until `аск71` is understood or replaced safely.
+   - `ДА8`/`влинии` (N2) vs `вдк71`; `ДА4А` empty штат if still needed.
+   - Config: at least one АС line (`NТАС`/`ЯШАС`); mux `sim` session.
+   - НОМБОБ/ТЕРМ штат АС (`АС761`/`АС762`/`rt`) with label freeze.
+   - Optional: `прп6` output vector when AS output entry exists.
 2. Decision B pass over the other К-71 features (plotter stubs, `шкэт`, …)
    — not ТЕРМАС / ТМГУ, not ХЛАМ Э62→Э62ГРУ, not `маспр7` / `зандк7`, not
    `∧ЛИНМД` (ДИСКИ lines / capture).
