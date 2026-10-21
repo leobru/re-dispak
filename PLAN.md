@@ -580,12 +580,54 @@ and the parked handlers slide down. Tail now ends near 077537 (~0160 words
 free before 077777). Left in place: `опрдк7`, `чрк71`/`дик71`, `можно7`/
 `избоэ7`, `∧ЛИНМД` helpers, `аск71`/`вдк71`, `шкот7`, plotter stubs.
 
+**АС output syllable assembles; one mux VT reaches the idle loop.**
+- The skip around the output block now ends at `КЧС` (`ДА6В` closed before
+  `вас1`, `ДА6Г` removed), so `ВАС3Г`/`ВХОД3В`/`sos` execute `увв '143'`.
+  Live `r1` is defined next to the parked cells (the old one sits in skipped
+  `ДА10Б`). ГЕНС1 plants `прп6`→`вас1` (`ОБВНП3+18`) beside `прп7`→`ВХОДАС`,
+  copies `НОМУСТ`→`НОМУС` and `ШКОПТ|ШКАС`→`ШКОПТТ`. Assembling the block
+  moved МОТТ: `ШКАС` 077023→077152, `АСОТ` 076774→077123 (`labels.base`
+  refreshed). `НАЧАЛО` stays `по аск71`. `АС762` stays the К-71 stub.
+- `sim/muxvt.py` + `sim/mux.ini`: one mux VT, physical line 2, `NТАС`=2,
+  all eight message channels = logical terminal 1, that terminal taken off
+  `ШКУСТР` and marked operator. Not wired into `tools/check.sh`.
+
+**`СТ175` on that boot was the `АС9` return register.** Parked `АС9` did
+`УИА ВЫХОД(М15)` / `ПБ уствд3`. Live К-71 `уствд3` copies the return with
+`уии М15(М16)` and `УСТПРП` does `пб (М15)`, so the return became the
+interrupt bit number left in `М16`. `БВЗ4` then restored a mode word whose
+bits 16–48 were 0 and took `по ОБЩМГ` (`уиа 31(М16)` / `пб СТ175`; `М15`
+was `БВЗ32`). GRP bits 20–23 did not fire. It is not a zero ТБУФ number
+(that leaves `М16`=3, or does not write `М16`) and not a zero МБ order
+(`ПРЛСЧМ` shares the `ОБЩМГ` cell, but this entry was the task-restore
+check). With no АС terminals the path is not taken: a `ШКУСТР` bit skips
+`н2`, and `НЕТАС` does not plant `прп6`/`прп7` or open E6|E7. Fix, matching
+the К-71 convention (СВС `АС9` returns through `М15` only because `УМВМПД`
+does): `УИА ВЫХОД(М16)`. After it the same boot reaches `04440`.
+
+**Still open: the operator terminal never gets the startup text.**
+- The only mux traffic is `увв '153'`, the status poll `101 200`, the reply
+  `101 010`, and another clear. `tty2` stays empty. The reply is «номер
+  БЭСМ = 0» and `ТАС` for that line is still 0, so `АС1` takes `ПО АС9`
+  and returns to `ВЫХОД`. That reply does not call `ПИЛОТ`, so this
+  boot never reaches `НОВТ`/`н5` and never builds `ЭВМ-…`. ГЕНС1 has
+  already closed the new terminal in `ШЗПРИМ`.
+- The console banner (`ДАТА`/`СМЕН`/`ЕСТЬ`, `CM1П` on the direct console)
+  is not this path and does not appear on the mux disk: terminal 1 is no
+  longer in `ШКУСТР`.
+- If the run is not stopped on `04440`, the CPU then executes address 0
+  and halts («выход за пределы памяти»). It does not remain in the idle
+  loop, so nothing further is printed either. Which return is zero is not
+  pinned down.
+
 ## Remaining work
 
 1. Phase 6 remainder:
-   - Park `вас1`/output chain in the freed tail; wire `прп6`;
-     `СВИСТ5`→`ВАС3С` (ДА13, one word).
-   - Mux session with `as_line.py` + SIMH `set ttyN` on mux.
+   - Why the status reply does not connect the operator VT (`ПИЛОТ`/`НОВТ`),
+     so `н5` never queues `ЭВМ-…`.
+   - Why continuing past `04440` jumps to address 0.
+   - `СВИСТ5`→`ВАС3С` (ДА13, one word).
+   - Do not add the mux probe to `check.sh` until a data syllable appears.
    - НОМБОБ `АС761` + ТЕРМ `rt` (park/overlay; do not reuse `АС762` label).
    - `ДА8`/`влинии` vs `вдк71` (N2); do **not** flip `НАЧАЛО`→`ВЫХМОН`.
 2. Decision B pass over the other К-71 features (plotter stubs, `шкот7`,
