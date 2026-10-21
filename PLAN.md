@@ -551,23 +551,33 @@ with Е16; else 0. Second word via `УИА -1(М17)` as in СВС (`ШКТТ`/`�
   `ШКОПТ|ШКАС|ШКУСТР` into `ШКНОВ`/`ШЗПРИМ`/`СЛОN`; sets `адраб`; `увв '153'`;
   installs `прп7`→`ВХОДАС` and opens `МПРП` E7|E6 only if TT/VT scales ≠ 0.
 - МОТТ: `шас01` instead of `'7777'`; `ВХОДАС` parked at end of module (ТАБЛО
-  style) with stubs for deferred AS labels; full `аск71` kept — `НАЧАЛО`→
-  `по ВЫХМОН` hangs boot. `ШКАС`/`АСОТ` stay at 077023/076774.
+  style); full `аск71` kept — `НАЧАЛО`→`по ВЫХМОН` hangs boot.
+  `ШКАС`/`АСОТ` stay at 077023/076774.
 - SIMH: `увв '153'` no longer pokes `ШКАС`/`АСОТ` or forces `МПРП` E6
   (`besm6_cpu.c` in the simulator tree).
-- `tools/check.sh` OK (job, T002, consuls). Mux line / non-empty `NТАС` not
-  tested yet.
+- `tools/check.sh` OK (job, T002, consuls).
+
+**Phase 6 receive path — parked handlers (no mid-МОТТ growth).**
+- End of МОТТ: real `КЧС1`→`ПРЯТ`, `СООБАС`/`АС1`→`ПИЛОТ`, `АС76В`,
+  `ас2`/`АС7`/`АС9`/`АС76А`, cells `ШСЕРАС`/`шксин`/`темптт` (were under
+  `ДА10А`). `КЧС2` counts `АСОШ` and exits (full `КЧС`/`вас1` not parked —
+  not enough room before 077777; output path deferred).
+- `sim/as_line.py`: sets `NТАС`:=1, `ШКТТ2` line 1, `ТРАКТЫ` E29. Opens
+  ПРП 7|6 via ГЕНС1 — needs a real mux `tty` attach before use (bare job
+  with only this patch hangs). Empty-AS job/T002/consuls still green.
+- НОМБОБ `АС762`: **keep K-71 stub** — `ПЕРЕМЛ`/`ЕСТЬБЭ`/`СМЕНА1` jump to
+  it expecting fall-through to `ЕСТЬБ`, not the штат poll→`ЗВ1А`.
+- ТЕРМ `rt` / НОМБОБ `АС761`: not enabled (ТЕРМ is full to 077777; НОМБОБ
+  has <20 words to `Н+'1400'`).
 
 ## Remaining work
 
 1. Phase 6 remainder:
-   - Wire real АС targets (`КЧС1`, `СООБАС`, `АС1`, …) instead of `пб ВЫХОД`
-     stubs — surgical `ДА5`/`ДА6*`/… with pad/park; do **not** flip
-     `НАЧАЛО`→`ВЫХМОН` until `аск71` is understood or replaced safely.
-   - `ДА8`/`влинии` (N2) vs `вдк71`; `ДА4А` empty штат if still needed.
-   - Config: at least one АС line (`NТАС`/`ЯШАС`); mux `sim` session.
-   - НОМБОБ/ТЕРМ штат АС (`АС761`/`АС762`/`rt`) with label freeze.
-   - Optional: `прп6` output vector when AS output entry exists.
+   - Park `вас1`/output chain (free space: trim K-71 DKS remnants or grow
+     МОТТ zones); wire `прп6`; `СВИСТ5`→`ВАС3С` (ДА13, one word).
+   - Mux session with `as_line.py` + SIMH `set ttyN` on mux.
+   - НОМБОБ `АС761` + ТЕРМ `rt` (park/overlay; do not reuse `АС762` label).
+   - `ДА8`/`влинии` vs `вдк71` (N2); do **not** flip `НАЧАЛО`→`ВЫХМОН`.
 2. Decision B pass over the other К-71 features (plotter stubs, `шкэт`, …)
    — not ТЕРМАС / ТМГУ, not ХЛАМ Э62→Э62ГРУ, not `маспр7` / `зандк7`, not
    `∧ЛИНМД` (ДИСКИ lines / capture).
