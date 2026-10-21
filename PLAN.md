@@ -570,14 +570,25 @@ with Е16; else 0. Second word via `УИА -1(М17)` as in СВС (`ШКТТ`/`�
 - ТЕРМ `rt` / НОМБОБ `АС761`: not enabled (ТЕРМ is full to 077777; НОМБОБ
   has <20 words to `Н+'1400'`).
 
+**Terminal ДКС block removed (`прсим7`…`км2бк7` / `шкэт`).** With `шкут` = 0
+the live exits were already the non-ДКС ones. Callers retargeted in place
+(`пб ПОСОБЛ`, `сч R(М13)`, `по км2в`, `мода 0` for the `шкэт` store and OR).
+`прнол7` kept as the five-word exit (`зп 42` / `сда 64-8` / `уиа -7(М6)` /
+`пб vton4`) so ТЕРМ's `пб прнол7` still sets М6. `П215` and a zero `П215+1`
+stay (ТЕРМАС). Cut is after `ШКАС`, so `ШКАС`/`АСОТ` do not move; `ВХОДАС`
+and the parked handlers slide down. Tail now ends near 077537 (~0160 words
+free before 077777). Left in place: `опрдк7`, `чрк71`/`дик71`, `можно7`/
+`избоэ7`, `∧ЛИНМД` helpers, `аск71`/`вдк71`, `шкот7`, plotter stubs.
+
 ## Remaining work
 
 1. Phase 6 remainder:
-   - Park `вас1`/output chain (free space: trim K-71 DKS remnants or grow
-     МОТТ zones); wire `прп6`; `СВИСТ5`→`ВАС3С` (ДА13, one word).
+   - Park `вас1`/output chain in the freed tail; wire `прп6`;
+     `СВИСТ5`→`ВАС3С` (ДА13, one word).
    - Mux session with `as_line.py` + SIMH `set ttyN` on mux.
    - НОМБОБ `АС761` + ТЕРМ `rt` (park/overlay; do not reuse `АС762` label).
    - `ДА8`/`влинии` vs `вдк71` (N2); do **not** flip `НАЧАЛО`→`ВЫХМОН`.
-2. Decision B pass over the other К-71 features (plotter stubs, `шкэт`, …)
-   — not ТЕРМАС / ТМГУ, not ХЛАМ Э62→Э62ГРУ, not `маспр7` / `зандк7`, not
-   `∧ЛИНМД` (ДИСКИ lines / capture).
+2. Decision B pass over the other К-71 features (plotter stubs, `шкот7`,
+   `опрдк7`, `можно7`/`избоэ7`, …) — not ТЕРМАС / ТМГУ, not ХЛАМ
+   Э62→Э62ГРУ, not `маспр7` / `зандк7`, not `∧ЛИНМД` (ДИСКИ lines / capture).
+   `шкэт` is already gone.
