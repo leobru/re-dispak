@@ -1,32 +1,35 @@
 # Overall Design of the Dispak Operating System
 
-This directory is a reverse-engineering project of **Диспак (Dispak, "ДИСПетчер ПАКетной обработки")** — the standard ОС-Диспак operating system for the БЭСМ-6, written in БЭМШ assembler, broken into the same set of overlay modules that the original system was distributed in.
+This directory is a reverse-engineering project of **Диспак (Dispak, "ДИСПетчер ПАКетной обработки")** — the standard ОС-Диспак operating system for the БЭСМ-6, written in БЕМШ assembler, broken into the same set of overlay modules that the original system was distributed in.
 
 Below is the design as it falls out of the sources.
 
 ## 1. Build / verification flow (the project, not the OS)
 
 ```
-modlist.src  ── mkloc.pl ──▶  modloc.txt        (zone layout on disk 2222)
-*.be file    ── asm.pl   ──▶  *.lst + zones on disk 2222
+modlist.src  ── mkloc.pl ──▶  build/modloc.txt  (zone layout on disk 2222)
+src/*.be     ── asm.pl   ──▶  build/lst/*.lst, build/tab/*.tab
+                              + zones on build/disk/2222
                                      │
-rvs.src ──── rvs.pl ────▶ rvs.log    │
+rvs.src ──── rvs.pl ────▶ build/rvs.log
+                                     │
                                      ▼
                      verify.pl  cmp zone-by-zone against
                      disk 2053 (the "gold" original Dispak)
 ```
 
 - `modlist.src` lists every module in Cyrillic with its length in 1024-word **zones** (1, 2, 3, 4 or 7).
-- `mkloc.pl` translates that list into `modloc.txt`, assigning each module a starting zone on the system disk image (cylinder/zone numbers 0000…0302 octal).
-- `asm.pl` wraps a `.be` source in the БЭМШ batch deck (`ВВД$$$ … КВЧ$$$ ТРН$$$ ЧТКОМП420070 … ЗОНМОД 43dest len … КНЦ$$$`) and feeds it to the original `dispak` emulator running the 1970-era БЭМШ assembler from disk 420070; the binary is written into disk image 2222.
-- `rvs.src` is the loader recipe (it patches `zzzz` placeholders with actual zone numbers from `modloc.txt`); `rvs.pl` runs that recipe under `dispak` to assemble the final system image.
-- `verify.pl` then dumps each zone with `besmtool` and runs `cmp` between the rebuilt disk 2222 (`silver`) and the recovered original disk 2053 (`gold`). The whole point of this repo is to drive that diff to zero — i.e. to recover legible БЭМШ source code that reassembles, byte-for-byte, to the original Dispak binary.
+- `mkloc.pl` translates that list into `build/modloc.txt`, assigning each module a starting zone on the system disk image (cylinder/zone numbers 0000…0302 octal).
+- `asm.pl` wraps a `src/*.be` source in the БЕМШ batch deck (`ВВД$$$ … КВЧ$$$ ТРН$$$ ЧТКОМП420070 … ЗОНМОД 43dest len … КНЦ$$$`) and feeds it to the original `dispak` emulator running the 1970-era БЕМШ assembler from disk 420070; the deck is kept in `build/job/`, the listing in `build/lst/`, and the binary is written into the scratch disk image `build/disk/2222`.
+- `rvs.src` is the loader recipe (it patches `zzzz` placeholders with actual zone numbers from `build/modloc.txt`); `rvs.pl` runs that recipe under `dispak` to assemble the final system image.
+- `verify.pl` then dumps each zone with `besmtool` and runs `cmp` between the rebuilt disk 2222 (`silver`) and the recovered original disk 2053 (`gold`); the zone dumps are kept in `build/dump/`. The whole point of this repo is to drive that diff to zero — i.e. to recover legible БЕМШ source code that reassembles, byte-for-byte, to the original Dispak binary.
+- `make` (or `make full` for a clean rebuild) runs all of the above; `make clean` just removes `build/`.
 
 `extern.pl`, `merge.pl`, `dubasm.pl`, `flatten.pl`, `disbesm6.cc`, `decode.c`, `showbrz.c`, etc. are the disassembly / cross-reference helpers that produce the per-module `*.sym` files, fix up `ВНЕШ` references and turn raw zone dumps (`G*-L*` files) back into source.
 
 ## 2. Map of the disk image (i.e. of the OS itself)
 
-`modloc.txt` is essentially the link map. Each line is `name start-zone length`, e.g.:
+`build/modloc.txt` is essentially the link map. Each line is `name start-zone length`, e.g.:
 
 ```
 дисп70 0061 07     ← 7-zone resident kernel
@@ -142,7 +145,7 @@ You can see in the comments and in `modloc.txt` that the project tracks two slig
 
 ## 5. Programming model that the sources expose
 
-From the БЭМШ idioms used everywhere in these files you can read off the run-time model the OS targets:
+From the БЕМШ idioms used everywhere in these files you can read off the run-time model the OS targets:
 
 - **48-bit word, 15 index registers (М1…М17).** By convention `М7` always holds the module's own base (every module starts with `УПОТР имя_модуля(М7)` so all `смещение(М7)` references are PC-relative within the module), `М15` is the link / return register, `М16`/`М17` are scratch, and `М1`/`М2` are usually job-number / NER-number.
 - **Two CPU modes**, with the kernel using the privileged (`РЕГ '237'`, `СЧРЖ '37'`, `УВВ '4034'`) instructions to look at the РЭ4 (interrupt cause) and to switch ОЗУ pages.
@@ -156,4 +159,4 @@ From the БЭМШ idioms used everywhere in these files you can read off the run
 
 > Dispak is an **interrupt-driven, extracode-based supervisor** for the БЭСМ-6: a small permanently-resident kernel (`disp70` + four-zone device drivers `вэу/мотт/диски/дмлмб/есмл/терм/хлам/боэк1`) that owns the 32 ГРП levels and the 64 Э-codes, vectors each Э-code into either a resident routine or, via a demand loader (`висп`), into one of about 80 single-zone non-resident overlays. Around that kernel sit (a) a job pipeline (`пускач` → `план/план2` → `аврасп` → `ресурс` → `процес`), (b) an operator-command interpreter (`приказ` + `прик1…прик8` + `бонбот`), (c) a math/library run-time embedded in `disp70`, (d) a family of per-extracode handlers (`э60`, `э60д`, `э64`, `э71тк`, `эк2…эк7`, `экввод`, `экст`, `экгдр`), and (e) a peripherals / communications fan-out (`терм`, `янус`, `связь`, `еспи80`, `еспл`, `консул`, `бенсон`, `рпипл`, `днепр`, `пибэсм`, `плбэсм`).
 
-Everything in this directory — the Perl scripts, the `*.sym` files, `modlist.src`, `modloc.txt`, `rvs.src`, the dozens of `*.be` files, and the `verify.pl` cmp loop against `disk 2053` — is the scaffolding to recover that supervisor in human-readable БЭМШ that reassembles bit-for-bit to the original Dispak system disk.
+Everything in this directory — the Perl scripts, the `*.sym` files, `modlist.src`, `modloc.txt`, `rvs.src`, the dozens of `*.be` files, and the `verify.pl` cmp loop against `disk 2053` — is the scaffolding to recover that supervisor in human-readable БЕМШ that reassembles bit-for-bit to the original Dispak system disk.

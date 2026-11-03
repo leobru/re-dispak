@@ -7,9 +7,13 @@ use open ':std', ':encoding(UTF-8)';
 $verbose = 0;
 if ($#ARGV >= 0 && $ARGV[0] eq '-v') { $verbose = 1; shift @ARGV; }
 
-die "Usage: zongp.pl [-v] file [naz volume zone]\n" unless $#ARGV == 0 || $#ARGV == 3;
+die "Usage: zongp.pl [-v] src/file.be [naz volume zone]\n" unless $#ARGV == 0 || $#ARGV == 3;
+# Writes build/job/file.b6, build/lst/file.lst, build/tab/file.tab.
 
 $src = $ARGV[0];
+($base = $src) =~ s{^.*/}{};
+$base =~ s/\.be$//;
+system('mkdir -p build/job build/lst build/tab build/disk; touch build/disk/2222');
 if ($#ARGV == 3) {
 $naz = $ARGV[1];
 $vol = $ARGV[2];
@@ -22,7 +26,7 @@ if (length($naz) < 5) { $naz = ('0' x (5-length($naz))) . $naz; }
 die "Volume $vol - ошибка\n" if $vol < 1 || $vol > 4095;
 
 die "Zone $zone - ошибка\n" if $zone !~ /^[0-7][0-7][0-7][0-7]$/;
-$b6 = "$src.b6";
+$b6 = "build/job/$base.b6";
 open(B, ">$b6") || die "Cannot open $b6 for writing\n";
 print B qq/ШИФР 419999^
 ТРАК 64^
@@ -64,11 +68,8 @@ print B qq/
 _\$ЕКОНЕЦ
 /;
 close(B);
-system("dispak $b6") if $verbose;
-system("./prn.sh $b6");
-$res = `grep ОШИБОК= $src.lst`;
+system("env BESM6_PATH=build/disk:${\($ENV{BESM6_PATH} // '/usr/local/share/besm6')} dispak $b6") if $verbose;
+system("./prn.sh $b6 $base");
+$res = `grep ОШИБОК= build/lst/$base.lst`;
 if ($res =~ /=0000/) { $color = 2; } else { $color = 1; }
 print STDERR "\033[1;3${color}m	 $res\033[22;39m\n";
-$lst = $src;
-$lst =~ s/\.be/.lst/;
-system("mv $src.lst $lst");

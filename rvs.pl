@@ -5,11 +5,13 @@ use open ':encoding(UTF-8)';
 use open ':std', ':encoding(UTF-8)';
 
 die "Usage: rvs.pl file\n" unless $#ARGV == 0;
+# Links the modules listed in file into build/disk/2222;
+# the job deck goes to build/job/, the log to build/rvs.log.
 
 $rvs = $ARGV[0];
 
 # Read module params
-open (M, 'modloc.txt') || die "No modloc.txt\n";
+open (M, 'build/modloc.txt') || die "No build/modloc.txt\n";
 while (<M>) {
     next if /^ *#/;
     chop;
@@ -17,7 +19,10 @@ while (<M>) {
     $locs{$cur} = $src;
 }
 close (M);
-$b6 = "$rvs.b6";
+system('mkdir -p build/job build/disk; touch build/disk/2222');
+(my $rvsbase = $rvs) =~ s{^.*/}{};
+$b6 = "build/job/$rvsbase.b6";
+$ENV{BESM6_PATH} = 'build/disk:' . ($ENV{BESM6_PATH} // '/usr/local/share/besm6');
 open(B, ">$b6") || die "Cannot open $b6 for writing\n";
 print B qq/шифр 419999^
 лен 67(2248)42(2113)^
@@ -48,4 +53,4 @@ _\$
 еконец
 /;
 close(B);
-system("dispak -s $b6 | tee rvs.log | grep -v ЗОНГП");
+system("dispak -s $b6 | tee build/rvs.log | grep -v ЗОНГП");

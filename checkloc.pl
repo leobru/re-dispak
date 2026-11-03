@@ -17,7 +17,7 @@ while (<M>) {
 close(M);
 @m = keys %lens;
 # Now read all listings finding module length reports
-while (<*.lst>) {
+while (<build/lst/*.lst>) {
     open(F, $_) || die "Cannot open $_\n";
     while (<F>) {
         next unless /^МОДУЛЬ/;
