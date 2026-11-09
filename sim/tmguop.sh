@@ -5,6 +5,7 @@
 #   PHYS=N sim/tmguop.sh     - другой физ. номер, восьмеричный (конфигурация и 041)
 #   NOTMGU=1 sim/tmguop.sh   - та же конфигурация без ТМГУ (для сравнения)
 #   INI=sim/vyzrez.ini sim/tmguop.sh - то же с другим сценарием SIMH
+#   SCR=файл sim/tmguop.sh          - другой сценарий ввода с терминала (tty.py)
 # Печатает обмен с концентратором (sim/tmgu_decode.py) и вывод tty1.
 set -e
 here=$(cd "$(dirname "$0")" && pwd)
@@ -15,11 +16,12 @@ tas=$(printf '%o' $((02445 + dec)))
 . "$here/setup.sh"
 "$here/muxvt.py" 2053.bin 2053.bin "$phys"
 if [ -n "$NOTMGU" ]; then
-    sed -i "s/^set tty tmgutrace=13/set tty notmgu/" boot.ini
+    sed -i "/^set tty tmgutrace$/d; /^set tty[0-9]* mux$/d" boot.ini
 else
     "$here/tmgu.py" 2053.bin 2053.bin
 fi
-sed -i "s/tmgutrace=13/tmgutrace=$phys/; s/tty13 /tty$dec /; s/lineorder=13/lineorder=$dec/; s/^e 2460$/e $tas/" boot.ini
+# Физ. номер терминала за концентратором = номер линии SIMH (десятичный в tty).
+sed -i "s/tty13 /tty$dec /; s/lineorder=13/lineorder=$dec/; s/^e 2460$/e $tas/" boot.ini
 # e @ИМЯ -> e АДРЕС (адреса меток МОТТ и ТЕРМАС текущей сборки), с подписью.
 for name in $(grep -o '^e @[^ ]*' boot.ini | cut -c4-); do
     addr=$(awk -v n="$name" '$3 == n { print $1; exit }' "$here/../mott.be.tab" "$here/../termas.be.tab")
@@ -29,9 +31,10 @@ port=$(python3 -c 'import socket; s = socket.socket(); s.bind(("", 0)); print(s.
 sed -i "s/%PORT%/$port/" boot.ini
 "$besm6" boot.ini < /dev/null > sim.out 2>&1 &
 pid=$!
-# telnet на линию мультиплексора ФИЗ: не пишет ли ОС лог.1 туда, мимо ТЕРМАС.
-printf 'wait %s\n' "${TIMEOUT:-90}" > mux.scr
-( sleep 2; "$here/tty.py" "$port" mux.scr > session.txt 2>/dev/null ) &
+# telnet на линию терминала за концентратором (set ttyN mux): сценарий
+# sim/tmguop.scr (или SCR=...), затем чтение до конца прогона.
+{ cat "${SCR:-$here/tmguop.scr}"; printf 'wait %s\n' "${TIMEOUT:-90}"; } > op.scr
+( sleep 2; "$here/tty.py" "$port" op.scr > session.txt 2>/dev/null ) &
 sleep "${TIMEOUT:-90}"
 kill $pid 2>/dev/null || true
 for i in 1 2 3 4 5 6 7 8 9 10; do grep -q '^### END' sim.out && break; sleep 0.5; done
@@ -45,6 +48,6 @@ echo "### TMGU"
 echo "### tty1 ($(wc -c < tty1.txt) bytes)"
 tail -c 600 tty1.txt || true
 echo
-echo "### mux tty$dec telnet ($(wc -c < session.txt) bytes)"
+echo "### terminal tty$dec telnet ($(wc -c < session.txt) bytes)"
 tail -c 600 session.txt || true
 echo
