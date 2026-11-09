@@ -3,6 +3,8 @@
 #   sim/term.sh            - линия 2 (T002)
 #   sim/term.sh consuls    - КОНСУЛЫ T031 и T032 (tty25, tty26) как видеотоны
 #                            VIDI; образ правит sim/consuls.py
+#   sim/term.sh dks        - штатный sbor2053.bin (К-71) с ДКС: линия 5 SIMH
+#                            за Э-60, ОС даёт ей терминал 031 (sim/dks.ini)
 # Сценарий - sim/term.scr (для sim/tty.py); протоколы - sim/run/session*.txt.
 set -e
 here=$(cd "$(dirname "$0")" && pwd)
@@ -15,6 +17,9 @@ port=$(freeport) port25=$(freeport) port26=$(freeport)
 if [ "$1" = consuls ]; then
     ini=$here/consul.ini
     sessions="031:$port25 032:$port26"
+elif [ "$1" = dks ]; then
+    ini=$here/dks.ini
+    sessions="031:$port"
 else
     ini=$here/term.ini
     sessions="002:$port"
@@ -22,6 +27,8 @@ fi
 . "$here/setup.sh"
 if [ "$1" = consuls ]; then
     "$here/consuls.py" 2053.bin 2053.bin
+elif [ "$1" = dks ]; then
+    cp "$disks/sbor2053.bin" 2053.bin
 fi
 PORT=$port PORT25=$port25 PORT26=$port26 \
     "$besm6" boot.ini < /dev/null > sim.out 2>&1 &
@@ -53,4 +60,5 @@ for s in $sessions; do
     fi
 done
 stop
-kadopam_count
+# Счётчик - для собранного образа, который КАДОПАМ трогать не должен.
+[ "$1" = dks ] || kadopam_count
