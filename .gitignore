@@ -36,6 +36,7 @@ __pycache__
 *.lst
 *.txt
 *.b6
+!sim/boot_dispak.b6
 *~
 
 # Symbol tables
