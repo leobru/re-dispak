@@ -74,5 +74,5 @@ def scan(path):
         i = k + 1
 
 
-for f in sys.argv[1:] or sorted(glob.glob("*.be")):
+for f in sys.argv[1:] or sorted(glob.glob("src/*.be")):
     scan(f)

@@ -4,6 +4,12 @@ use feature 'unicode_strings';
 use open ':encoding(UTF-8)';
 use open ':std', ':encoding(UTF-8)';
 
+# Compares the zones written by rvs.src into build/disk/2222 with the
+# original disks; the zone dumps G*-L* (gold) and S*-L* (silver) go to
+# build/dump/.
+system('mkdir -p build/dump');
+$ENV{BESM6_PATH} = 'build/disk:' . ($ENV{BESM6_PATH} // '/usr/local/share/besm6');
+
 # Parsing rvs.src to find out what to compare
 open(R, 'rvs.src') || die "No rvs.src\n";
 while (<R>) {
@@ -48,8 +54,8 @@ sub comp {
 
 for ($i = 0; $i <= $#start; ++$i) {
     my($s, $l) = ($start[$i], $len[$i]);
-    $gold = "G$s-L$l";
-    $silver = "S$s-L$l";
+    $gold = "build/dump/G$s-L$l";
+    $silver = "build/dump/S$s-L$l";
 # For zones higher than 01000 take gold from 2048
     $disk = oct($s) < 512 ? '2053' : '2048';
     system("besmtool dump $disk --start=0$s --length=$l --to-file=$gold > /dev/null")

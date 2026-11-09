@@ -1,16 +1,16 @@
 #!/bin/sh
 # Проверка, что МОТТ не зависит от абсолютных адресов: перед НАЧАЛО
 # вставляется ПАМ K, затем сборка, задача, сеанс T002 и КОНСУЛЫ T031/T032.
-#   tools/mott_pad.sh K     - K слов (mott.be после прогона восстанавливается)
+#   tools/mott_pad.sh K     - K слов (src/mott.be после прогона восстанавливается)
 # Печатает одну строку: K, время и результаты (### ... из sim/*.sh).
 cd "$(dirname "$0")/.." || exit 1
 k=${1:?K}
-cp mott.be mott.be.pad-orig
-trap 'mv mott.be.pad-orig mott.be; touch mott.be' EXIT   # touch: иначе make не пересоберёт МОТТ
-sed -i "0,/^НАЧАЛО/s//\tПАМ\t$k\tПРОВЕРКА СДВИГА (tools\/mott_pad.sh)\nНАЧАЛО/" mott.be
+cp src/mott.be src/mott.be.pad-orig
+trap 'mv src/mott.be.pad-orig src/mott.be; touch src/mott.be' EXIT   # touch: иначе make не пересоберёт МОТТ
+sed -i "0,/^НАЧАЛО/s//\tПАМ\t$k\tПРОВЕРКА СДВИГА (tools\/mott_pad.sh)\nНАЧАЛО/" src/mott.be
 s=$(date +%s)
 make build > build.log 2>&1 || { echo "ПАМ $k: BUILD FAILED"; exit 1; }
-bad=$(grep -L 'ОШИБОК=0000' *.lst)
+bad=$(grep -L 'ОШИБОК=0000' build/lst/*.lst)
 [ -z "$bad" ] || { echo "ПАМ $k: ASSEMBLY ERRORS $bad"; exit 1; }
 r1=$(TIMEOUT=40 sim/run.sh 2>&1 | grep -o 'PRINTED\|TIMEOUT')
 grep -q 'КОНЕЦ ЗАДАЧИ' sim/run/output.txt || r1="$r1 JOB-FAILED"

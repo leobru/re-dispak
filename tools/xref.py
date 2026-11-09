@@ -6,7 +6,7 @@ LAT = str.maketrans("abcehkmoptxyABCEHKMOPTXY", "авсенкмортхуАВС�
 def norm(s): return s.translate(LAT).upper()
 syms = {norm(s): s for s in sys.argv[1:]}
 word = re.compile(r"[0-9A-Za-zА-Яа-яЁё’]+")
-for f in sorted(glob.glob("*.be")):
+for f in sorted(glob.glob("src/*.be")):
     for n, line in enumerate(open(f, encoding="utf-8"), 1):
         if line.startswith("*"):
             continue

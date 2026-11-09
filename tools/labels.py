@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Адреса всех меток всех модулей (по *.be.tab).
+"""Адреса всех меток всех модулей (по build/tab/*.tab).
 
 labels.py > labels.base        - снимок
 labels.py --check labels.base  - метки, сменившие адрес (код возврата 1),
@@ -11,8 +11,8 @@ import sys
 
 def current():
     labels = {}
-    for tab in sorted(glob.glob("*.be.tab")):
-        mod = tab[:-len(".be.tab")]
+    for tab in sorted(glob.glob("build/tab/*.tab")):
+        mod = tab[len("build/tab/"):-len(".tab")]
         for line in open(tab, encoding="utf-8"):
             f = line.split()
             if len(f) >= 3:

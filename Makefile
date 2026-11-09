@@ -19,12 +19,22 @@ MODS = disp70 vzu term kachka kit diski mott gnus khlam pechat \
 
 DISKS_REPO ?= $(HOME)/git/besm6.github.io
 
-build: $(addsuffix .lst,$(MODS)) modloc.txt rvs.src sbor2053.orig
-	env BESM6_PATH=.:$(BESM6_PATH) ./rvs.pl rvs.src
-	env BESM6_PATH=.:$(BESM6_PATH) ./verify.pl
+SRC = src
+BUILD = build
+LSTS = $(addprefix $(BUILD)/lst/,$(addsuffix .lst,$(MODS)))
+
+.PHONY: build boot term clean zip full
+
+# Sources are src/*.be; listings go to build/lst, label tables to
+# build/tab, job decks to build/job, zone dumps to build/dump, the
+# scratch disk to build/disk/2222, the bootable image to build/2053.bin.
+build: $(LSTS) $(BUILD)/modloc.txt rvs.src $(BUILD)/sbor2053.orig
+	env BESM6_PATH=$(BESM6_PATH) ./rvs.pl rvs.src
+	env BESM6_PATH=$(BESM6_PATH) ./verify.pl
 	./mkdisk.py --zero 0677 --zero 0567:0 --zero 0607:012 --zero 0744 --zero 0676 --zero 0737 --trakty-off 28
 
-sbor2053.orig:
+$(BUILD)/sbor2053.orig:
+	mkdir -p $(BUILD)
 	git -C $(DISKS_REPO) show HEAD:download/disks/sbor2053.bin > $@
 
 boot: build
@@ -34,20 +44,21 @@ term: build
 	sim/term.sh
 	sim/term.sh consuls
 
-%.lst: %.be modloc.txt
-	env BESM6_PATH=.:$(BESM6_PATH) ./asm.pl $<
+$(BUILD)/lst/%.lst: $(SRC)/%.be $(BUILD)/modloc.txt
+	env BESM6_PATH=$(BESM6_PATH) ./asm.pl $<
 
-%.txt: %.lst
+$(BUILD)/txt/%.txt: $(BUILD)/lst/%.lst
+	mkdir -p $(BUILD)/txt
 	cp $< $@
 
-modloc.txt: modlist.src
+$(BUILD)/modloc.txt: modlist.src
+	mkdir -p $(BUILD)
 	./mkloc.pl < $< > $@
 
 clean:
-	rm -f 2222 *.lst *.tab G*-L* S*-L* *.be.b6 2053.bin
-	rm -rf sim/run
+	rm -rf $(BUILD) sim/run
 
-zip:	$(addsuffix .txt,$(MODS))
-	zip -Z bzip2 -m listing.zip $(addsuffix .txt,$(MODS))
+zip:	$(addprefix $(BUILD)/txt/,$(addsuffix .txt,$(MODS)))
+	cd $(BUILD)/txt && zip -Z bzip2 -m ../listing.zip $(addsuffix .txt,$(MODS))
 
 full: clean build

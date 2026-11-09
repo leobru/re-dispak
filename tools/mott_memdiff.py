@@ -24,7 +24,7 @@ M48 = (1 << 48) - 1
 
 
 def built_words():
-    data = open("2053.bin", "rb").read()
+    data = open("build/2053.bin", "rb").read()
     off = MOTT_ZONE * ZONE + 64
     return [struct.unpack_from("<Q", data, off + 8 * i)[0] & M48
             for i in range(1024)]
@@ -32,7 +32,7 @@ def built_words():
 
 def listing():
     lines = {}
-    for ln in open("mott.lst", encoding="utf-8", errors="replace"):
+    for ln in open("build/lst/mott.lst", encoding="utf-8", errors="replace"):
         m = re.match(r"^\s*(?:\S+\s+)?(7[67][0-7]{3})\s+[0-7]{2}\s", ln)
         if m:
             lines.setdefault(int(m.group(1), 8), ln.rstrip()[25:110])

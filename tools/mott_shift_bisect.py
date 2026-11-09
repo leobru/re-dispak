@@ -54,7 +54,7 @@ FILLER = ["\tмода\t0\n"]
 
 def boots(lines, at, n):
     text = lines[:at - 1] + FILLER * n + lines[at - 1:]
-    open("mott.be", "w", encoding="utf-8").writelines(text)
+    open("src/mott.be", "w", encoding="utf-8").writelines(text)
     try:
         if subprocess.run("make build > build.log 2>&1", shell=True).returncode:
             sys.exit("build failed")
@@ -62,7 +62,7 @@ def boots(lines, at, n):
                            text=True, env={**os.environ, "TIMEOUT": "60"})
         return "### PRINTED" in r.stdout
     finally:
-        open("mott.be", "w", encoding="utf-8").writelines(lines)
+        open("src/mott.be", "w", encoding="utf-8").writelines(lines)
 
 
 def main():
@@ -72,7 +72,7 @@ def main():
     args = sys.argv[2:] if data else sys.argv[1:]
     lo, hi = int(args[0]), int(args[1])
     n = 1 if data else (int(args[2]) if len(args) > 2 else 5)
-    lines = open("mott.be", encoding="utf-8").readlines()
+    lines = open("src/mott.be", encoding="utf-8").readlines()
     if data:
         FILLER = ["\tпам\t1\n"]
         c = data_candidates(lines, lo, hi)

@@ -7,9 +7,14 @@ use open ':std', ':encoding(UTF-8)';
 $verbose = 0;
 if ($#ARGV >= 0 && $ARGV[0] eq '-v') { $verbose = 1; shift @ARGV; }
 
-die "Usage: asm.pl [-v] file [naz]\n" unless $#ARGV == 0 || $#ARGV == 1;
+die "Usage: asm.pl [-v] src/file.be [naz]\n" unless $#ARGV == 0 || $#ARGV == 1;
+# Writes build/job/file.b6, build/lst/file.lst, build/tab/file.tab;
+# the object module goes to the scratch disk build/disk/2222.
 
 $src = $ARGV[0];
+($base = $src) =~ s{^.*/}{};
+$base =~ s/\.be$//;
+system('mkdir -p build/job build/lst build/tab build/disk; touch build/disk/2222');
 $naz = $ARGV[1] if $#ARGV == 1;
 
 # Find module name
@@ -26,7 +31,7 @@ while (<F>) {
 close (F);
 die "Could not find module name in $src, check start\n" if $mod eq '';
 # Find module params
-open (M, 'modloc.txt') || die "No modloc.txt\n";
+open (M, 'build/modloc.txt') || die "No build/modloc.txt\n";
 $found = 0;
 while (<M>) {
     next if /^ *#/;
@@ -35,9 +40,9 @@ while (<M>) {
     if ("$mod " =~ /^$cur\b/i) { $found = 1; last; }
 }
 close (M);
-warn "Could not find $mod in modloc.txt\n" if ! $found;
+warn "Could not find $mod in build/modloc.txt\n" if ! $found;
 $type = defined($naz) ? 'ГП ' : 'МОД';
-$b6 = "$src.b6";
+$b6 = "build/job/$base.b6";
 open(B, ">$b6") || die "Cannot open $b6 for writing\n";
 print B qq/шифр 419999^
 трак 64^
@@ -82,11 +87,8 @@ print B qq/
 _\$ЕКОНЕЦ
 /;
 close(B);
-system("dispak $b6") if $verbose;
-system("./prn.sh $b6");
-$res = `grep ОШИБОК= $src.lst`;
+system("env BESM6_PATH=build/disk:${\($ENV{BESM6_PATH} // '/usr/local/share/besm6')} dispak $b6") if $verbose;
+system("./prn.sh $b6 $base");
+$res = `grep ОШИБОК= build/lst/$base.lst`;
 if ($res =~ /=0000/) { $color = 2; } else { $color = 1; }
 print STDERR "\033[1;3${color}m$mod	: $res\033[22;39m\n";
-$lst = $src;
-$lst =~ s/\.be/.lst/;
-system("mv $src.lst $lst");

@@ -22,8 +22,7 @@ length (`пам n`, or a jump over the hole), so no exported label moves.
 2. `verify.pl` (part of `make build`): only the zones of the edited modules
    differ from the original.
 3. `tools/labels.py --check labels.base`: no label of the baseline moved
-   (0 MOVED); labels of removed code are reported as gone. (The first steps
-   used `tools/entries.sh | diff entries.base -`, exported labels only.)
+   (0 MOVED); labels of removed code are reported as gone.
 4. `sim/run.sh` (or `make boot`): the OS boots, the job runs, the printout
    ends; the summary line `KADOPAM accesses: N` counts 032/0132 executions
    (logged by `set dks debug=KADOPAM`). Baseline: 2–3 reads of cell 0, from
@@ -46,8 +45,8 @@ length (`пам n`, or a jump over the hole), so no exported label moves.
 
 Setting `∧К71 УСТВ 0` everywhere does not assemble: 45 errors in 10 modules
 (ТЕРМ, ВЗУ, ХЛАМ, ДИСКИ, МОТТ, БОЭК1, ДИСП70, ТРУБКА, ГП2, КОНФУС), nearly all
-undefined labels. Much ДКС code is unconditional, e.g. `term.be:115`
-`пб выдас7`, `term.be:418` `пб кмас7`, ВЗУ `кик7а`, БОНБОТ `*** ДКС ***`. Also,
+undefined labels. Much ДКС code is unconditional, e.g. `src/term.be:115`
+`пб выдас7`, `src/term.be:418` `пб кмас7`, ВЗУ `кик7а`, БОНБОТ `*** ДКС ***`. Also,
 `∧К71` switches far more than ДКС (below). Where a module does have a "штат"
 variant (`АПУ (&К71).ДА` … `АПБ .НЕТ`: lines before `АПБ` = штат, after `.ДА` =
 К-71), it is used as a reference. It has never been assembled into the binary
@@ -68,25 +67,25 @@ Hooks in other modules:
 
 | Module | Site | What it does |
 |---|---|---|
-| НОМБОБ | `nombob.be:316-346`, `1496-1507` | `диасм7` (from `ЗВ2`, alarm-clock path) → КОНФУС.`нстдкс`: loads СВЯЗЬ7, installs ПРП vectors, polls cell 0 |
-| ДИСП70 | `disp70.be:1815-1822` | `КИК` → ВЗУ.`кик7а` on every task switch (штат: falls into `КИК1`; `КИК` is used by ЯНУС and ХЛАМ) |
-| ВЗУ | `vzu.be:1791-1815` | `кик7а`: re-selects the task's КАДОПАМ channel (`кк 26,'70000'`); cells `шзпри7`, `шзагс7`, `шкут` |
-| ВЗУ | `vzu.be:1857-1873` | `выдас7`, `кмас7`: output to ДКС terminals → СВЯЗЬ7 |
-| ВЗУ | `vzu.be:1875-1888` | `Э1`: hands Э50 '133' of tasks in `шкаэко` to ЭКО |
-| ВЗУ | `vzu.be:2183-2208` | ВНЕШ/ВХОД |
-| ТЕРМ | `term.be:115`, `317-322`, `418`, `465-471`, `200-202`, `427`, `452-455`, `659-669` | start/char/end of output to ДКС lines (`выдас7`, `прнол7`, `кмас7`, `км2бк7`); `штерм7` |
-| МОТТ | `mott.be:2001-2142` (block N3, ex-ХЛАМ1) | `прсим7`, `прнол7`, `вдкс`, `км2бк7`: character I/O for "АС К-71" lines (`шкэт`; `шкут` removed with ДКС) → СВЯЗЬ7 |
-| МОТТ | `mott.be:278-282`, `1875`, `2418-2419`, `2537-2569`; `шзпри7` at `185-186`, `654`, `1338-1339`, `1425-1426` | call of `прсим7`; cells `базсв7`, `бсв7ма`, `бсв7мб`; ВНЕШ/ВХОД |
-| ДМЛМБ | `dmlmb.be:404-419`, `1886-1903`, `2354-2361` | drum-exchange hooks → СВЯЗЬ7.`вдмлмб`/`св7мб` |
-| ЭКВВОД | `ekvvod.be:180-181` | Э50 '133' → ЭК7.`Э133` |
-| КЗ | `kz.be:46-52`, `456-464` | cold start calls КОНФУС.`кзк71` |
-| ПРИКАЗ | `prikaz.be:261-268`, `362-371`, `1531-1539` | `шсост7` ("ДКС state": silent refusal of ВЦПП for tasks on a remote machine) |
-| ПРИСКВ | `priskv.be:20-25`, `577-583` | the same; штат keeps a local `шсост7` |
-| БОНБОТ | `bonbot.be:147-153`, `2043` | no carriage return for `шкут` lines |
-| ГЕНС | `gens.be:491-492`, `552` | copies СВЯЗЬ7 (zone 0677) to the drum at startup (`куссв7`) |
-| ГЕНС1 | (was `gens1.be:347`) | `шкут := СЛОN` — removed; without ДКС `шкут` would stay 0 and is not needed |
+| НОМБОБ | `src/nombob.be:316-346`, `1496-1507` | `диасм7` (from `ЗВ2`, alarm-clock path) → КОНФУС.`нстдкс`: loads СВЯЗЬ7, installs ПРП vectors, polls cell 0 |
+| ДИСП70 | `src/disp70.be:1815-1822` | `КИК` → ВЗУ.`кик7а` on every task switch (штат: falls into `КИК1`; `КИК` is used by ЯНУС and ХЛАМ) |
+| ВЗУ | `src/vzu.be:1791-1815` | `кик7а`: re-selects the task's КАДОПАМ channel (`кк 26,'70000'`); cells `шзпри7`, `шзагс7`, `шкут` |
+| ВЗУ | `src/vzu.be:1857-1873` | `выдас7`, `кмас7`: output to ДКС terminals → СВЯЗЬ7 |
+| ВЗУ | `src/vzu.be:1875-1888` | `Э1`: hands Э50 '133' of tasks in `шкаэко` to ЭКО |
+| ВЗУ | `src/vzu.be:2183-2208` | ВНЕШ/ВХОД |
+| ТЕРМ | `src/term.be:115`, `317-322`, `418`, `465-471`, `200-202`, `427`, `452-455`, `659-669` | start/char/end of output to ДКС lines (`выдас7`, `прнол7`, `кмас7`, `км2бк7`); `штерм7` |
+| МОТТ | `src/mott.be:2001-2142` (block N3, ex-ХЛАМ1) | `прсим7`, `прнол7`, `вдкс`, `км2бк7`: character I/O for "АС К-71" lines (`шкэт`; `шкут` removed with ДКС) → СВЯЗЬ7 |
+| МОТТ | `src/mott.be:278-282`, `1875`, `2418-2419`, `2537-2569`; `шзпри7` at `185-186`, `654`, `1338-1339`, `1425-1426` | call of `прсим7`; cells `базсв7`, `бсв7ма`, `бсв7мб`; ВНЕШ/ВХОД |
+| ДМЛМБ | `src/dmlmb.be:404-419`, `1886-1903`, `2354-2361` | drum-exchange hooks → СВЯЗЬ7.`вдмлмб`/`св7мб` |
+| ЭКВВОД | `src/ekvvod.be:180-181` | Э50 '133' → ЭК7.`Э133` |
+| КЗ | `src/kz.be:46-52`, `456-464` | cold start calls КОНФУС.`кзк71` |
+| ПРИКАЗ | `src/prikaz.be:261-268`, `362-371`, `1531-1539` | `шсост7` ("ДКС state": silent refusal of ВЦПП for tasks on a remote machine) |
+| ПРИСКВ | `src/priskv.be:20-25`, `577-583` | the same; штат keeps a local `шсост7` |
+| БОНБОТ | `src/bonbot.be:147-153`, `2043` | no carriage return for `шкут` lines |
+| ГЕНС | `src/gens.be:491-492`, `552` | copies СВЯЗЬ7 (zone 0677) to the drum at startup (`куссв7`) |
+| ГЕНС1 | (was `src/gens1.be:347`) | `шкут := СЛОN` — removed; without ДКС `шкут` would stay 0 and is not needed |
 
-Left as is (harmless text): АВРАСП `avrasp.be:1490` alarm text 29 «НЕ ГОТ. КАДОПАМ».
+Left as is (harmless text): АВРАСП `src/avrasp.be:1490` alarm text 29 «НЕ ГОТ. КАДОПАМ».
 The default ПРП vectors in ДИСП70 (`ОБВНП3`) are already the non-ДКС ones; only
 КОНФУС patches them at run time.
 
@@ -105,8 +104,8 @@ These are switched by `∧К71` too, but do not use КАДОПАМ:
 The АС and ТАБЛО blocks in НОМБОБ, ТЕРМ `rt` and the АС blocks of МОТТ are
 not К-71 features: they are штат code that `∧К71` assembles out. ТАБЛО is
 back (see Progress); the АС parts belong to phase 6.
-- МОТТ block N1 (`mott.be:133-260`, `аск71`: КРК terminal detection) and block
-  N2 (`mott.be:1373-1441`, `вд1`: modified telegraph-line I/O). They replace
+- МОТТ block N1 (`src/mott.be:133-260`, `аск71`: КРК terminal detection) and block
+  N2 (`src/mott.be:1373-1441`, `вд1`: modified telegraph-line I/O). They replace
   the МОТТ-100 multiplexer path (`ВХОДАС`, ПРП 8). Block N1 mentions the КРК
   equipment "с прямым доступом в память Э-60" and reads `шзпри7`, so it is
   partly ДКС; see decision A.
@@ -117,7 +116,7 @@ Disk **lines** (УКВП → `НОМРМД`) and hardware capture/release (ПР�
 `мзахв`, `увв '20'`) are штат. The BESM-6 alternate control paths that used
 to sit under `∧К71` in ДИСКИ — readiness poll via `нпр2`/`опргд1`, release via
 `освкм1`/`освл`/`опргд2`, and the matching `ВНЕШ` — are now under
-`∧ЛИНМД УСТВ 1` (`diski.be`). Helpers stay in МОТТ; they are not ДКС.
+`∧ЛИНМД УСТВ 1` (`src/diski.be`). Helpers stay in МОТТ; they are not ДКС.
 
 ## Phases
 
@@ -156,9 +155,9 @@ that any remaining load attempt fails loudly instead of loading the old code.
 
 DW-21 is a К-71 addition, but the printer is only a subset of the standard
 АЦПУ-128, so the support is not worth keeping. Only a few parts are assembled
-out by `∧DW21 УСТВ 0` (`konfus.be:9-10`, `pechat.be:5-6`); most of the code is
+out by `∧DW21 УСТВ 0` (`konfus.be:9-10`, `src/pechat.be:5-6`); most of the code is
 unconditional and runs on every print job:
-- ПЕЧАТЬ: `НАЧАЛО` calls КОНФУС.`начdw` (`pechat.be:45-47`); the per-character
+- ПЕЧАТЬ: `НАЧАЛО` calls КОНФУС.`начdw` (`src/pechat.be:45-47`); the per-character
   block `пркдdw`/`пркdw1`/`пркdw2` (`269-339`) and the `шdw21б`/`е17dw` test in
   the output path (`351-354`, `376`, `404-406`); the DW-21 buffer write
   (`657-711`, with the jump to КОНФУС.`авdw21`); the `шdw21`/`шdw21а` uses
@@ -166,8 +165,8 @@ unconditional and runs on every print job:
   (`1164-1296`, `1401`, `1427`); cells `режdw1`, `режdw2`, `cимвdw`.
 - КОНФУС: block "ПЕЧАТЬ" (`konfus.be:491-571`: `начdw`, `авdw21`, `пркод7`,
   the `шdw21*` cells, `е17dw`, the recoding table `ТАБЛИЦ`) and its ВНЕШ/ВХОД.
-- ПРИК4/КОНФУС: `вых1к7` and `шпр4к7` (`prik4.be:300`, `konfus.be:699-715`,
-  `pechat.be:110-111`). Check first whether they belong to DW-21 or are a
+- ПРИК4/КОНФУС: `вых1к7` and `шпр4к7` (`src/prik4.be:300`, `konfus.be:699-715`,
+  `src/pechat.be:110-111`). Check first whether they belong to DW-21 or are a
   separate К-71 change of ПРИК4.
 
 Use the штат variant (plain АЦПУ-128 path) where the source has one; otherwise
@@ -177,10 +176,10 @@ must stay unchanged (apart from date and time).
 ### Phase 5: remove Э52 '7777' — done
 
 The "trusted link" extracode for the АНИС-6 resident (НИТИ). ДИСП70 sends every
-Э52 to КОНФУС.`Э52777` (`disp70.be:255-263`), which returns to `ПЕЭ52` unless the
+Э52 to КОНФУС.`Э52777` (`src/disp70.be:255-263`), which returns to `ПЕЭ52` unless the
 address is '7777'. The штат variant `пб пеэ52` is still in the source, so:
 - ДИСП70: use the штат branch of the `э52к71` block and drop
-  `КОНФУС ВНЕШ Э52777` (`disp70.be:2764`).
+  `КОНФУС ВНЕШ Э52777` (`src/disp70.be:2764`).
 - КОНФУС: the `Э52777` block (`konfus.be:18-236`, `Э52777` … `ш52гус`) becomes
   a reserve; drop `Э52777` from ВХОД and, if nothing else needs it, `ПЕЭ52`
   from the ДИСП70 ВНЕШ line.
@@ -205,7 +204,7 @@ gets the same handling as in the штат system.
 Not done: the other штат АС blocks (НОМБОБ `ДА1`-`ДА3`, ТЕРМ `rt`, МОТТ `ДА6`,
 `ДА40`, `ДА10`) — nothing needed them for the operator session.
 
-**Reference: ЯНУС.** The kernel debugger (`janus.be`) drives the АС hardware
+**Reference: ЯНУС.** The kernel debugger (`src/janus.be`) drives the АС hardware
 directly and is the definitive description of the interface; МОТТ-100 does
 the same in its штат text (`ВХОДАС`):
 - `увв '143'`: send a 16-bit syllable; `увв '4143'`: read the received
@@ -263,8 +262,8 @@ Steps:
      (штат `АС762`; К-71 has a stub `АС762 ноп`, the target of СМЕНА1's
      `пе/пб АС762-Н(М7)` «ДР. БОБ.»), block ДА3 (`ТЕРМ ВНЕШ rt`) and the
      commented-out `ПЕ АС762` in the ЗВ1 loop.
-   - ТЕРМ: `rt` (`term.be:613-615`) and its `ВХОД` (`term.be:652-661`).
-   - МОТТ: the штат АС blocks (`mott.be:133-260`, 596-608, 806-882, 895-905,
+   - ТЕРМ: `rt` (`src/term.be:613-615`) and its `ВХОД` (`src/term.be:652-661`).
+   - МОТТ: the штат АС blocks (`src/mott.be:133-260`, 596-608, 806-882, 895-905,
      924-951, 964-1135, 1142-1210, 1659-1667, 1734-1745, 1780-1788), part of
      step 1.
    Like ТАБЛО, any growth must not move labels: НОМБОБ ends just below
@@ -286,7 +285,7 @@ patch.
 ## Progress
 
 **Phase 1 done.** Each edit replaces instructions one for one, so no module
-changes size (`мода 0` is the no-op, as in `benson.be:354`):
+changes size (`мода 0` is the no-op, as in `src/benson.be:354`):
 - НОМБОБ `диасм7`: `по нстдкс` → `пб НЕЗАВИ`.
 - ЭКВВОД, table entry 133: `СЧ 0` / `ПБ Э105Г`, like the other unused
   extracodes (145, 175, 200, 201, 220).
@@ -302,7 +301,7 @@ the job and the terminal session work; КАДОПАМ accesses 0.
 СВЯЗЬ7 even when no ДКС is present and copies the five `уходы` entries of
 СВЯЗЬ7 into the ПРП vectors listed in `адреса`: ПРП 8, 7, 6, 5 and 12. ПРП 12
 is the receive interrupt of Consul 0 (T031; default `уиа (М16) / пб прсn`,
-`disp70.be:1413-1414`); СВЯЗЬ7.`ПРП12` reads КАДОПАМ cell 0 and drops the
+`src/disp70.be:1413-1414`); СВЯЗЬ7.`ПРП12` reads КАДОПАМ cell 0 and drops the
 character. In the baseline T031 therefore gets no input at all (T032 works);
 memory at 04050 shows `мод базсв7`. ПРП 11, 10, 9 (T032 receive, T031/T032
 output) are never patched; СВЯЗЬ7.`фикпрп` only uses entries 0–3 (ПРП 8–5).
@@ -437,7 +436,7 @@ reserves.
 How КОНФУС got into memory: ГЕНС1 tests ТРАКТЫ E28 («СЭВМ ДА»); if set, it
 closes page 034 (`ШКЗЛ` E20) and stores `КЛСВ` (zone 0576 + `НОММЛ1` = logical
 0676, page 034) into ДИСП70.`КУСЛСВ`; ПРИК4 at the first directive 16 reads
-that zone into 070000 and clears `КУСЛСВ` (`prik4.be:288-294`). So КОНФУС sat
+that zone into 070000 and clears `КУСЛСВ` (`src/prik4.be:288-294`). So КОНФУС sat
 in the page of the СЭВМ (inter-machine link) module. E28 is set in all 16
 configuration variants. With no СЭВМ module it only closed page 034 and read
 the zeroed zone 0676 into it, so `mkdisk.py --trakty-off 28` now clears E28 in
@@ -524,7 +523,7 @@ zone 0737 zeroed. Related: ДИСКИ's absolute `уиа '76010'(М7)` is now
 ГЕНС1 loads zone 0414 when `ПРЕДЕЛ` has Е39) is штат. ТЕРМАС installs ПРП
 12/10 at `обвнп3+12`/`+14` and the timer at `обвнп1+38`; the old `∧К71`
 offsets (`обвнп3-6`/`-4`, `обвнп1+20`) were a К-71 overlay quirk and must not
-be used. `termas.be` now has `∧К71 УСТВ 0` so the штат vectors assemble.
+be used. `src/termas.be` now has `∧К71 УСТВ 0` so the штат vectors assemble.
 ТЕРМАС stays in the build; it starts only when ТМГУ is enabled.
 
 **ХЛАМ Э62 → Э62ГРУ aligned with СВС.** The test for Э62 addresses
@@ -637,7 +636,7 @@ does): `УИА ВЫХОД(М16)`. After it the same boot reaches `04440`.
   pinned down.
 
 **Заявка в `ШКОРАБ` не доходит до `БОНБОТ`.** После обнуления `ТАС(0)`
-(`disp70.be`) и записи `Е45` в `ШКОРАБ` сразу после `КЦОТ` (`gens1.be`)
+(`src/disp70.be`) и записи `Е45` в `ШКОРАБ` сразу после `КЦОТ` (`src/gens1.be`)
 прогон mux останавливается в `04440`. Слога `101 200` нет, на мультиплексоре
 только гашение. `02445` `ТАС` = 0, линия 2 (`02447`) = `3000 0000 0010 0000`
 (слово `ТЕРАС`, логический номер не дописан), `77146` `ШКОРАБ` =
@@ -657,13 +656,13 @@ does): `УИА ВЫХОД(М16)`. After it the same boot reaches `04440`.
 `ИЛИ ЕНЕРОТ` / `ЗП ШКИВ`, «вызов НЕРОТ-а») и тот же фрагмент в `КЧС` модуля
 `МОТТ`.
 
-На БЭСМ имени `ЕНЕРОТ` в командах нет: в `sostav.be` это только
+На БЭСМ имени `ЕНЕРОТ` в командах нет: в `src/sostav.be` это только
 `ЭКВИВ (ЕНЕРОТ,Е24)`, а в таблице задач разряд 24 занят ОСА. РЕЗОТ стоит на
-разряде 30, и адрес входа у него нулевой (`disp70.be`, `КОНК М17В'23'`
+разряде 30, и адрес входа у него нулевой (`src/disp70.be`, `КОНК М17В'23'`
 `Е30-РЕЗОТ` / `КОНК А(0)`). Вместо тех двух команд работает `ВЫЗРЕЗ` в
-`boek1.be`. Он собран: ближайшие `АПУ` в этом модуле кончаются раньше
+`src/boek1.be`. Он собран: ближайшие `АПУ` в этом модуле кончаются раньше
 (`.ДА2`), а следующий начинается уже после `ВЫЗРЕЗ` (`.ДА4`). Вызов из
-`diski.be` (`пб ВЫЗРЕЗ`, в листинге ДИСКИ-100 это `БНБОТ`) тоже вне блоков
+`src/diski.be` (`пб ВЫЗРЕЗ`, в листинге ДИСКИ-100 это `БНБОТ`) тоже вне блоков
 `АПУ`.
 
 `ВЫЗРЕЗ` читает `ШКОРАБ` и при нуле уходит на `НЕТР` («нет работы РЕЗОТ-у»).
@@ -672,13 +671,13 @@ does): `УИА ВЫХОД(М16)`. After it the same boot reaches `04440`.
 разряд 30 шкалы вызова.
 
 `ШКОРАБ` уже ненулевой, так что первая проверка проходит. Разряд 16 в
-`ЗАНЯТА` комментарий в `gens1.be` называет «разрешение работать». Его ставит
+`ЗАНЯТА` комментарий в `src/gens1.be` называет «разрешение работать». Его ставит
 только ветка `НОМЕСТ`, когда в `ТЗНМД` нашлась зона. Если зоны нет, `ОЖ`
 (`СЧ ТЗНМД` / `ПЕ НОМЕСТ`, иначе `ПВ ТАЙМЕР` и `ПБ ТБУФ13`) этого разряда не
 записывает. Тогда `ВЫЗРЕЗ` возвращается в `БМВ` и разряд 30 в `ШКИВ` не
-зажигает. В `gens1.be` блоков `АПУ` нет.
+зажигает. В `src/gens1.be` блоков `АПУ` нет.
 
-Штатный кусок перед `.ДА12` в `mott.be` (`КЧС2`: `СЧ АСОШ` / `СЛЦ Е1` /
+Штатный кусок перед `.ДА12` в `src/mott.be` (`КЧС2`: `СЧ АСОШ` / `СЛЦ Е1` /
 `ЗП АСОШ` / `ПБ КЧС`) `АПУ` действительно пропускает, но там только переход
 на `КЧС`, без записи в `ШКИВ`. Живой `КЧС` ставит в `ШКОРАБ` разряд 44
 (гашение `ШКВЫД` по `ШКАС`) и тоже планировщика не вызывает.
@@ -687,9 +686,9 @@ does): `УИА ВЫХОД(М16)`. After it the same boot reaches `04440`.
 реально вызывает `ВХПУСК`, а не только читает зону 0414 в лист 020.
 Сделано на ветке (не в `master`):
 
-- `termas.be` / `rvs.src`: сборка на `040000` (как грузит `ктмгу`), а не
+- `src/termas.be` / `rvs.src`: сборка на `040000` (как грузит `ктмгу`), а не
   `062000`; `АПВВ`/`АПВЫВ`/`АВХТ` с `+'40000'`.
-- `gens1.be`: после `ПЕРЕПС` ДИСП70 на лист 0 — `СЧ ПРЕДЕЛ` / `И Е39` /
+- `src/gens1.be`: после `ПЕРЕПС` ДИСП70 на лист 0 — `СЧ ПРЕДЕЛ` / `И Е39` /
   `ПВ '40000'(М15)` (`ВХПУСК`).
 - SIMH (`besm6_cpu.c`): `увв '142'` → `PRP |= ACC` (раньше
   `STOP_UNIMPLEMENTED`).

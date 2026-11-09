@@ -5,7 +5,7 @@
 # Печатает только строки '###'; код возврата 1 при любой неудаче.
 cd "$(dirname "$0")/.." || exit 1
 make build > build.log 2>&1 || { tail -20 build.log; echo "### BUILD FAILED"; exit 1; }
-bad=$(grep -L 'ОШИБОК=0000' *.lst)
+bad=$(grep -L 'ОШИБОК=0000' build/lst/*.lst)
 [ -z "$bad" ] || { echo "### ASSEMBLY ERRORS: $bad"; exit 1; }
 out=$( { sim/run.sh
           grep -q 'КОНЕЦ ЗАДАЧИ' sim/run/output.txt || echo "### JOB FAILED"

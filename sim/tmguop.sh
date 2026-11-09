@@ -24,7 +24,7 @@ fi
 sed -i "s/tty13 /tty$dec /; s/lineorder=13/lineorder=$dec/; s/^e 2460$/e $tas/" boot.ini
 # e @ИМЯ -> e АДРЕС (адреса меток МОТТ и ТЕРМАС текущей сборки), с подписью.
 for name in $(grep -o '^e @[^ ]*' boot.ini | cut -c4-); do
-    addr=$(awk -v n="$name" '$3 == n { print $1; exit }' "$here/../mott.be.tab" "$here/../termas.be.tab")
+    addr=$(awk -v n="$name" '$3 == n { print $1; exit }' "$here/../build/tab/mott.tab" "$here/../build/tab/termas.tab")
     sed -i "s/^e @$name\$/echo $name\ne $addr/" boot.ini
 done
 port=$(python3 -c 'import socket; s = socket.socket(); s.bind(("", 0)); print(s.getsockname()[1])')

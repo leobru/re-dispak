@@ -55,3 +55,6 @@ __pycache__
 sbor2053.orig
 sim/run/
 *.log
+
+# Build artifacts
+build/

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Собирает загружаемый образ системного диска 2053 для SIMH из пустого образа
-и зон ОС, записанных РВС на рабочий диск 2222.
+и зон ОС, записанных РВС на рабочий диск build/disk/2222.
 
 Переносятся зоны, указанные в rvs.src (ЗОНГП 43zzzz n), только < 01000 -
 зоны 01000 и выше лежат на 2048, а не на 2053.  Зона в образе физическая =
@@ -17,7 +17,7 @@ SIMH выполняет только слова с командной свёрт
 --trakty-off N гасит разряд EN слова ТРАКТЫ (слово 015) во всех 16 вариантах
 конфигурации (зона 0750, по 040 слов на вариант).
 
-    python3 mkdisk.py [--base образ] [--src 2222] [--out 2053.bin]
+    python3 mkdisk.py [--base образ] [--src build/disk/2222] [--out build/2053.bin]
                       [--zero 0677] [--zero 0567:0] [--trakty-off 28]
 """
 import argparse
@@ -32,7 +32,7 @@ M48 = (1 << 48) - 1
 PHYS_OFFSET = 4
 PARITY_INSN = 1
 PARITY_NUM = 2
-DEFAULT_BASE = "sbor2053.orig"
+DEFAULT_BASE = "build/sbor2053.orig"
 CONFIG_ZONE = 0o750
 CONFIG_VARIANTS = 16
 CONFIG_SIZE = 0o40
@@ -63,9 +63,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--base", default=DEFAULT_BASE)
-    ap.add_argument("--src", default="2222")
+    ap.add_argument("--src", default="build/disk/2222")
     ap.add_argument("--rvs", default="rvs.src")
-    ap.add_argument("--out", default="2053.bin")
+    ap.add_argument("--out", default="build/2053.bin")
     ap.add_argument("--zero", action="append", default=[], metavar="ZONE[:SECTORS]")
     ap.add_argument("--trakty-off", action="append", default=[], type=int, metavar="N")
     args = ap.parse_args()
