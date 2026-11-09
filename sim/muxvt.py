@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Один терминал АС,VТ как ОТАС, все каналы сообщений — на него.
 
-muxvt.py ИЗ В
+muxvt.py ИЗ В [ФИЗ]
 
-Линия SIMH — tty2 (физический номер 2). Во всех непустых вариантах зоны 0750:
+ФИЗ — физический номер терминала, восьмеричный, как в ГЕНС (1..60), по умолчанию 2
+(линия SIMH tty2). Во всех непустых вариантах зоны 0750:
 
-- шкалы АС (ШКТТ, ШКVТ, ШАС128) гасятся, в ШКVТ2 зажигается линия 2;
-- NТАС := 2 — первое 6-разрядное поле ОТАС, логический терминал 1;
+- шкалы АС (ШКТТ, ШКVТ, ШАС128) гасятся, в ШКVТ2 зажигается линия ФИЗ
+  (ТЕРМ АС,VТ:ФИЗ);
+- NТАС := ФИЗ — первое 6-разрядное поле ОТАС, логический терминал 1;
 - НОМУСТ: все 8 каналов сообщений = 1;
 - разряд логического терминала 1 снимается с ШКУСТР, иначе подключение
   идёт «на прямую», а не через АСОТ;
@@ -35,8 +37,11 @@ def scale_bit(n):
 
 
 def main():
-    if len(sys.argv) != 3:
-        sys.exit("usage: muxvt.py SRC DST")
+    if len(sys.argv) not in (3, 4):
+        sys.exit("usage: muxvt.py SRC DST [PHYS]")
+    line = int(sys.argv[3], 8) if len(sys.argv) == 4 else LINE
+    if not 1 <= line <= 48:
+        sys.exit("PHYS must be octal 1..60")
     data = bytearray(open(sys.argv[1], "rb").read())
 
     def get(i):
@@ -56,8 +61,8 @@ def main():
         w = lambda k: get(first + k) & M48
         for k in (SHAS128, SHAS128 + 1, SHKTT, SHKTT + 1, SHKVT, SHKVT + 1):
             put(first + k, 0)
-        put(first + SHKVT + 1, scale_bit(LINE))
-        put(first + NTAS, LINE)
+        put(first + SHKVT + 1, scale_bit(line))
+        put(first + NTAS, line)
         put(first + TKANA, channels)
         put(first + SHKUSTR, w(SHKUSTR) & ~scale_bit(LOG))
         put(first + SHKOPT, w(SHKOPT) | scale_bit(LOG))
