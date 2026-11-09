@@ -189,6 +189,22 @@ gets the same handling as in the штат system.
 
 ### Phase 6: enable МОТТ-100 and fix the ШКАС setup in ГЕНС1 — in progress
 
+**Done (АС without ТМГУ).** An operator terminal on the АС works with ТМГУ НЕТ
+(`sim/as.sh`, in `tools/check.sh`): boot text, prompt `3,T013(01)`, ВРЕ.
+- МОТТ: the штат output scheduler (blocks `ДА6В`/`ДА6Г`: `вас1`, `ОПРОС`,
+  `ВАС3Б1`…`ВАС3Д`, `орс1-3`, `ЗАПВХО` → `ПРПРО2`, `ГМВМПД`, `SLINЕ1`,
+  `ВХОД3В`, `sos`) is live code after the parked `ВХОДАС`; `адраб` = `вас1`;
+  `СВИСТА` = the штат `СВИСТ5` (`A(ВАС3С)`), since `СВИСТ5` stays К-71.
+  The physical number in `ТСЛ` is at bit АТ+1 (41) as in БОНБОТ, in `АС1` and
+  `вас1` (МОТТ-100 had bits 43-48).
+- ГЕНС1 `КЦОТ`: with АС scales and ТМГУ НЕТ, ПРП 7 → `ВХОДАС`, ПРП 6 →
+  `мод адраб / пб` (`апвыас`), МПРП Е7|Е6; `ЗАНЯТА.Е16` after ПЕРЕПС as for ТМГУ.
+- `sim/muxvt.py` clears Е39: an АС configuration means ТМГУ НЕТ.
+- SIMH: the service codes and the ready level are described in
+  `BESM6/doc/АС.md` of the simulator.
+Not done: the other штат АС blocks (НОМБОБ `ДА1`-`ДА3`, ТЕРМ `rt`, МОТТ `ДА6`,
+`ДА40`, `ДА10`) — nothing needed them for the operator session.
+
 **Reference: ЯНУС.** The kernel debugger (`janus.be`) drives the АС hardware
 directly and is the definitive description of the interface; МОТТ-100 does
 the same in its штат text (`ВХОДАС`):

@@ -3,7 +3,7 @@
 # ТЕРМ АС,VТ:13 и ОТАС 13 (номера терминалов в ГЕНС восьмеричные).
 #   sim/tmguop.sh            - прогон TIMEOUT секунд (по умолчанию 90)
 #   PHYS=N sim/tmguop.sh     - другой физ. номер, восьмеричный (конфигурация и 041)
-#   NOTMGU=1 sim/tmguop.sh   - та же конфигурация без ТМГУ (для сравнения)
+#   NOTMGU=1 sim/tmguop.sh   - та же конфигурация через АС (ТМГУ НЕТ, set tty mux)
 #   INI=sim/vyzrez.ini sim/tmguop.sh - то же с другим сценарием SIMH
 #   SCR=файл sim/tmguop.sh          - другой сценарий ввода с терминала (tty.py)
 # Печатает обмен с концентратором (sim/tmgu_decode.py) и вывод tty1.
@@ -16,7 +16,7 @@ tas=$(printf '%o' $((02445 + dec)))
 . "$here/setup.sh"
 "$here/muxvt.py" 2053.bin 2053.bin "$phys"
 if [ -n "$NOTMGU" ]; then
-    sed -i "/^set tty tmgutrace$/d; /^set tty[0-9]* mux$/d" boot.ini
+    sed -i "s/^set tty tmgutrace$/set tty mux/" boot.ini
 else
     "$here/tmgu.py" 2053.bin 2053.bin
 fi
