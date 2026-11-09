@@ -191,14 +191,14 @@ gets the same handling as in the штат system.
 
 **Done (АС without ТМГУ).** An operator terminal on the АС works with ТМГУ НЕТ
 (`sim/as.sh`, in `tools/check.sh`): boot text, prompt `3,T013(01)`, ВРЕ.
-- МОТТ: the штат output scheduler (blocks `ДА6В`/`ДА6Г`: `вас1`, `ОПРОС`,
+- МОТТ: the штат output scheduler (blocks `ДА6В`/`ДА6Г`: `ВХОД1В`, `ОПРОС`,
   `ВАС3Б1`…`ВАС3Д`, `орс1-3`, `ЗАПВХО` → `ПРПРО2`, `ГМВМПД`, `SLINЕ1`,
-  `ВХОД3В`, `sos`) is live code after the parked `ВХОДАС`; `адраб` = `вас1`;
+  `ВХОД3В`, `sos`) is live code after the parked `ВХОДАС`; `АДРВХО` = `ВХОД1В`;
   `СВИСТА` = the штат `СВИСТ5` (`A(ВАС3С)`), since `СВИСТ5` stays К-71.
   The physical number in `ТСЛ` is at bit АТ+1 (41) as in БОНБОТ, in `АС1` and
-  `вас1` (МОТТ-100 had bits 43-48).
+  `ВХОД1В` (МОТТ-100 had bits 43-48).
 - ГЕНС1 `КЦОТ`: with АС scales and ТМГУ НЕТ, ПРП 7 → `ВХОДАС`, ПРП 6 →
-  `мод адраб / пб` (`апвыас`), МПРП Е7|Е6; `ЗАНЯТА.Е16` after ПЕРЕПС as for ТМГУ.
+  `мод АДРВХО / пб` (`апвыас`), МПРП Е7|Е6; `ЗАНЯТА.Е16` after ПЕРЕПС as for ТМГУ.
 - `sim/muxvt.py` clears Е39: an АС configuration means ТМГУ НЕТ.
 - SIMH: the service codes and the ready level are described in
   `BESM6/doc/АС.md` of the simulator.
@@ -564,7 +564,7 @@ with Е16; else 0. Second word via `УИА -1(М17)` as in СВС (`ШКТТ`/`�
 
 **Phase 6 core (СВС МПД / ПАСМПД shape) — done for empty configs.**
 - ГЕНС1: ЦОТ builds `ШКАС`/`АСОТ` from `NТАС` (like СВС `ШОТА`); folds
-  `ШКОПТ|ШКАС|ШКУСТР` into `ШКНОВ`/`ШЗПРИМ`/`СЛОN`; sets `адраб`; `увв '153'`;
+  `ШКОПТ|ШКАС|ШКУСТР` into `ШКНОВ`/`ШЗПРИМ`/`СЛОN`; sets `АДРВХО`; `увв '153'`;
   installs `прп7`→`ВХОДАС` and opens `МПРП` E7|E6 only if TT/VT scales ≠ 0.
 - МОТТ: `шас01` instead of `'7777'`; `ВХОДАС` parked at end of module (ТАБЛО
   style); full `аск71` kept — `НАЧАЛО`→`по ВЫХМОН` hangs boot.
@@ -576,7 +576,7 @@ with Е16; else 0. Second word via `УИА -1(М17)` as in СВС (`ШКТТ`/`�
 **Phase 6 receive path — parked handlers (no mid-МОТТ growth).**
 - End of МОТТ: real `КЧС1`→`ПРЯТ`, `СООБАС`/`АС1`→`ПИЛОТ`, `АС76В`,
   `ас2`/`АС7`/`АС9`/`АС76А`, cells `ШСЕРАС`/`шксин`/`темптт` (were under
-  `ДА10А`). `КЧС2` counts `АСОШ` and exits (full `КЧС`/`вас1` not parked —
+  `ДА10А`). `КЧС2` counts `АСОШ` and exits (full `КЧС`/`ВХОД1В` not parked —
   not enough room before 077777; output path deferred).
 - `sim/as_line.py`: sets `NТАС`:=1, `ШКТТ2` line 1, `ТРАКТЫ` E29. Opens
   ПРП 7|6 via ГЕНС1 — needs a real mux `tty` attach before use (bare job
@@ -598,9 +598,9 @@ free before 077777). Left in place: `опрдк7`, `чрк71`/`дик71`, `мо�
 
 **АС output syllable assembles; one mux VT reaches the idle loop.**
 - The skip around the output block now ends at `КЧС` (`ДА6В` closed before
-  `вас1`, `ДА6Г` removed), so `ВАС3Г`/`ВХОД3В`/`sos` execute `увв '143'`.
+  `ВХОД1В`, `ДА6Г` removed), so `ВАС3Г`/`ВХОД3В`/`sos` execute `увв '143'`.
   Live `r1` is defined next to the parked cells (the old one sits in skipped
-  `ДА10Б`). ГЕНС1 plants `прп6`→`вас1` (`ОБВНП3+18`) beside `прп7`→`ВХОДАС`,
+  `ДА10Б`). ГЕНС1 plants `прп6`→`ВХОД1В` (`ОБВНП3+18`) beside `прп7`→`ВХОДАС`,
   copies `НОМУСТ`→`НОМУС` and `ШКОПТ|ШКАС`→`ШКОПТТ`. Assembling the block
   moved МОТТ: `ШКАС` 077023→077152, `АСОТ` 076774→077123 (`labels.base`
   refreshed). `НАЧАЛО` stays `по аск71`. `АС762` stays the К-71 stub.
