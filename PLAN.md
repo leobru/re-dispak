@@ -106,7 +106,7 @@ The АС and ТАБЛО blocks in НОМБОБ, ТЕРМ `rt` and the АС block
 not К-71 features: they are штат code that `∧К71` assembles out. ТАБЛО is
 back (see Progress); the АС parts belong to phase 6.
 - МОТТ block N1 (`mott.be:133-260`, `аск71`: КРК terminal detection) and block
-  N2 (`mott.be:1373-1441`, `вдк71`: modified telegraph-line I/O). They replace
+  N2 (`mott.be:1373-1441`, `вд1`: modified telegraph-line I/O). They replace
   the МОТТ-100 multiplexer path (`ВХОДАС`, ПРП 8). Block N1 mentions the КРК
   equipment "с прямым доступом в память Э-60" and reads `шзпри7`, so it is
   partly ДКС; see decision A.
@@ -226,7 +226,7 @@ the same in its штат text (`ВХОДАС`):
 the one `MUX: clear` from ГЕНС1 `увв '153'`.
 - МОТТ: `ВХОДАС` (block N1) is the штат text of an `∧К71` block, so it is
   not assembled; the К-71 text `аск71` is entered from the monitor loop
-  (`НАЧАЛО`: `по аск71` instead of `по ВЫХМОН`). Block N2 (`вдк71`) and the
+  (`НАЧАЛО`: `по аск71` instead of `по ВЫХМОН`). Block N2 (`вд1`) and the
   `ДА4А`/`ДА4Б` blocks are К-71 versions as well.
 - ДИСП70: the ПРП 7 and 6 vectors (`прп7`, `прп6`) go to `БМВ`, and nothing
   installs `ВХОДАС` there. ГЕНС1's header says the listing lost lines
@@ -594,7 +594,7 @@ the live exits were already the non-ДКС ones. Callers retargeted in place
 stay (ТЕРМАС). Cut is after `ШКАС`, so `ШКАС`/`АСОТ` do not move; `ВХОДАС`
 and the parked handlers slide down. Tail now ends near 077537 (~0160 words
 free before 077777). Left in place: `опрдк7`, `чрк71`/`дик71`, `можно7`/
-`избоэ7`, `∧ЛИНМД` helpers, `аск71`/`вдк71`, `шкот7`, plotter stubs.
+`избоэ7`, `∧ЛИНМД` helpers, `аск71`/`вд1`, `шкот7`, plotter stubs.
 
 **АС output syllable assembles; one mux VT reaches the idle loop.**
 - The skip around the output block now ends at `КЧС` (`ДА6В` closed before
@@ -725,7 +725,7 @@ does): `УИА ВЫХОД(М16)`. After it the same boot reaches `04440`.
    - `СВИСТ5`→`ВАС3С` (ДА13, one word).
    - Do not add the mux probe to `check.sh` until a data syllable appears.
    - НОМБОБ `АС761` + ТЕРМ `rt` (park/overlay; do not reuse `АС762` label).
-   - `ДА8`/`влинии` vs `вдк71` (N2); do **not** flip `НАЧАЛО`→`ВЫХМОН`.
+   - Block N2 stays К-71 (now under the МОТТ-100 names `вд1`, `вд2`, `влинии`, `пр4`, `vt19б`); the commented штат `ДА7`-`ДА10` text was removed. Do **not** flip `НАЧАЛО`→`ВЫХМОН`: `аск71` feeds the next character.
 2. Ветка `TMGU`: концентратор МАМС в SIMH; затем `ПОДКТ`/`ОТКЛТ`/`СТЕР`.
 3. Decision B pass over the other К-71 features (plotter stubs, `шкот7`,
    `опрдк7`, `можно7`/`избоэ7`, …) — not ТЕРМАС / ТМГУ, not ХЛАМ
